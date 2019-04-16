@@ -1,0 +1,485 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+var now = new Date(); //当前日期
+var nowDayOfWeek = now.getDay(); //今天本周的第几天
+var nowDay = now.getDate(); //当前日
+var nowMonth = now.getMonth(); //当前月
+var nowYear = now.getYear(); //当前年
+nowYear += (nowYear < 2000) ? 1900 : 0; //
+var lastMonthDate = new Date(); //上月日期
+lastMonthDate.setDate(1);
+lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+var lastYear = lastMonthDate.getYear();
+var lastMonth = lastMonthDate.getMonth();
+//格式化日期：yyyy-MM-dd
+function formatDate(date) {
+    var myyear = date.getFullYear();
+    var mymonth = date.getMonth() + 1;
+    var myweekday = date.getDate();
+    if (mymonth < 10) {
+        mymonth = "0" + mymonth;
+    }
+    if (myweekday < 10) {
+        myweekday = "0" + myweekday;
+    }
+    return (myyear + "-" + mymonth + "-" + myweekday);
+}
+jQuery(function(){
+	var firstDay=getLastWeekStartDate();
+	var lastDay=getLastWeekEndDate();
+	$("#sadfff").attr("href","${ctx}/betreportform/winorfaillist?k=1&starttime="+firstDay+"&endtime="+lastDay); 
+	var firstDay1=getMonthStartDate();
+	var lastDay1=getMonthEndDate();
+	$("#adger").attr("href","${ctx}/betreportform/winorfaillist?k=1&starttime="+firstDay1+"&endtime="+lastDay1);
+	var firstDay2=getLastMonthStartDate();
+	var lastDay2=getLastMonthEndDate();
+	$("#asdtret").attr("href","${ctx}/betreportform/winorfaillist?k=1&starttime="+firstDay2+"&endtime="+lastDay2);
+	var href = window.location.href;
+	var result = href.split('?')[href.split('?').length-1];
+	var url_list = $('.xiao-btnlist').find('a');
+	for(var i = 0; i < url_list.length ; i++){
+		if(url_list[i].href == href){
+//				console.log(url_list[i].href);
+			url_list[i].style.backgroundColor = "#009688";
+			url_list[i].style.display = "block";
+			url_list[i].style.color = "#fff";
+		}
+	}	
+	
+	function getLastWeekStartDate() {
+	    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 6);
+	    return formatDate(weekStartDate);
+	}
+	function getLastWeekEndDate() {
+	    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek );
+	    return formatDate(weekEndDate);
+	}
+	function getMonthStartDate() {
+	    var monthStartDate = new Date(nowYear, nowMonth, 1);
+	    return formatDate(monthStartDate);
+	}
+	function getMonthEndDate() {
+	    var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
+	    return formatDate(monthEndDate);
+	}
+	function getMonthDays(myMonth) {
+	    var monthStartDate = new Date(nowYear, myMonth, 1);
+	    var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+	    var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+	    return days;
+	}
+	//获得上月开始时间
+	function getLastMonthStartDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthStartDate;
+		if(lastMonth==11){
+			lastMonthStartDate = new Date(LastYear, lastMonth, 1);	
+		}else{
+			lastMonthStartDate = new Date(nowYear, lastMonth, 1);
+		}
+	    
+	    return formatDate(lastMonthStartDate);
+	}
+	//获得上月结束时间
+	function getLastMonthEndDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthEndDate;
+		if(lastMonth==11){
+			lastMonthEndDate = new Date(LastYear, lastMonth, getMonthDays(lastMonth));
+		}else{
+			lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
+		}
+	    return formatDate(lastMonthEndDate);
+	}
+})
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/winorfaillist?k=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="layui-table search-wrap">
+									  	<div class="xiao-cell xiao-pull-left xiao-record">
+											<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;"  href="${ctx}/betreportform/winorfaillist">
+											<span id="thismonth">本周</span></a>&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;"><span style="cursor:hand;" id="lastmonth">上月</span></a> -->
+											&nbsp;&nbsp;&nbsp;
+											<div class="xiao-btnlist xiap-pull-left layui-inline">
+									 				<div class="xiao-btnlist-item">
+													<a href="${ctx}/betreportform/winorfaillist?springraintoken=${springraintoken!''}">本周</a>
+													</div>
+													<div class="xiao-btnlist-item">
+													<a id="sadfff" >上周</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="adger" >本月</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="asdtret" >上月</a>
+													</div>
+									</div>
+											
+											
+											
+											投注额：
+											${((bettingmoney)?string(',###'))!0}&nbsp;&nbsp;&nbsp;&nbsp;
+											输赢总计：
+											${((gamewin)?string(',###'))!0}
+										</div>
+										<div class="layui-input-inline xiao-input-wrap pull-left">
+											<div class="layui-input-inline xiao-input-wrap pull-left">
+												<input id="starttime" name="starttime" onclick="laydate()" placeholder="请输入日期 " value="${startDate!''}" class="laydate-icon ">
+											</div>
+										到
+											<div class="layui-input-inline">
+												<input id="endtime" name="endtime" onclick="laydate()" placeholder="请输入日期 " value="${endDate!''}" class="laydate-icon ">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon"  style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even >
+											<thead>
+												<tr>
+													<th colspan="16"><font id='' class='recorsView'>共<span>${returnDatas.page.pageCount!''}</span>页,共 <span></span><#if addtotalcount??>${(returnDatas.page.totalCount+1)!''}<#else>${returnDatas.page.totalCount!''}</#if>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												<!--   <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th> -->
+												 
+												  <!--first_end_no_export-->
+														<th style="white-space:nowrap">日期</th>
+														<th style="white-space:nowrap">投注额</th>
+														<!-- <th>卡收</th>
+														<th>签到</th>
+														<th>救济</th>
+														<th>日返利</th>
+														<th>首冲</th>
+														<th>排行</th> -->
+														<th>已结算</th>
+														<th style="white-space:nowrap">未结算</th>
+														<th>派彩</th>
+														<th style="white-space:nowrap">游戏输赢</th>
+														<!-- <th style="white-space:nowrap">游戏输赢（按结算时间统计）</th> -->
+														
+														<th style="white-space:nowrap">今日库存</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td> -->
+														
+														<!--end_no_export-->
+														<td style="text-align: center; white-space:nowrap">
+															<!--日期型-->
+														${((_data.date)?string('MM-dd'))!''}
+														</td>
+														<td style="text-align: center;">
+														<input class="tze" type="hidden" value="${(_data.bettingmoney)!0}">
+															<a style="text-decoration:underline;"     href="${ctx}/betreportform/list?k=9&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<font style="color: blue;">
+															${((_data.bettingmoney))!0}
+															</font>
+															</a>
+														</td>
+														
+														<td style="text-align: center;">
+															<input class="yjstze" type="hidden" value="${(_data.bettingtimebettingmoney)!0}">
+															<a style="text-decoration:underline;"     href="${ctx}/betreportform/winorfaillist?k=3&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (_data.bettingtimebettingmoney??)>	
+															<#if _data.bettingtimebettingmoney &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingmoney))!0}
+															</font>
+															</#if>
+															<#if _data.bettingtimebettingmoney &lt; 0 >
+															<font style="color: red;">
+															${(((_data.bettingtimebettingmoney)))!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color: blue;">
+															${((_data.bettingtimebettingmoney))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="untreated" type="hidden" value="${(_data.untreatedbettingmoney)!0}">
+															<#if (_data.untreatedbettingmoney??)>															
+																<a style="text-decoration:underline;"     href="${ctx}/betreportform/winorfaillist?k=2&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">												
+															
+															<#if _data.untreatedbettingmoney &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.untreatedbettingmoney))!0}
+															</font>
+															</#if>
+															<#if _data.untreatedbettingmoney &lt; 0 >
+															<font style="color: red;">
+															${((_data.untreatedbettingmoney))!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color: blue;">
+															${((_data.untreatedbettingmoney))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="pc" type="hidden" value="${(_data.bettingtimebettingscore)!0}">
+															<#if (_data.bettingtimebettingscore??)>	
+															<#if _data.bettingtimebettingscore &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingscore))!0}
+															</font>
+															</#if>
+															<#if _data.bettingtimebettingscore &lt; 0 >
+															<font style="color: red;">
+															${(((_data.bettingtimebettingscore)))!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color: blue;">
+															${((_data.bettingtimebettingscore))!0}
+															</font>
+															</#if>
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="bettingtimeyxsy" type="hidden" value="${(_data.bettingtimebettingwin)!0}">
+															<#if (_data.bettingtimebettingwin??)>	
+															<#if _data.bettingtimebettingwin &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingwin))!0}
+															</font>
+															</#if>
+															<#if _data.bettingtimebettingwin &lt; 0 >
+															<font style="color: red;">
+															${(((_data.bettingtimebettingwin)))!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color: blue;">
+															${((_data.bettingtimebettingwin))!0}
+															</font>
+															</#if>
+														</td>
+														
+													<!-- 	
+														<td style="text-align: center;">
+														<input class="yxsy" type="hidden" value="${(_data.winorloss)!0}">
+															
+																<a style="text-decoration:underline;"     href="${ctx}/betreportform/list?k=26&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">												
+															
+															
+															<#if _data.winorloss &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.winorloss))!0}
+															</font>
+															</#if>
+															<#if _data.winorloss &lt; 0 >
+															<font style="color: red;">
+															${((_data.winorloss))!0}
+															</font>
+															</#if>
+															</a>
+														</td> -->
+														
+														
+														
+														<td style="text-align: center;">
+															<#if (_data.id=2147483647)>
+																<a style="text-decoration:underline;"     href="${ctx}/betmember/list">
+															<#else>
+																<a style="text-decoration:underline;"     href="${ctx}/betreportform/list?k=10&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">															
+															</#if>
+															<#if _data.score &gt;= 0 >
+															<font style="color: blue;">
+															${(((_data.score)))!0}
+															</font>
+															</#if>
+															<#if _data.score &lt; 0 >
+															<font style="color: red;">
+															${(((_data.score)))!0}
+															</font>
+															</#if>
+															</a>
+													</tr>
+												</#list>
+												<tr style="text-align: center;background-color: #eafcff;">
+												<td>小计</td>
+												<td><a id="tze" ></a></td>
+												<td><a id="yjstze"></a></td>
+												<td><a id="untreated" ></a></td>
+												<td><a id="pc"></a></td>
+												<td><a id="bettingtimeyxsy"></a></td>
+												<!-- <td><a id="yxsy" ></a></td> -->
+												
+												<td></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+<script>
+
+
+
+$("#lastmonth").click(function(){
+	var nowdays = new Date();
+    var year = nowdays.getFullYear();
+    var month = nowdays.getMonth();
+    if(month==0) {
+        month=12;
+        year=year-1;
+    }
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var firstDay = year + "-" + month + "-" + "01";//上个月的第一天
+    var myDate = new Date(year, month, 0);
+    var lastDay = year + "-" + month + "-" + myDate.getDate();//上个月的最后一天
+	$("#starttime").val(firstDay);
+	$("#endtime").val(lastDay);
+	window.location.href="${ctx}/betreportform/winorfaillist?k=1&starttime="+firstDay+"&endtime="+lastDay;
+});
+    
+
+function clearpageindex(){
+	$("#pageIndex").val(1);
+}
+
+function Request(name){
+   new RegExp("(^|&)"+name+"=([^&]*)").exec(window.location.search.substr(1));
+   return RegExp.$2
+}
+
+
+
+
+
+var untreated = 0;
+$(".untreated").each(function(){
+	untreated+=parseFloat($(this).val());
+});
+$("#untreated").text(Math.floor(untreated*100)/100);
+if(untreated>=0){
+	$("#untreated").css("color","blue");
+}
+if(untreated<0){
+	$("#untreated").css("color","red");
+}
+
+
+var yxsy = 0;
+$(".yxsy").each(function(){
+	yxsy+=parseFloat($(this).val());
+});
+$("#yxsy").text(Math.floor(yxsy*100)/100);
+if(yxsy>=0){
+	$("#yxsy").css("color","blue");
+}
+if(yxsy<0){
+	$("#yxsy").css("color","red");
+}
+
+var tze = 0;
+$(".tze").each(function(){
+	tze+=parseFloat($(this).val());
+});
+$("#tze").text(Math.floor(tze*100)/100);
+if(tze>=0){
+	$("#tze").css("color","blue");
+}
+if(tze<0){
+	$("#tze").css("color","red");
+}
+
+var yjstze = 0;
+$(".yjstze").each(function(){
+	yjstze+=parseFloat($(this).val());
+});
+$("#yjstze").text(Math.floor(yjstze*100)/100);
+if(yjstze>=0){
+	$("#yjstze").css("color","blue");
+}
+if(yjstze<0){
+	$("#yjstze").css("color","red");
+}
+
+var pc = 0;
+$(".pc").each(function(){
+	pc+=parseFloat($(this).val());
+});
+$("#pc").text(Math.floor(pc*100)/100);
+if(pc>=0){
+	$("#pc").css("color","blue");
+}
+if(pc<0){
+	$("#pc").css("color","red");
+}
+
+
+var bettingtimeyxsy = 0;
+$(".bettingtimeyxsy").each(function(){
+	bettingtimeyxsy+=parseFloat($(this).val());
+});
+$("#bettingtimeyxsy").text(Math.floor(bettingtimeyxsy*100)/100);
+if(bettingtimeyxsy>=0){
+	$("#bettingtimeyxsy").css("color","blue");
+}
+if(bettingtimeyxsy<0){
+	$("#bettingtimeyxsy").css("color","red");
+}
+
+</script>
+</html>
+

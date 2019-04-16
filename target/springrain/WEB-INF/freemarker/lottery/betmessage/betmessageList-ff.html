@@ -1,0 +1,145 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmessage/delete");
+	}
+	function dels(_id){
+		springrain.mydeletemore(_id,"${ctx}/betmessage/delete/more");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betmessage/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmessage/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		                <@shiro.hasPermission name="/betmessage/delete" >
+		               		 <button type="button" onclick="dels('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">站内消息列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <th style="text-align:center">操作</th>
+												  <!--first_end_no_export-->
+														<th id="sender" >发送者</th>
+														<th id="receiver" >接收者</th>
+														<th id="title" >标题</th>
+														<th id="context" >内容</th>
+														<th id="th_time" >发送时间</th>
+														<th id="state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<td style="text-align:center">
+								                            <@shiro.hasPermission name="/betmessage/delete" >
+								                            	<a style="margin:2px 0" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betmessage/look" >
+								                            	<a style="margin:2px 0" href="#" data-action="${ctx}/betmessage/look?id=${_data.id}" class="layui-btn layui-btn-normal layui-btn-mini">查看</a>
+								                            </@shiro.hasPermission>
+														</td>
+														<!--end_no_export-->
+														<td >
+															${(_data.sender)!''}
+														</td>
+														<td >
+															<#if _data.receiver='all'>
+															所有用户
+															<#elseif _data.receiver='vip'>
+															VIP用户
+															<#else>
+															${(_data.receiver)!''}
+															</#if>
+														</td>
+														<td >
+															${(_data.title)!''}
+														</td>
+														<td >
+															${(_data.context)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<#if _data.state==0>
+															未查看
+															<#elseif _data.state==1>
+															已查看
+															<#elseif _data.state==2>
+															默认
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

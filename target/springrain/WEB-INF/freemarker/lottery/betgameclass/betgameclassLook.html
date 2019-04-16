@@ -1,0 +1,263 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>游戏管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加游戏</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betgameclass/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">游戏中文名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.gcname)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">游戏英文名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.gename)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">简称*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.gsname)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">排序状态*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.grank)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">状态*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.glock)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">性质分类*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.pt)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">号码数量*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.nlen)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">最小号码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.nmin)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">最大号码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.nmax)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">游戏规则*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.gamerules)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">股份类型*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.gstockid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注子菜单*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.submenu)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	
+																	
+																	
+																	
+																	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开始时*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.msh)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开始分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.msm)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开始秒*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mss)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">结束时*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.meh)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">结束分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mem)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">结束秒*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mes)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">每期时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mstep)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">每天期数*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mnums)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开奖/秒*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mopen)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">截止/秒*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mstop)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">首期编码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.msnum)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">首期时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mstime)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">网址*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.msurl)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注上限*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingceiling)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注下限*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettinglimit)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">退佣*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ty)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">状态*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.state)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">本期开奖*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.currenttickets)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

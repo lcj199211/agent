@@ -1,0 +1,227 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>代理管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加代理</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betagent/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">代理商id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.agentid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">代理账号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.account)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">昵称*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.nickname)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">登录密码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.password)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">银行密码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bankpassword)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">联系电话*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.mobile)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">qq*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.qq)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">微信Id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.weixin)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">是否有效(0否,1是)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.active)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">金币*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.score)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">转账金额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.transferaccountsscore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">退佣*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ty)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!-- <div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">授信*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sx)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div> -->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">下属*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.subordinate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">登录*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.login)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">充值返利*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.rechargerebate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">输赢返利*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.winorlossrebate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注流水返利*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingrebate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">公司吃成*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.companyproportion)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">注册时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.registrationtime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">父级id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.parentid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">代理商id 逗号隔开从根节点开始*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.parentids)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">是否允许下级代理(0:不允许1:允许)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allowagent)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">是否允许转账(0:不允许1:允许)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.transferaccount)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">是否允许充值(0:不允许1:允许)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.recharge)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">是否允许兑换(0:不允许1:允许)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.exchange)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

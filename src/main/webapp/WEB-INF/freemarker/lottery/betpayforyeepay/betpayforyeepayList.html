@@ -1,0 +1,236 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+
+<script>
+
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betpayforanother/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+	
+	/* var czqf = 0.;
+	$(".czqf").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		czqf+= a*1;
+	}); */
+	
+	$("#czqf").text(123);
+	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<!-- <@shiro.hasPermission name="/betpayforyeepay/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission> -->
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betpayforyeepay/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									 
+									 
+									  <div class="search-wrap">
+										  	
+										  		<div class="xiao-cell xiao-pull-left xiao-record" >
+													昨日代付总金额：<span class="xiao-color-e00 font-weight font-s20">${(yesterdayRecharge)!0}</span>&nbsp;&nbsp;&nbsp;今日代付金额：<span class="xiao-color-e00 font-weight font-s20">${(todayRecharge)!0}</span>
+												</div>
+												
+								          		<div class="layui-inline xiao-pull-left ">
+										            <div class="layui-input-inline xiao-input-wrap pull-left">
+																&nbsp;&nbsp;&nbsp;	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+												        </div>
+												      &nbsp;&nbsp;&nbsp;  会员ld：
+												      <div class="layui-input-inline">
+													       <input  id="userId" name="userId" type="text" value="${(userId)!''}">
+												      </div>
+												      &nbsp;&nbsp;&nbsp;  状态：
+									                    <div class="layui-input-inline">
+									                        <select name="state" id="state" >
+									                        	<option value="">请选择</option>
+								                        		<option value="" <#if returnDatas.queryBean.state??></#if> >所有</option>
+								                        		<option value="0" <#if (returnDatas.queryBean.state)??><#if (returnDatas.queryBean.state==0)>selected="selected"</#if></#if> >处理中</option>
+															    <option value="1" <#if (returnDatas.queryBean.state)??><#if (returnDatas.queryBean.state==1)>selected="selected"</#if></#if> >取消</option>
+																<option value="2" <#if (returnDatas.queryBean.state)??><#if (returnDatas.queryBean.state=2)>selected="selected"</#if></#if> >成功</option>
+																	
+															</select>   
+									                    </div>
+										            </div>
+										            
+									          		<div class="layui-inline">
+											            <button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											        </div>
+											        <div class="layui-inline xiao-pull-right">
+												        <span id="hints" >60秒</span><button id="reflesh" class="xiao-btn xiao-btn-success mb0">刷新</button>
+											        </div>
+								                </div>
+								          </div>
+									 
+									 
+									 <!--  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">卡号</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="accountNo" value="${(returnDatas.queryBean.accountNo)!''}" placeholder="请输入卡号 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">订单号</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="orderId" value="${(returnDatas.queryBean.orderId)!''}" placeholder="请输入订单号 " class="layui-input">
+									                    </div>
+							                		</div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table> -->
+							          
+							          
+							          
+							          
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+														<th id="th_txnAmt" >商户订单金额</th>
+														<th id="th_accountNo" >卡号</th>
+														<th id="th_orderId" >订单号</th>
+														<th id="th_tranId" >交易流水号</th>
+														<th id="th_state" >状态</th>
+														<th id="th_createtime" >创建时间</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															<input class="txnAmt" type="hidden" value="${(_data.txnAmt)!0}">
+														${(_data.txnAmt)!''}
+														</td>
+														<td >
+															${(_data.accountNo)!''}
+														</td>
+														<td >
+															${(_data.orderId)!''}
+														</td>
+														<td >
+															${(_data.tranId)!''}
+														</td>
+														<td >
+															 <#if _data.state==0> 处理中</#if>
+															 <#if _data.state==1> 取消</#if>
+															 <#if _data.state==2> 成功</#if>
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.createtime)?string('yyyy-MM-dd'))!''}
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color:#eafcff;">
+														<td style="text-align: left;"><a id="txnAmt"></a></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+													</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+
+	
+	var txnAmt = 0.;
+	$(".txnAmt").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		txnAmt+= a*1;
+	});
+	
+	$("#txnAmt").text("合计："+Math.round(txnAmt*100)/100);
+	
+</script>
+
+
+</html>
+

@@ -1,0 +1,222 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/ZeroClipboard.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betrechargecard/delete");
+	}
+</script>
+</head>
+<body onLoad="init()">
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             		<!-- <i class="layui-icon">&#xe630;</i> -->
+							<!--网站地图导航-->
+		             		<!-- <span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>充值卡管理</cite></a>
+							</span> -->
+		             </li>
+					<!--  <li style="float:right;">
+		             	<@shiro.hasPermission name="/betrechargecard/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betrechargecard/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/betrechargecard/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/betrechargecard/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li> -->
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betrechargecard/list?z=1&k=${k!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          
+									<!--   <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">充值卡搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table> -->
+									  <!-- 查询  结束 -->
+									</form>
+									<a href="${ctx}/betrechargecard/list?z=2">生成点卡</a>&nbsp;&nbsp;&nbsp; <a href="${ctx}/betrechargecard/list?z=1">点卡列表</a> 
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">充值卡列表:&nbsp;&nbsp;&nbsp;<a href="${ctx}/betrechargecard/list?k=1&z=1">作废</a></a>&nbsp;&nbsp;&nbsp;
+
+
+  <button id="ff-botton" style="width:128px;height:32px;line-height:26px;font:16px arial;">复制</button>
+  </span>
+
+
+
+
+  &nbsp;&nbsp;&nbsp;<a href="${ctx}/betrechargecard/list?k=3&z=1">已使用</a>&nbsp;&nbsp;&nbsp;<a href="${ctx}/betrechargecard/list?k=2&z=1">未使用</a><font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												 
+												  <!--first_end_no_export-->
+												  		<th>充值卡号</th>
+														<th id="th_password" >充值密码</th>
+														<th id="th_money" >面值/元</th>
+														<th id="th_state" >状态</th>
+														<th id="th_ip" >充值地址IP</th>
+														<th id="th_time" >充值时间</th>
+														<th id="th_memberid2" >充值ID</th>
+														<th id="th_operator" >操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input  name="ff-checked" value="${_data.id}"  type="checkbox">
+														</td>
+														<!--end_no_export-->
+														<td>${(_data.id)!''}</td>
+														<td >
+															${(_data.password)!''}
+														</td>
+														<td >
+															${(_data.money)!0}
+														</td>
+														<td >
+														<#if _data.state??>
+															<#if _data.state=1>
+																已充
+																<#elseif _data.state=0>
+																<font style="color:blue;">未充</font>
+																<#elseif _data.state=2>
+																<font style="color:grey;">作废</font>
+															</#if>
+														</#if>
+														</td>
+														<td >
+															${(_data.ip)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.memberid2)!0}
+														</td>
+														<td >
+															${(_data.operator)!''}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	function init() { 
+	var clip = new ZeroClipboard.Client(); // 新建一个对象 
+	clip.setHandCursor( true ); // 设置鼠标为手型 
+	clip.setText($("input:checkbox[name=ff-checked]:checked").parent().next().text()); // 设置要复制的文本。
+	clip.addEventListener( "mouseUp", function(client) {
+        alert("复制卡号成功！");
+    });
+	// 注册一个 button，参数为 id。点击这个 button 就会复制。 
+	//这个 button 不一定要求是一个 input 按钮，也可以是其他 DOM 元素。 
+	clip.glue("ff-botton"); // 和上一句位置不可调换
+	
+	}
+	
+	
+	
+	
+	
+</script>
+	
+</body>
+</html>
+

@@ -1,0 +1,217 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+	});
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>总福利</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>周输赢返利</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/list?k=24&date=${time}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="13">周输赢返利列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+														<th>用户ID</th>
+														<th>昵称</th>
+														<th id="th_weekscore" >输赢</th>
+														<th id="th_weekbetting" >流水</th>
+														<th id="th_rebate" >返利</th>
+														<th id="th_receivetime" >领取时间</th>
+														<th>领取IP</th>
+														<th id="th_gamescore" >游戏积分</th>
+														<th id="th_bankscore" >银行积分</th>
+														<th id="th_date" >日期</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td style="text-align: center;">
+															<a href="${ctx}/betmember/look?id2=${(_data.memberid2)!''}" style="color: blue"><u>${(_data.memberid2)!''}</u></a>
+														</td>
+														<td style="text-align: center;">
+															${(_data.nickname)!''}
+														</td>
+														<td style="text-align: center;">
+															${((_data.weekscore)?string(',###'))!0}
+														</td>
+														<td style="text-align: center;">
+															${((_data.weekbetting)?string(',###'))!0}
+														</td>
+														<td style="text-align: center;">
+															${((_data.rebate)?string(',###.##'))!0}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.receivetime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.receiveip)!''}
+														</td>
+														<td style="text-align: center;">
+															${((_data.gamescore?floor)?string(',###'))!0}
+														</td>
+														<td style="text-align: center;">
+															${((_data.bankscore?floor)?string(',###'))!0}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.date)?string('yyyy-MM-dd'))!''}
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color: #eafcff">
+												<td style="text-align: center;">小计</td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"><a id="sy"></a></td>
+												<td style="text-align: center;"><a id="ls"></a></td>
+												<td style="text-align: center;"><a id="fl"></a></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"><a id="yxf"></a></td>
+												<td style="text-align: center;"><a id="yhf"></a></td>
+												<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script>
+var sy = 0;
+$(".sy").each(function(){
+	sy+=parseFloat($(this).val());
+});
+sy=parseInt(sy);
+$("#sy").val(outputmoney(sy));
+if(sy>=0){
+	$("#sy").css("color","blue");
+}
+if(sy<0){
+	$("#sy").css("color","red");
+}
+
+var ls = 0;
+$(".ls").each(function(){
+	ls+=parseFloat($(this).val());
+});
+ls=parseInt(ls);
+$("#ls").val(outputmoney(ls));
+if(ls>=0){
+	$("#ls").css("color","blue");
+}
+if(ls<0){
+	$("#ls").css("color","red");
+}
+
+var fl = 0;
+$(".fl").each(function(){
+	fl+=parseFloat($(this).val());
+});
+fl=parseInt(fl);
+$("#fl").val(outputmoney(fl));
+if(fl>=0){
+	$("#fl").css("color","blue");
+}
+if(fl<0){
+	$("#fl").css("color","red");
+}
+
+var yxf = 0;
+$(".yxf").each(function(){
+	yxf+=parseFloat($(this).val());
+});
+yxf=parseInt(yxf);
+$("#yxf").val(outputmoney(yxf));
+if(yxf>=0){
+	$("#yxf").css("color","blue");
+}
+if(yxf<0){
+	$("#yxf").css("color","red");
+}
+
+var yhf = 0;
+$(".yhf").each(function(){
+	yhf+=parseFloat($(this).val());
+});
+yhf=parseInt(yhf);
+$("#yhf").val(outputmoney(yhf));
+if(yhf>=0){
+	$("#yhf").css("color","blue");
+}
+if(yhf<0){
+	$("#yhf").css("color","red");
+}
+</script>
+</html>
+

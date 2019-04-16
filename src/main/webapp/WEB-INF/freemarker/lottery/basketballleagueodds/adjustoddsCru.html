@@ -1,0 +1,160 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/basketballadjustodds/list?springraintoken="+springraintoken});
+	 });
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+				
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">篮球<span class="layui-box">&gt;</span></a>
+							   <a><cite>篮球联赛场次管理</cite><span class="layui-box">&gt;</span></a>
+							   <a><cite> 调整篮球赔率</cite><span class="layui-box">&gt;</span></a>
+							</span>
+		            </li>
+		           
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          <!--  
+						          				<header class="larry-personal-tit">
+													<span>添加BasketballAdjustodds</span>
+												</header>
+												-->
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/basketballadjustodds/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+																	<!--  
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">mid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="mid" id="mid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.mid)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">zid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" readonly="readonly" name="zid" id="zid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zid)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">序号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" readonly="readonly" name="num" id="num" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.num)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">赛事名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" readonly="readonly"  name="matchname"  id="matchname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.matchname)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开赛时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="datetime" readonly="readonly" name="starttime" id="starttime" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.starttime)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主队名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" readonly="readonly"  name="leftteamname" id="leftteamname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.hometeam)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客队名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" readonly="readonly"  name="rightteamname" id="rightteamname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.awayteam)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-10">
+																		<label class="layui-form-label">胜负*</label>
+																		<div class="layui-inline col-lg-9">  
+																			主胜(${(basketballLeagueOdds.sfzs)!''})：<input <#if (!(basketballLeagueOdds.sfzs??))||(basketballLeagueOdds.sfzs=0)>disabled="disabled"</#if> style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.sfzs??))||(basketballLeagueOdds.sfzs=0)>border:0;</#if>" type="text" name="sfzs" id="sfzs" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.sfzs)!''}">
+																			主负(${(basketballLeagueOdds.sfzf)!''})：<input <#if (!(basketballLeagueOdds.sfzf??))||(basketballLeagueOdds.sfzf=0)>disabled="disabled"</#if> style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.sfzf??))||(basketballLeagueOdds.sfzf=0)>border:0;</#if>" type="text" name="sfzf" id="sfzf" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.sfzf)!''}">
+																		</div>
+																	</div>	
+																	<div class="layui-form-item col-lg-10">
+																		<label class="layui-form-label">让分胜负(${(basketballLeagueOdds.letpoints)!''})*</label>
+																		<div class="layui-inline col-lg-9">  
+																			让分主胜(${(basketballLeagueOdds.rfzs)!''})：<input <#if (!(basketballLeagueOdds.rfzs??))||(basketballLeagueOdds.rfzs=0)>disabled="disabled"</#if> style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.rfzs??))||(basketballLeagueOdds.rfzs=0)>border:0;</#if>" type="text" name="rfzs" id="rfzs" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.rfzs)!''}">
+																			让分主负(${(basketballLeagueOdds.rfzf)!''})：<input <#if (!(basketballLeagueOdds.rfzf??))||(basketballLeagueOdds.rfzf=0)>disabled="disabled"</#if> style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.rfzf??))||(basketballLeagueOdds.rfzf=0)>border:0;</#if>" type="text" name="rfzf" id="rfzf" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.rfzf)!''}">
+																		</div>
+																	</div>		
+																	<div class="layui-form-item col-lg-10">
+																		<label class="layui-form-label">大小分(${(basketballLeagueOdds.dxf)!''})*</label>
+																		<div class="layui-inline col-lg-9">  
+																			大(${(basketballLeagueOdds.big)!''})：<input <#if (!(basketballLeagueOdds.big??))||(basketballLeagueOdds.big=0)>disabled="disabled"</#if> style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.big??))||(basketballLeagueOdds.big=0)>border:0;</#if>" type="text" name="big" id="big" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.big)!''}">
+																			小(${(basketballLeagueOdds.small)!''})：<input <#if (!(basketballLeagueOdds.small??))||(basketballLeagueOdds.small=0)>disabled="disabled"</#if> style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.small??))||(basketballLeagueOdds.small=0)>border:0;</#if>" type="text" name="small" id="small" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.small)!''}">
+																		</div>
+																	</div>	
+																	<!-- 待续  -->
+																	<div class="layui-form-item col-lg-10">
+																		<label class="layui-form-label">胜分差*</label>
+																		<div class="layui-inline col-lg-9">  
+																			主胜1-5(${(basketballLeagueOdds.zsfc1t5)!''})：<input <#if (!(basketballLeagueOdds.zsfc1t5??))||(basketballLeagueOdds.zsfc1t5=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.zsfc1t5??))||(basketballLeagueOdds.zsfc1t5=0)>border:0;</#if>" name="zsfc1t5" id="zsfc1t5" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc1t5)!''}">
+																			主胜6-10(${(basketballLeagueOdds.zsfc6t10)!''})：<input <#if (!(basketballLeagueOdds.zsfc6t10??))||(basketballLeagueOdds.zsfc6t10=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.zsfc6t10??))||(basketballLeagueOdds.zsfc6t10=0)>border:0;</#if>" name="zsfc6t10" id="zsfc6t10" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc6t10)!''}">
+																			主胜11-15(${(basketballLeagueOdds.zsfc11t15)!''})：<input <#if (!(basketballLeagueOdds.zsfc11t15??))||(basketballLeagueOdds.zsfc11t15=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.zsfc11t15??))||(basketballLeagueOdds.zsfc11t15=0)>border:0;</#if>" name="zsfc11t15" id="zsfc11t15" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc11t15)!''}">
+																			主胜16-20(${(basketballLeagueOdds.zsfc16t20)!''})：<input <#if (!(basketballLeagueOdds.zsfc16t20??))||(basketballLeagueOdds.zsfc16t20=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.zsfc16t20??))||(basketballLeagueOdds.zsfc16t20=0)>border:0;</#if>" name="zsfc16t20" id="zsfc16t20" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc16t20)!''}">
+																			主胜21-25(${(basketballLeagueOdds.zsfc21t25)!''})：<input <#if (!(basketballLeagueOdds.zsfc21t25??))||(basketballLeagueOdds.zsfc21t25=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.zsfc21t25??))||(basketballLeagueOdds.zsfc21t25=0)>border:0;</#if>" name="zsfc21t25" id="zsfc21t25" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc21t25)!''}">
+																			主胜26+(${(basketballLeagueOdds.zsfc26)!''})：<input <#if (!(basketballLeagueOdds.zsfc26??))||(basketballLeagueOdds.zsfc26=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.zsfc26??))||(basketballLeagueOdds.zsfc26=0)>border:0;</#if>" name="zsfc26" id="zsfc26" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc26)!''}">
+																			</br>
+																			客胜1-5(${(basketballLeagueOdds.ksfc1t5)!''})：<input <#if (!(basketballLeagueOdds.ksfc1t5??))||(basketballLeagueOdds.ksfc1t5=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.ksfc1t5??))||(basketballLeagueOdds.ksfc1t5=0)>border:0;</#if>" name="ksfc1t5" id="ksfc1t5" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc1t5)!''}">
+																			客胜6-10(${(basketballLeagueOdds.ksfc6t10)!''})：<input <#if (!(basketballLeagueOdds.ksfc6t10??))||(basketballLeagueOdds.ksfc6t10=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.ksfc6t10??))||(basketballLeagueOdds.ksfc6t10=0)>border:0;</#if>" name="ksfc6t10" id="ksfc6t10" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc6t10)!''}">
+																			客胜11-15(${(basketballLeagueOdds.ksfc11t15)!''})：<input <#if (!(basketballLeagueOdds.ksfc11t15??))||(basketballLeagueOdds.ksfc11t15=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.ksfc11t15??))||(basketballLeagueOdds.ksfc11t15=0)>border:0;</#if>" name="ksfc11t15" id="ksfc11t15" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc11t15)!''}">
+																			客胜16-20(${(basketballLeagueOdds.ksfc16t20)!''})：<input <#if (!(basketballLeagueOdds.ksfc16t20??))||(basketballLeagueOdds.ksfc16t20=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.ksfc16t20??))||(basketballLeagueOdds.ksfc16t20=0)>border:0;</#if>" name="ksfc16t20" id="ksfc16t20" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc16t20)!''}">
+																			客胜21-25(${(basketballLeagueOdds.ksfc21t25)!''})：<input <#if (!(basketballLeagueOdds.ksfc21t25??))||(basketballLeagueOdds.ksfc21t25=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.ksfc21t25??))||(basketballLeagueOdds.ksfc21t25=0)>border:0;</#if>" name="ksfc21t25" id="ksfc21t25" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc21t25)!''}">
+																			客胜26+(${(basketballLeagueOdds.ksfc26)!''})：<input <#if (!(basketballLeagueOdds.ksfc26??))||(basketballLeagueOdds.ksfc26=0)>disabled="disabled"</#if> type="text" style="width:80px;display:inline-block;<#if (!(basketballLeagueOdds.ksfc26??))||(basketballLeagueOdds.ksfc26=0)>border:0;</#if>" name="ksfc26" id="ksfc26" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc26)!''}">
+																		</div>
+																	</div>	
+																	
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

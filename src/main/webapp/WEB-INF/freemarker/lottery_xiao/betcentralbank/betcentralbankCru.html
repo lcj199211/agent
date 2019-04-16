@@ -1,0 +1,179 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betcentralbank/list?springraintoken="+springraintoken});
+	 });
+</script>
+<style>
+		.page-title .title_left {
+			margin-bottom: 10px;
+		}
+</style>
+</head>
+<body class="nav-md">
+    <div class="container body">
+      	<div class="main_container">
+		<@h.naviHeader /><@h.leftMenu />
+		<div class="right_col" role="main">	
+				<!-- 主体内容 -->
+          		<div class="">
+          			<!-- 页面引导地址 -->
+					<div class="page-title">
+			            <div class="title_left">
+			                <i class="fa fa-home"></i>系统管理 > 系统管理 > 添加中央银行
+			            </div>
+		            </div>	
+		            <!-- 引导end -->
+		            
+		            <div class="clearfix"></div>
+		            
+		            <!--  -->
+		            <div class="row">	
+		            	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="x_panel">
+			                  <div class="x_title">
+			                    <h2>添加中央银行</h2>
+			                    <ul class="nav navbar-right panel_toolbox">
+			                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+			                      </li>
+			                      <li class="dropdown">
+			                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+			                        <ul class="dropdown-menu" role="menu">
+			                          <li><a href="#">Settings 1</a>
+			                          </li>
+			                          <li><a href="#">Settings 2</a>
+			                          </li>
+			                        </ul>
+			                      </li>
+			                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+			                      </li>
+			                    </ul>
+			                    <div class="clearfix"></div>
+			                  </div>
+			                  <div class="x_content">
+			                    <br />
+			                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+			
+			                      <div class="form-group">
+			                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">系统 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="system" id="system" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.system)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">管理员转账 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="admintransfer" id="admintransfer" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.admintransfer)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">在线充值<span class="required">*</span></label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="onlinerecharge" id="onlinerecharge" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.onlinerecharge)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">点卡充值<span class="required">*</span></label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="cardrecharge" id="cardrecharge" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.cardrecharge)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">冻结分数<span class="required">*</span></label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="frozenscore" id="frozenscore" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.frozenscore)!''}" class="form-control col-md-7 col-xs-12" >
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">用户总分<span class="required">*</span></label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="memberscore" id="memberscore" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.memberscore)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">中央银行<span class="required">*</span></label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="centralbank" id="centralbank" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.centralbank)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">救济领取 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="reliefcollection" id="reliefcollection" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.reliefcollection)!''}" class="date-picker form-control col-md-7 col-xs-12" >
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">签到领取 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="signincollection" id="signincollection" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.signincollection)!''}" class="date-picker form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">下线奖励 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="subordinatereward" id="subordinatereward" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.subordinatereward)!''}" class="date-picker form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">周返利 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="text" name="weekrebate" id="weekrebate" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.weekrebate)!''}" class="date-picker form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">日输赢返利 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="daywinorlossrebate" id="daywinorlossrebate" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.daywinorlossrebate)!''}" class="date-picker form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">首冲返利 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="thefirstchargerebate" id="thefirstchargerebate" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.thefirstchargerebate)!''}" class="date-picker form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="form-group">
+			                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">红包奖励 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="redpacketbonus" id="redpacketbonus" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"  value="${(returnDatas.data.redpacketbonus)!''}" class="date-picker form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="ln_solid"></div>
+			                      <div class="form-group">
+			                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+			                          <button id="smtbtn" class="btn btn-primary" type="button">保存</button>
+									  <button id="rstbtn" class="btn btn-primary" type="reset">重置</button>
+			                          <button onclick="history.go(-1)" type="button" class="btn btn-success"> <i class="btn-fh fa fa-mail-reply"></i> 返回</button>
+			                        </div>
+			                      </div>
+			
+			                    </form>
+			                  </div>
+			                </div>
+			              </div>
+		           	</div>
+		        </div>
+		</div>        
+		<@h.footer />
+		</div>
+	</div>
+</body>
+</html>

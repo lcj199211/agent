@@ -1,0 +1,98 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          		<div class="xiao-form-control  xiao-input-wrap text-center col-lg-10">
+							          		<div class="xiao-btnlist xiap-pull-left">
+												<div class="xiao-btnlist-item">
+													<a href="${ctx}/betredenvelope/list">红包生成</a>
+												</div>
+												<div class="xiao-btnlist-item">
+													<a href="${ctx}/betredenvelope/list?k=1">红包列表</a>
+												</div>
+											</div>
+											<div class="col-lg-10">
+												<div class="xiao-hb col-lg-3">
+													<p class="xiao-hb-title">随机红包</p>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">红包数：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-redenvelopenum">
+													</div>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">总金额：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-totalscore">
+													</div>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">说明：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-illustrate"> 
+													</div>
+													<button id="ff-genredenvelope" class="xiao-btn xiao-btn-blue">生 成</button>
+												</div>
+												<div class="xiao-hb col-lg-3">
+													<p class="xiao-hb-title">固定红包</p>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">红包数：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-redenvelopenum2"> 
+													</div>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">金额：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-totalscore2">
+													</div>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">说明：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-illustrate2"> 
+													</div>
+													<button id="ff-genredenvelope2" class="xiao-btn xiao-btn-blue"> 生成</button>
+												</div>
+												<div  class="xiao-hb col-lg-3">
+													<p class="xiao-hb-title">制定红包</p>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">红包金额：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-totalscore3">
+													</div>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">说明 ：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-illustrate3">
+													</div>
+													<div class="mb10 clear">
+														<span class="xiao-hb-text col-lg-3">指定ID：</span>
+														<input class="xiao-input col-lg-5" type="text" name="ff-memberid2" placeholder="（用小写，隔开）">
+													</div>
+													<button id="ff-genredenvelope3" class="xiao-btn xiao-btn-blue"> 生成</button>
+												</div>
+											</div>
+							          	</div>
+						          
+						          
+						          
+						          
+						          
+						          
+						          
+						          
+						          
+									<!--start_export-->
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,261 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 //springrain.initValid(null,function(){window.location.href="${ctx}/basketballleagueodds/list?springraintoken="+springraintoken});
+		 springrain.initValid(null,function(){window.location.reload()});
+	 });
+</script>
+<style>
+.layui-form-label {
+    
+    width: 200px;
+    
+}
+</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            <!-- 
+		            		<i class="layui-icon">&#xe630;</i>
+		            		 
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>篮球联赛赔率管理</cite></a>
+							</span>
+							-->
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/basketballleagueodds/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+																	<!--  
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">场次id(来自500)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="mid" id="mid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.mid)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">场次id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" readonly="readonly" name="zid" id="zid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zid)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--  
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">赛事id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="arrangeid" id="arrangeid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.arrangeid)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">赛事id2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="arrangeid2" id="arrangeid2" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.arrangeid2)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">胜负主胜*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="sfzs" id="sfzs" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.sfzs)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">胜负主负*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="sfzf" id="sfzf" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.sfzf)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主队让分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="letpoints" id="letpoints" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.letpoints)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">让分主胜*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="rfzs" id="rfzs" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.rfzs)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">让分主负*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="rfzf" id="rfzf" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.rfzf)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">大小分预设*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="dxf" id="dxf" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.dxf)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">大*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="big" id="big" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.big)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">小*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="small" id="small" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.small)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主胜(1-5)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="zsfc1t5" id="zsfc1t5" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc1t5)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主胜(6-10)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="zsfc6t10" id="zsfc6t10" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc6t10)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主胜(11-15)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="zsfc11t15" id="zsfc11t15" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc11t15)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主胜(16-20)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="zsfc16t20" id="zsfc16t20" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc16t20)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主胜(21-25)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="zsfc21t25" id="zsfc21t25" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc21t25)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主胜(26+)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="zsfc26" id="zsfc26" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.zsfc26)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客胜(1-5)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ksfc1t5" id="ksfc1t5" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc1t5)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客胜(6-10)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ksfc6t10" id="ksfc6t10" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc6t10)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客胜(11-15)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ksfc11t15" id="ksfc11t15" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc11t15)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客胜(16-20)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ksfc16t20" id="ksfc16t20" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc16t20)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客胜(21-25)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ksfc21t25" id="ksfc21t25" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc21t25)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客胜(26+)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ksfc26" id="ksfc26" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ksfc26)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">时间(最新时间)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="datetime" name="date" id="date" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.date)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1正常,3删除*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="state" id="state" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.state)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	-->
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

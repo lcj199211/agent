@@ -1,0 +1,97 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betrankconf/list?springraintoken="+springraintoken});
+	 });
+</script>
+</head>
+<style>
+		.page-title .title_left {
+			margin-bottom: 10px;
+		}
+</style>
+<body class="nav-md">
+    <div class="container body">
+      	<div class="main_container">
+		<@h.naviHeader /><@h.leftMenu />
+		<div class="right_col" role="main">	
+				<!-- 主体内容 -->
+          		<div class="">
+          			<!-- 页面引导地址 -->
+					<div class="page-title">
+			            <div class="title_left">
+			                <i class="fa fa-home"></i>系统管理 > 系统管理 > 排行榜设置
+			            </div>
+		            </div>	
+		            <!-- 引导end -->
+		            
+		            <div class="clearfix"></div>
+		            
+		            <!--  -->
+		            <div class="row">	
+		            	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="x_panel">
+			                  <div class="x_title">
+			                    <h2>编辑排行榜设置</h2>
+			                    <ul class="nav navbar-right panel_toolbox">
+			                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+			                      </li>
+			                      <li class="dropdown">
+			                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+			                        <ul class="dropdown-menu" role="menu">
+			                          <li><a href="#">Settings 1</a>
+			                          </li>
+			                          <li><a href="#">Settings 2</a>
+			                          </li>
+			                        </ul>
+			                      </li>
+			                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+			                      </li>
+			                    </ul>
+			                    <div class="clearfix"></div>
+			                  </div>
+			                  <div class="x_content">
+			
+			                    <form id="validForm"  method="post" action="${ctx}/betrankconf/update" class="form-horizontal form-label-left" novalidate>
+			                      <div class="item form-group">
+			                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">排名 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input type="text" name="orderno" id="orderno" datatype="*" nullmsg="不能为空" errormsg="不能为空！" readonly="readonly" autocomplete="off" = value="${(returnDatas.data.orderno)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="item form-group">
+			                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">奖励 <span class="required">*</span>
+			                        </label>
+			                        <div class="col-md-6 col-sm-6 col-xs-12">
+			                          <input <input type="number" name="award" id="award" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" = value="${(returnDatas.data.award)!''}" class="form-control col-md-7 col-xs-12">
+			                        </div>
+			                      </div>
+			                      <div class="ln_solid"></div>
+			                      <div class="form-group">
+			                        <div class="col-md-6 col-md-offset-3">
+			                          <button type="button"  id="smtbtn" class="btn btn-primary">保存</button>
+			                          <button type="button"  id="rstbtn" class="btn btn-primary">重置</button>
+			                          <button type="button" onclick="history.go(-1)" class="btn btn-success"><i class="btn-fh fa fa-mail-reply"></i>返回</button>
+			                        </div>
+			                      </div>
+			                    </form>
+			                  </div>
+			                </div>
+			              </div>
+		            </div>
+		        </div>
+		</div>        
+		<@h.footer />
+	</div>
+</body>
+</html>

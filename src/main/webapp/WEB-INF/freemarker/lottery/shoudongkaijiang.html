@@ -1,0 +1,119 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+		<script src="${ctx}/js/jquery/jquery.min.js" type="text/javascript">
+			
+		</script>
+		<style type="text/css">
+			i{font-style: normal;}
+			b{font-weight: normal;}
+			.tk{
+				width: 100%;
+				height: 250px; 
+				font-size: 15px;
+				
+			}
+			.tk_context{
+				width: 360px;
+				min-height: 160px;
+				margin: 25px auto;
+			}
+			.tk_context ul{
+				overflow: hidden;
+				padding: 0;
+			}
+			.tk_context ul li{
+				float: left;
+				list-style: none;
+				margin: 2px 3px;
+			}
+			.tk_context ul li input{
+				width: 25px;
+			}
+			.tk_button{
+				width: 360px;
+				height: 50px;
+				margin-left: 200px;
+			}
+			.tk_button button{
+				padding: 5px 18px;
+				margin-left:15px;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+	
+			<div class="tk">
+				<div class="tk_context">
+					<input   type="hidden" id="value" type="text" value="${shoudongkaijiang.nlen}"/>
+					<input id="q" name="id" type="hidden"  type="text" value="${betPeriod1.id}"/>
+					期数：<span>${betPeriod1.qibie}</span><br>
+					<p></p>
+					开奖号码录用：
+					<ul id="ul"></ul>
+					注&nbsp;（开奖号码：最小值<b>${shoudongkaijiang.nmin}</b>，最大值<i>${shoudongkaijiang.nmax}</i>）
+				</div>
+				<div class="tk_button">
+					<button  id="btn_true">确定</button>
+				</div>
+			</div>
+	
+		<script>
+			$(document).ready(function(){
+				var num=$("#value").val();
+				num = parseInt(num);
+				for (var i=0;i<num;i++) {
+					var li=$("<li><input class='hs' name="+i+" type='text'></li>");
+					$("#ul").append(li);
+					var periods=$(".hs").val();
+				}
+				
+				$("#btn_true").click(function(){
+								
+				})
+			})
+			
+			
+			
+			$(document).ready(function(){
+		$("#btn_true").click(function(){
+			var id=$("#q").val();
+			var periods=$(".hs");
+			var a=new Array();
+			for (var i=0;i<periods.length;i++)
+            {    
+            	a.push(periods[i].value);
+            }
+            var p=a.join(",");
+           
+            
+            
+			$.ajax({
+			type:"post",
+			url:"${ctx}/betperiod/update?x=1",
+			
+			data:{id:id,hs:p},
+			success:function(data){
+				//if(data.code===1){
+					//alert('修改成功！')
+				//}
+						var dates=$(this).parent().siblings('.dates').text();
+						var periods=$(this).parent().next().text();
+							layer.open({
+								  type: 1,
+								  title:' ',
+								  shadeClose: true,
+								  closeBtn: 0,
+								    area: ['600px', '400px'], //宽高
+								  content:'<div class="tk1_context">期数：<span>${betPeriod1.qibie}</span><br><p></p>开奖时间：<i>${betPeriod1.time}</i><br><p></p>开奖号码录用：<b>'+p+'</b></div>'
+							});
+			},
+			error:function(result){
+				console.log(result)
+			}
+	})
+	})
+	})
+		</script>
+	</body>
+</html>

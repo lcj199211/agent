@@ -1,0 +1,368 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/soccerleagueodds/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+				<!--
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>SoccerLeagueOdds管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/soccerleagueodds/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/soccerleagueodds/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/soccerleagueodds/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/soccerleagueodds/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+		             -->
+		              <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!--  
+						          <div class="xiao-btnlist">
+						          			<div class="xiao-btnlist-item">
+												<a href="${ctx}/soccerleague/list">足球联赛</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a  href="${ctx}/soccerleaguearrange/list">足球场次</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a style="display: block; background-color: #009688;color: #fff;"  href="${ctx}/soccerleagueodds/list">足球赔率</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/soccerleagueplaymethod/list">足球玩法</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a  href="${ctx}/soccerleagueteam/list">足球球队</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a  href="${ctx}/soccerleaguescoreodds/list">足球比分赔率</a>
+											</div>
+									</div>
+									-->
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/soccerleagueodds/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">足球让球赔率搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          			<!-- 
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+							                		 -->
+							                		
+									                
+									                <div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+										             &nbsp;&nbsp;&nbsp;&nbsp;
+										            <div class="layui-inline">
+									                    <label class="layui-form-label">状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="state" id="state" class="layui-input">
+																	<option value="1" 
+																	<#if returnDatas.queryBean.state??>
+																		 <#if returnDatas.queryBean.state=1> selected
+																		 </#if> 
+																    </#if> >正常</option>
+																  	<option value="3" 
+																  	<#if returnDatas.queryBean.state??>
+																		 <#if returnDatas.queryBean.state=3> selected
+																		 </#if> 
+																    </#if> >已禁用</option>
+															</select>   
+									                    </div>
+									                </div>
+							                		<!--  
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+									                -->
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="12">足球让球赔率列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												 -->
+												  <!--first_end_no_export-->
+												  		<th id="th_date" >更新时间</th><!-- (最新时间) -->
+												 		<th  >赛事名</th>
+												 		<th  >主队名</th>
+												   		<th  >客队名</th>
+														<th  >玩法</th>
+														<!--  
+														<th id="th_arrangeid" >场次id</th>
+														<th id="th_arrangeid2" >场次id2</th>
+														-->
+														<!--<th id="th_type" >是否让球</th> 不让球0,让球1 -->
+														<th  >让球</th>
+														<th  >胜赔率</th>
+														<th  >平赔率</th>
+														<th  >输赔率</th>
+														
+														<th  >状态</th>
+														 <th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+													<!-- 
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														 -->
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+															${((_data.date)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.matchname)!''}
+														</td>
+														<td >
+															${(_data.leftteamname)!''}
+														</td>
+														<td >
+															${(_data.rightteamname)!''}
+														</td>
+														<td >
+															<!--  ${(_data.playmethodid)!0} -->
+															<#if _data.playmethodid==1>
+																<span  >单关让球胜平负</span>
+																<#else>
+																<span  >让球胜平负</span>
+															</#if>
+														</td>
+														<!--  
+														<td >
+															${(_data.arrangeid)!0}
+														</td>
+														<td >
+															${(_data.arrangeid2)!''}
+														</td>
+														-->
+														<!--
+														<td >
+															 ${(_data.type)!0} 不让球0,让球1 
+															<#if _data.type==1>
+																<span style="color:#288a53" >让球</span>
+																<#else>
+																<span style="color:red" >不让球</span>
+															</#if>
+														</td>
+														-->
+														<td >
+															${(_data.letpoints)!''}
+														</td>
+														<#if _data.win==0&&_data.flat==0&&_data.lose==0>
+																<td colspan="3">
+																	未开售
+																</td>
+														<#else>
+															<td >
+																${(_data.win)!0}
+															</td>
+															<td >
+																${(_data.flat)!0}
+															</td>
+															<td >
+																${(_data.lose)!0}
+															</td>
+														</#if>
+															
+														
+														<td ><!-- 1正常,3删除 -->
+															<#if _data.state==1>
+																<span style="color:#288a53" >正常</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="disable"><u>禁用</u></span>
+																<#else>
+																<span style="color:red" >已禁用</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="restore"><u>启用</u></span>
+															</#if>
+															
+														</td>
+														<td>
+															<@shiro.hasPermission name="/soccerleagueodds/update" >
+								                           		 <a href="#" data-action="${ctx}/soccerleagueodds/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/soccerleagueodds/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+//启用
+	$(".restore").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		layer.confirm('确认要启用？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+				//layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/soccerleagueodds/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("启用成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	
+	})
+//禁用
+	$(".disable").click(function(){
+		var s=3;
+		var i=$(this).prev().val();
+		layer.confirm('确认要禁用？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){ 
+				//layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/soccerleagueodds/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("禁用成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	
+	})
+
+</script>
+</html>
+

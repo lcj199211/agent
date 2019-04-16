@@ -1,0 +1,160 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betnotice/delete");
+	}
+	function dels(_id){
+		springrain.mydeletemore(_id,"${ctx}/betnotice/delete/more");
+	}
+</script>
+
+</head>
+<style>
+		.page-title .title_left {
+			margin-bottom: 10px;
+		}
+</style>
+<body class="nav-md">
+    <div class="container body">
+      	<div class="main_container">
+		<@h.naviHeader /><@h.leftMenu />
+			<div class="right_col" role="main">	
+				<!-- 主体内容 -->
+          		<div class="">
+          			<!-- 页面引导地址 -->
+					<div class="page-title">
+			            <div class="title_left">
+			                <i class="fa fa-home"></i>系统管理 > 内容管理 > 新闻
+			            </div>
+		            </div>	
+		            <!-- 引导end -->
+		            
+		            <div class="clearfix"></div>
+		            
+		            <!--  -->
+		            <div class="row">
+		            	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="x_panel">
+			                  <div class="x_title">
+			                    <h2>新闻</h2>
+			                    <ul class="nav navbar-right panel_toolbox">
+			                      <li><@shiro.hasPermission name="/betnotice/news/update" ><a href="${ctx}/betnotice/news/update/pre" class="zeng btn btn-success" ><i class="fa fa-plus"></i>增加</a></@shiro.hasPermission></li>	
+			                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+			                      </li>
+			                      <li class="dropdown">
+			                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+			                        <ul class="dropdown-menu" role="menu">
+			                          <li><a href="#">Settings 1</a>
+			                          </li>
+			                          <li><a href="#">Settings 2</a>
+			                          </li>
+			                        </ul>
+			                      </li>
+			                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+			                      </li>
+			                    </ul>
+			                    <div class="clearfix"></div>
+			                  </div>
+			                  <div class="x_content">
+			                    <table id="datatable" class="table table-striped table-bordered bulk_action">
+			                      <thead>
+			                        <tr>
+			                          	<th>
+										 	<th><input  id="checkAll"  type="checkbox" class="flat"></th>
+									  	</th>
+			                          	<th id="title" >标题</th>
+										<th id="content" >内容</th>
+										<th id="state" >状态</th>
+										<th id="th_time" >发布时间</th>
+										<th>操作</th>
+			                        </tr>
+			                      </thead>
+			
+			
+			                      <tbody>
+			                      	<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+			                        <tr>
+			                          <td>
+										 <th><input  name="check_li" value="${_data.id}"  type="checkbox"class="flat"></th>
+									  </td>
+			                          <td>${(_data.title)!''}</td>
+			                          <td>${(_data.content)!''}</td>
+			                          <td><#if _data.state??>
+											<#if _data.state==1>
+												发布中
+												<#elseif _data.state==0>
+													下架
+											</#if>
+											<#else>
+												${(_data.state)!0}
+										</#if>
+										</td>
+			                          <td>${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}</td>
+			                          <td>
+										<@shiro.hasPermission name="/betnotice/news/update">
+											<a href="#" data-action="${ctx}/betnotice/news/update/pre?id=${_data.id}&mark=news" class="btn btn-primary" >修改</a>
+										</@shiro.hasPermission>
+										<@shiro.hasPermission name="/betnotice/news/update">
+											<a href="#" data-action="${ctx}/betnotice/news/update?id=${_data.id}&state=1" class="btn btn-primary">上架</a>
+										</@shiro.hasPermission>
+										<@shiro.hasPermission name="/betnotice/news/update">
+											<a href="#" data-action="${ctx}/betnotice/news/update?id=${_data.id}&state=0" class="btn btn-primary">下架</a>
+										</@shiro.hasPermission>
+									</td>
+			                        </tr>
+			                        </#list>
+								</#if>
+			                       </tbody>
+			                     </table>
+			                   </div>
+			                </div>
+			              </div>    
+		            </div>
+		        </div>
+		    </div>
+		<@h.footer />
+		</div>
+	</div>
+	<script type="text/javascript">
+		//分野国际化配置
+		$('#datatable').DataTable({
+			"aLengthMenu" : [10,50,100,200],
+        	"oLanguage": {
+            		"sLengthMenu" : "显示 _MENU_ 条", 
+            		"sZeroRecords": "没有您要搜索的内容",
+            		"sInfo": "从 _START_ 到 _END_ 条记录 总记录数为 _TOTAL_ 条",
+            		"sInfoEmpty" : "记录数为0",
+            		"sInfoFiltered" : "(全部记录数 _MAX_ 条)",
+            		"sInfoPostFix" : "",
+            		"sSearch" : "搜索",
+            		"sUrl" : "",
+            		"oPaginate": {
+            			"sFirst": "第一页",
+            			"sPrevious": "上一页",
+            			"sNext": "下一页",
+            			"sLast" : "最后一页"
+            		}
+		    }
+		});
+	</script>
+</body>
+</html>
+

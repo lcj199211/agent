@@ -1,0 +1,93 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betrechargecard/list" method="post">
+							         <!--  <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" /> -->
+									</form>
+									<div class="xiao-form-control  xiao-input-wrap  col-lg-10">
+									<table>
+										<tbody>
+											<tr style="height:40px;">
+												<td>用户ID：</td>
+												<td><input id="ff-memberid2" type="text" > <button id="ff-test">检测</button> <span id="ff-testdetail"></span></td>
+											</tr>
+											<tr style="height:40px;">
+												<td>充值卡号：</td>
+												<td><input id="ff-kh" type="text"></td>
+											</tr>
+											<tr style="height:40px;">
+												<td>充值卡密码：</td>
+												<td><input id="ff-mm" type="text"></td>
+											</tr>
+											<tr>
+												<td>&nbsp;</td>
+												<td><button class="xiao-btn xiao-btn-success" id="ff-confirm">确认兑换</button></td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+<script>
+$("#ff-test").click(function(){
+	var a=$("#ff-memberid2").val();
+	$.ajax({
+		type:"post",
+		url:"${ctx}/betmember/look/json",
+		
+		data:{id2:a},
+		success:function(result){
+				if("error"==result.status){
+					$("#ff-testdetail").html("<font color='red'>无此用户</font>");
+					
+				}else if("success"==result.status){
+					$("#ff-testdetail").text("手机："+result.data.mobile+"，真实姓名："+result.data.realname+"，游戏分："+result.data.gamescore+"，银行分："+result.data.bankscore+"，输赢："+result.data.winorfail);
+				}
+			},
+	})
+})
+
+
+$("#ff-confirm").click(function(){
+var fn = arguments.callee,  
+		        self = this;  
+			    $(self).unbind('click', fn); 
+	var a=$("#ff-memberid2").val();
+	var b=$("#ff-kh").val();
+	var c=$("#ff-mm").val();
+	$.ajax({
+		type:"post",
+		url:"${ctx}/betrechargecard/update?k=3",
+		
+		data:{id2:a,kh:b,mm:c},
+		success:function(result){
+			if("error"==result.status){
+				layer.msg(result.message,{offset:['','']});
+				 $(self).click(fn); 
+			}else if("success"==result.status){
+				layer.msg(result.message,{offset:['','']});
+				setTimeout("location.reload(true);",2000);
+				
+			}
+		},
+	})
+})
+</script>
+</body>
+</html>
+

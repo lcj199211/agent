@@ -1,0 +1,209 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <!-- <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>BetAgentwithdraw管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betagentwithdraw/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betagentwithdraw/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li> 
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/seclist?k=31&date=${((date))!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="">
+										    <col width="">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="11"><font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+												  		<th id="th_id">订单编号</th>
+												  			<th>代理账号</th>
+												  		<th>代理昵称</th>
+														<th id="th_applicationtime" >提交时间</th>
+														<th id="th_audittime" >审核时间</th>
+														<th id="th_bwcs" >提现前分</th>
+														
+														<th id="th_money" >提现金额</th>
+														<th id="th_awcs" >提现后分</th>
+														<th id="th_realname" >真实姓名</th>
+														
+														<th id="th_remark" >备注</th>
+														<th id="th_state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														<!--end_no_export-->
+														<td >
+														${((_data.id))!''}
+														</td>
+														<td >
+														${((_data.agentaccount))!''}
+														</td>
+														<td >
+														${((_data.agentnickname))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.applicationtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.audittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.bwcs)!''}
+														</td>
+														<td style="color:blue;"><input class="money" type="hidden" value="${(_data.money)!0}">
+															${(_data.money)!''}
+														</td>
+														<td >
+															${(_data.awcs)!''}
+														</td>
+														<td >
+															${(_data.realname)!''}
+														</td>
+														
+														
+														<td >
+															${(_data.remark)!''}
+														</td>
+														<td >
+															<#if _data.state==0>
+																<font style="color:red;">未处理</font>
+																<#elseif _data.state==1>
+																未付款
+																<#elseif _data.state==2>
+																<p style="color:green">成功</p>
+																<#else> 
+															</#if>
+														</td>
+													</tr>
+												</#list>
+												<tr class="center" style="text-align: center;background-color: #eafcff;">
+														<!--end_no_export-->
+														<td>
+														小计
+														</td>
+														<td>
+														</td>
+														<td>
+														</td>
+														<td>
+														</td>
+														<td>
+														</td>
+														<td>
+														</td>
+														<td>
+															<a id="money" ></a>
+														</td>
+														<td>
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+													</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script>
+var money = 0;
+$(".money").each(function(){
+	money+=parseFloat($(this).val());
+});
+$("#money").text(Math.round(money* 100) / 100);
+if(money>=0){
+	$("#money").css("color","blue");
+}
+if(money<0){
+	$("#money").css("color","red");
+}
+</script>
+</html>
+

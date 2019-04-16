@@ -1,0 +1,280 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/renjiumatch/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <!--  <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>RenjiuMatch管理</cite></a>
+							</span>
+		             </li> -->
+					 <!-- <li style="float:right;">
+		             	<@shiro.hasPermission name="/renjiumatch/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/renjiumatch/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/renjiumatch/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/renjiumatch/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li> -->
+		             <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/renjiumatch/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">任九场次搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">赛事名</label>
+									                    <div class="layui-input-inline">
+									                            <input type="text" name="leaguename" value="${(returnDatas.queryBean.leaguename)!''}" placeholder="请输入赛事名 " class="layui-input"> 
+									                    </div>
+							                		</div>
+							                		 &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">期号</label>
+									                    <div class="layui-input-inline">
+									                            <input type="text" name="periodnum" value="${(returnDatas.queryBean.periodnum)!''}" placeholder="请输入期号 " class="layui-input"> 
+									                    </div>
+							                		</div>
+									                 &nbsp;&nbsp;&nbsp;&nbsp;
+									                <div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入开赛时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入开赛时间" class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+										              &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="state" id="state" class="layui-input">
+									                        		<option value="">全部比赛</option>
+															  		<option value="4">无效比赛</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="15">任九场次列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th> -->										  
+												  <!--first_end_no_export-->
+												  		<th id="th_creattime" >录入时间</th>
+														<th id="th_mid" >序号</th>
+														<th id="th_leaguename" >赛事名</th>
+														<th id="th_periodnum" >期号</th>
+														<th id="th_leftteam" >主队</th>
+														<th id="th_rightteam" >客队</th>
+														<th id="th_starttime" >比赛时间 </th>
+														<th id="th_endtime" >截止时间</th>
+														<!-- <th id="th_win" >胜</th>
+														<th id="th_flat" >平</th>
+														<th id="th_lose" >负</th>
+														<th id="th_full" >比分</th>
+														<th id="th_result" >3胜 1平 0负</th> -->
+														<th id="th_state" >状态</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td> -->														
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+															${((_data.creattime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.rid)!''}
+														</td>
+														<td >
+															${(_data.leaguename)!''}
+														</td>
+														<td >
+															${(_data.periodnum)!''}
+														</td>
+														<td >
+															${(_data.leftteam)!''}
+														</td>
+														<td >
+															${(_data.rightteam)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.starttime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.endtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														
+														<!-- <td >
+															${(_data.win)!''}
+														</td>
+														<td >
+															${(_data.flat)!''}
+														</td>
+														<td >
+															${(_data.lose)!''}
+														</td>
+														<td >
+															${(_data.full)!''}
+														</td>
+														<td >
+															${(_data.result)!0}
+														</td> -->
+														<td >
+															<#if _data.state==4>
+																<span style="color:red" >无效比赛</span>&nbsp;&nbsp;&nbsp;&nbsp;														
+															<#else>
+																<span style="color:#288a53" >正常</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.rid)!''}"><span style="cursor:hand" class="invalid"><u>设为无效比赛</u></span>
+															</#if>
+														</td>
+														<td>
+															<@shiro.hasPermission name="/renjiumatch/update" >
+								                           		 <a href="#" data-action="${ctx}/renjiumatch/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/renjiumatch/update" >
+								                            <a   class="layui-btn layui-btn-danger layui-btn-mini"  href="${ctx}/renjiuscheme/update/pre?k=1&rid=${(_data.rid)!''}">手动开奖</a>
+														    </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+//无效比赛	
+		$(".invalid").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定设为无效比赛？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				layer.load();
+				$.ajax({
+					type:"get",
+					url:"${ctx}/renjiumatch/update?k=1&rid="+a,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已设为无效比赛！',{offset:['','']});
+							setTimeout("history.go(0);",2000);	
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			  
+			});
+
+		})
+</script>
+</html>
+

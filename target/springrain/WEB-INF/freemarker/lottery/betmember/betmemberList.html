@@ -1,0 +1,595 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+jQuery(function(){
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})
+/* //120秒刷新
+var t; 
+	t=120; 
+	function shua() 
+	{ 
+	t=t-1; 
+	document.getElementById("hints").innerHTML=t+" 秒"; 
+	if (t==0) 
+	{ 
+	document.location.reload(); 
+	} 
+}  */
+
+
+//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+	function clearformurl(){
+		$('#searchForm').attr("action","${ctx}/betmember/list");
+	}
+</script>
+</head>
+<body >
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			             <!-- <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								网站地图导航
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>BetMember管理</cite></a>
+								</span>
+			             </li> -->
+						 <li style="float:right;">
+						 	<@shiro.hasPermission name="/betmember/send_msgs" >
+			             		<button type="button" id="sendMsgsButton" class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe61f;</i>发送短信</button>
+			             	</@shiro.hasPermission>
+			             	<@shiro.hasPermission name="/betmember/update" >
+			             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmember/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+			             	</@shiro.hasPermission>
+			             	<!-- <@shiro.hasPermission name="/betmember/list/export" >
+					        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button> -->
+			                <!-- <@shiro.hasPermission name="/betmember/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission> -->
+			               <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" ><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form id="searchForm" onkeydown="if(event.keyCode==13)return false;" action="${ctx}/betmember/list?today=${today!''}&isinternal=${isinternal!''}&risk=${risk22!''}&vip=${vip22!''}&status=${statussss!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									<div class="search-wrap">
+										<div class="layui-inline betmember_find xiao-input-wrap">
+											查询:<input class="xiao-input" id="find" type="text" <#if returnDatas.queryBean.id2??> value="${(returnDatas.queryBean.id2)!''}"
+											</#if>
+											<#if returnDatas.queryBean.account??>
+												value="${(returnDatas.queryBean.account)!''}"
+											</#if>
+											<#if returnDatas.queryBean.mobile??>
+												value="${(returnDatas.queryBean.mobile)!''}"
+											</#if>
+											<#if returnDatas.queryBean.nickname??>
+												value="${(returnDatas.queryBean.nickname)!''}"
+											</#if>
+											<#if returnDatas.queryBean.realname??>
+												value="${(returnDatas.queryBean.realname)!''}"
+											</#if>
+											<#if returnDatas.queryBean.loginip??>
+												value="${(returnDatas.queryBean.loginip)!''}"
+											</#if>
+											<#if returnDatas.queryBean.signip??>
+												value="${(returnDatas.queryBean.signip)!''}"
+											</#if>
+											<#if returnDatas.queryBean.agentid??>
+												value="${(returnDatas.queryBean.agentid)!''}"
+											</#if>
+											>
+											<input id="id2" class="allUser" type="radio" name="1" checked />ID
+											<input id="account" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.account??> checked
+											</#if>
+											/>用户名
+											<input id="nickname" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.nickname??> checked
+											</#if>
+											/>昵称
+											<input id="mobile" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.mobile??> checked
+											</#if>
+											/>手机号码
+											<input id="realname" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.realname??> checked
+											</#if>
+											/>真实姓名
+											<input id="agentid" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.agentid??> checked
+											</#if>
+											/>代理id
+											<input id="loginip" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.loginip??> checked
+											</#if>
+											/>登录IP
+											<input id="signip" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.signip??> checked
+											</#if>
+											/>注册IP
+											
+										</div>
+										<div class="layui-inline">
+																	注册时间：从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>
+	
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button"  onclick="clearpageindex();clearformurl();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+										<div class="layui-inline xiao-pull-right">
+											<button id="reflesh" class="xiao-btn xiao-btn-success"><!-- <span id="hints">120秒</span> -->刷新</button>
+										</div>
+										<div class="xiao-btnlist xiap-pull-left layui-inline">
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?springraintoken=${springraintoken}">用户列表</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?today=1">今日注册</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?online=1">在线用户</a>
+											</div>
+											<#if agentparentid?? && agentparentid=='A101'>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?order=winorfail&sort=desc">用户输赢</a>
+											</div>
+											</#if>
+											<!-- <div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?isinternal=1&order=winorfail&sort=desc">内部账户</a>
+											</div> -->
+											<#if agentparentid?? && agentparentid=='A101'>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?limitusername=1">限制用户名</a>
+											</div>
+											</#if>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?status=0">冻结用户</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?status=2">作废用户</a>
+											</div>
+											<!-- <div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?vip=1&order=exp&sort=desc">VIP用户</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betmember/list?risk=1&order=winorfail&sort=desc">风险用户</a>
+											</div> -->
+										</div>
+									</div> 
+									  <!-- 查询  结束 -->
+									  
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even>
+												<thead>
+													<tr>
+													  <!--first_start_no_export-->
+													  <th class="center">
+																<input id="checkAll"  type="checkbox">
+													  </th>
+													  
+													  <!--first_end_no_export-->
+													  		<th id="th_agentnickname">代理昵称</th>
+													  		<th id="th_id2" >用户ID</th>
+															<th id="_account" >用户名</th>
+															<th id="_nickname" >昵称</th>
+															<th id="t_realname" >真实姓名</th>
+															<#if agentparentid?? && agentparentid=='A101'>
+															<th id="th_dayscore" >每日输赢</th>
+															<th id="th_winorfail" >总输赢</th>
+															</#if>
+															<th id="th_gamescore">总分</th>
+															<th id="th_gamescore">游戏分</th>
+															<th id="th_gamescore">银行分</th>
+															<!-- <th  id="th_exp">VIP/积分</th> -->
+															<th id="th_subordinate" >下线</th>
+															<!-- <th id="th_logintimes" >登录</th>
+															<th id="th_logintime" >登录时间</th> -->
+															<th>登录地址</th>
+															<th id="th_status" >状态</th>
+															<th id="th_logintool">来源</th>
+															<th style="text-align:center">操作</th>
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<td class="center">
+																	<input name="check_li" value="${_data.id}"  type="checkbox">
+																	<input type="hidden" value="${_data.id2}">
+															</td>
+															
+															<!--end_no_export-->
+															<td >
+																${(_data.agentnickname)!''}
+															</td>
+															<td >
+																<a class="xiao-color-00e"   style="text-decoration:underline;" href="${ctx}/betmember/look?id2=${(_data.id2)!''}&id=${(_data.id)!''}">${(_data.id2)!''}</a>
+															</td>
+															<td >
+																<a class="xiao-color-861db1"  style="text-decoration:underline;" href="${ctx}/betmember/list?k=6&id2=${_data.id2!''}">
+																	${(_data.account)!''}
+																</a>
+																<!-- <a class="xiao-color-861db1"  style="text-decoration:underline;" href="${ctx}/betmember/list?k=6&id2=${_data.id2!''}">
+																	${(_data.account)!''}
+																</a> -->
+															</td>
+															<td >
+																${(_data.nickname)!''}
+															</td>
+															<td >
+																<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betmember/list?realname=${(_data.realname)!''}">${(_data.realname)!''}</a>
+															</td>
+															<#if agentparentid?? && agentparentid=='A101'>
+															<td >
+																<span class="xiao-color-00e">${(_data.dayscore?string('#'))!''}
+																
+															</td>
+															<td >
+																<a class="xiao-color-eb7c05"  href="${ctx}/betmember/list?k=1&id=${_data.id!''}" style="text-decoration:underline;">${(_data.winorfail?string('#'))!''}</a>
+															</td>
+															</#if> 
+															<td class="xiao-color-e00 font-weight" >
+																${(_data.score?string('#'))!0}
+															</td>
+															<td class="xiao-color-e00 font-weight" >
+																${(_data.gamescore?string('#'))!0}
+															</td>
+															<td class="xiao-color-e00 font-weight" >
+																${(_data.bankscore?string('#'))!0}
+															</td>
+															<!-- <td>
+																VIP${(_data.level)!''}(${(_data.exp)!0})
+															</td> -->
+															<td >
+																<a 
+																 <#if (_data.subordinate??)&&(_data.subordinate>0)>
+																 class="xiao-color-e00"
+																 </#if> 
+																 href="${ctx}/betmember/list?parentid=${(_data.id2)!''}"  style="text-decoration:underline;">${(_data.subordinate)!0}</a>
+															</td>
+															<!-- <td >
+																${(_data.logintimes)!0}
+															</td>
+															<td >
+																${(_data.logintime)!''}
+															</td> -->
+															<td >
+																<a style="text-decoration:underline;"  href="${ctx}/betmember/list?k=22&ip2=${(_data.loginip)!''}">${(_data.loginip)!''}</a> <a class="xiao-color-00e" href="${ctx}/betmember/list?k=22&memberid2=${(_data.id2)!''}" style="text-decoration:underline;">查</a>
+															</td>
+															<td >
+																<#if _data.status==0>
+																	<font style="color:red">冻结</font>&nbsp;&nbsp;<input type="hidden" value="${(_data.id)!''}" /><a class=" unfreeze" style="text-decoration:underline;"  href="javacript:void(0);">解冻</a>
+																<#elseif _data.status==2>
+																	<font style="color:red">作废</font>
+																<#else>
+																	<font style="color:green">启用</font>
+																</#if>
+															</td>
+															<td >
+																${(_data.logintool)!''}
+															</td>
+															<td style="text-align:center">
+																<@shiro.hasPermission name="/betmember/send_msg" >
+									                           		 <a href="javascript:void(0);" data-id="${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini sendMsgButton">发送短信</a>
+									                            </@shiro.hasPermission>
+															</td>
+															<!-- <td style="text-align:center">
+																<@shiro.hasPermission name="/betmember/update" >
+									                           		 <a href="#" data-action="${ctx}/betmember/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+									                            </@shiro.hasPermission>
+									                            <@shiro.hasPermission name="/betmember/delete" >
+									                            	<a style="margin:2px" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+									                            </@shiro.hasPermission>
+															</td> -->
+														</tr>
+													</#list>
+												 </#if>
+												</tbody>
+												
+											</table>
+											<input type="radio" id="rrifjfhjdkid" name="internalorfreeze" value="internal"/>内部账户&nbsp;&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="rrifghthtid" name="internalorfreeze" value="freeze"/>冻结账户   &nbsp;&nbsp;&nbsp;&nbsp;
+											<@shiro.hasPermission name="/betagent/updatememberagentid" >
+												<input type="radio" id="gojewroigjewrg" name="internalorfreeze" value="changeagent"/>转移代理   &nbsp;&nbsp;&nbsp;&nbsp;
+											</@shiro.hasPermission>
+											<span id="asdfasfasdfasggs">备注：<input type="text"  name="internalorfreezeremark" /></span>   &nbsp;&nbsp;&nbsp;&nbsp;
+											 <button id="internalorfreeze" class="xiao-btn xiao-btn-default xiao-mt9">确 认</button>
+											<#if returnDatas.page??> 
+												<div id='laypageDiv' class="xiao-inline-block"></div>
+												<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th>
+												<@h.layPage page=returnDatas.page /> 
+											</#if>
+										</div>
+								</div>
+							</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	<script>
+	$("#sendMsgsButton").click(function(){
+		var a=jQuery(":checkbox[name='check_li']");
+		var arr="";
+		a.each(function(i, _obj) {
+			if (_obj.checked) {
+				arr += _obj.value+",";
+			}
+		});
+		if (arr=="") {
+			layer.confirm("没有选择待发送短信的数据", {icon: 3, title:'提示',offset:['','']}, function(index){
+				  layer.close(index);
+			});
+			return false;
+		} else {
+			arr = arr.substring(0,arr.length-1);
+		}
+		if (arr.split(",").length > 100) {
+			layer.msg("不能一次发送100条短信",{offset:['','']});
+		}
+		//prompt层
+		layer.prompt({title: '输入短信内容，共' + arr.split(',').length + '条',offset:['',''], formType: 2}, function(pass, index){
+		  layer.close(index);
+		   	$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/send_msgs",
+				data:{idsStr:arr,msg:pass},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('发送成功！',{offset:['','']});
+						/* setTimeout(window.location.reload(),2000);  */
+					}else if("error"==result.status){
+						layer.msg(result.message,{offset:['','']});
+					}
+				},
+				}) 
+		  });
+	})
+	$(".sendMsgButton").click(function(){
+		var a=$(this).attr("data-id");
+		console.log(a);
+		//prompt层
+		layer.prompt({title: '输入短信内容',offset:['',''], formType: 2}, function(pass, index){
+		  layer.close(index);
+		   	$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/send_msg",
+				data:{id:a,msg:pass},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('修改成功！',{offset:['','']});
+						/* setTimeout(window.location.reload(),2000);  */
+					}else if("error"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						
+					}
+				},
+				}) 
+		  });
+	})
+	var _state;
+	jQuery(function(){
+		$("#asdfasfasdfasggs").hide();
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmember/delete");
+	}
+	
+	$(".allUser").change(
+		function(){
+			var a=$(this).attr("id");
+			$("#find").attr("name",a);
+		}
+	)
+	jQuery(function(){
+		var a=$("input[name='1']:checked").attr("id");
+			$("#find").attr("name",a);
+	})	
+	
+	$("#gojewroigjewrg").click(function(){
+		$("#asdfasfasdfasggs").hide();
+	})
+	$("#rrifghthtid").click(function(){
+		$("#asdfasfasdfasggs").show();
+	})
+	$("#rrifjfhjdkid").click(function(){
+		$("#asdfasfasdfasggs").show();
+	})
+	
+	
+	$("#internalorfreeze").click(function(){
+		var a=$("input[name='internalorfreeze']:checked").val();
+		var b=$("input[name='check_li']:checked");
+		var c=new Array();
+		var z=new Array();
+		var e=$("input[name='internalorfreezeremark']").val();
+		 
+		for(var i=0;i<b.length;i++){
+            c[i]=b[i].value; 
+            z[i]=$(b[i]).next().val();
+    	}
+    	var d=c.join(",");
+    	var y=z.join(",");
+    	var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+		//询问框
+		if(d == null || d == undefined || d == ''){
+			layer.msg('请选择用户！',{offset:['','']});
+		}else{
+			if("internal"==a){
+			layer.confirm('确定把ID为'+y+'的用户改为内部用户？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?internalorfreeze=1",
+			
+			data:{a:a,d:d,e:e},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg('修改失败！',{offset:['','']});
+				}else if("success"==result.status){
+					layer.msg('修改成功！',{offset:['','']});
+					setTimeout(window.location.reload(),2000); 
+				}
+			},
+		})
+		}, function(){
+		  
+		});
+		}
+		else if("freeze"==a){
+			layer.confirm('确定把ID为'+y+'的用户冻结？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?internalorfreeze=1",
+			
+			data:{a:a,d:d,e:e},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg('修改失败！',{offset:['','']});
+				}else if("success"==result.status){
+					layer.msg('修改成功！',{offset:['','']});
+					setTimeout(window.location.reload(),2000); 
+				}
+			},
+		})
+		}, function(){
+		  
+		});
+		}else if("changeagent"==a){
+			layer.confirm('确定转移ID为'+y+'的用户的代理？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				//prompt层
+				layer.prompt({title: '输入代理账户，并确认',offset:['',''], formType: 2}, function(pass, index){
+				  layer.close(index);
+				   	$.ajax({
+						type:"post",
+						url:"${ctx}/betmember/update?internalorfreeze=1&agentaccount="+pass,
+						data:{a:a,d:d},
+						success:function(result){
+							if("success"==result.status){
+								layer.msg('修改成功！',{offset:['','']});
+								setTimeout(window.location.reload(),2000); 
+							}else if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								
+							}
+						},
+						}) 
+				  	
+				  });
+				
+			}, function(){
+			  
+			});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+			
+		
+		}else{
+			layer.msg('请选择内部账户、冻结账户或转移代理！',{offset:['','']});
+		}
+			
+		}
+				
+		
+		
+
+		
+	})
+	
+	
+	var href = window.location.href;
+	var result = href.split('?')[href.split('?').length-1];
+	var url_list = $('.xiao-btnlist').find('a');
+	for(var i = 0; i < url_list.length ; i++){
+		if(url_list[i].href == href){
+//			console.log(url_list[i].href);
+			url_list[i].style.backgroundColor = "#009688";
+			url_list[i].style.display = "block";
+			url_list[i].style.color = "#fff";
+		}
+	}
+	
+	 
+	 $(".unfreeze").click(function(){
+			var id=$(this).prev().val();
+			//询问框
+layer.confirm('确定解冻用户？', {
+offset:['',''],
+btn: ['确定','取消'] //按钮
+}, function(){
+
+	$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/update?unfreeze=1",
+				
+				data:{id:id},
+				success:function(result){
+					if("error"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						
+					}else if("success"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						setTimeout("location.reload(true);",2000);
+						
+					}
+				},
+			})
+}, function(){
+
+});
+			
+		})
+		
+
+</script>
+</body>
+</html>
+

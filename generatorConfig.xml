@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+    <!DOCTYPE generatorConfiguration 
+      PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+      "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry
+        location="C:\Users\aswan\.m2\repository\com\microsoft\sqlserver\sqljdbc4\4.0\sqljdbc4-4.0.jar" />
+    <context id="sqlserverTables" targetRuntime="MyBatis3">
+    
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        
+        <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+            connectionURL="jdbc:sqlserver://106.14.21.240:1433;databaseName=QPAccountsDB;user=mzmj;password=mzmj1234"
+            userId="mzmj" password="mzmj1234">
+        </jdbcConnection>
+        
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+         <!-- 生成model模型，对应的包，存放位置可以指定具体的路径,如/ProjectName/src，也可以使用MAVEN来自动生成 -->
+        <javaModelGenerator targetPackage="com.wiiy.qpgame.pojo"
+            targetProject="springrain_agent/src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        
+         <!--对应的xml mapper文件  -->
+        <sqlMapGenerator targetPackage="mybatis" targetProject="springrain_agent/src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+        
+        <!-- 对应的dao接口 -->
+        <javaClientGenerator type="XMLMAPPER"
+            targetPackage="com.wiiy.qpgame.mapper" targetProject="springrain_agent/src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+
+         <!-- 这里是数据库的表名table_user 以及 POJO类的名字User -->
+        <table tableName="AccountsInfo" domainObjectName="AccountsInfo"
+            enableCountByExample="true" enableSelectByExample="true"
+            enableUpdateByExample="true" enableDeleteByExample="false">
+
+        </table>
+    </context>
+
+</generatorConfiguration>

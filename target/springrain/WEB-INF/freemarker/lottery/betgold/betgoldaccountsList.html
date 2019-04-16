@@ -1,0 +1,577 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgold/delete");
+	}
+
+$(document).ready(function(){
+	$('.confirm').click(function(){
+	 var a=$(this).prev().val();
+		//询问框
+		layer.confirm('确定充值成功？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgold/update?id="+a+"&state=2",
+				data:{},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已确认充值成功！',{offset:['','']});
+						setTimeout("kkk()",2000);
+						
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		});
+	
+	
+	})
+	$('.cancel').click(function(){
+		var a=$(this).prev().prev().val();
+			//询问框
+			layer.confirm('确定充值失败？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betgold/update?id="+a+"&state=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已确认充值失败！',{offset:['','']});
+							setTimeout("kkk()",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+	
+	
+	
+	})
+	
+	$('.resubmit').click(function(){
+		var a=$(this).prev().val();
+			//prompt层
+			layer.prompt({title: '输入补单备注，并确认',offset:['',''], formType: 2}, function(pass, index){
+			  layer.close(index);
+			  	
+			   	$.ajax({
+					type:"get",
+					url:"${ctx}/betgold/update?id="+a+"&ddbt=1&remark="+pass,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('补单成功！',{offset:['','']});
+							setTimeout("kkk()",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					}) 
+			  	
+			  });
+			});
+			
+			
+			$('.orderquery').click(function(){
+			var a=$(this).prev().val();
+			   	$.ajax({
+					type:"get",
+					url:"${ctx}/betgold/scancode/orderquery?ORDERNO="+a,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							var a=result.data.ORDERNO;
+							var b=result.data.PAYORDERNO;
+							var c="";
+							if(result.data.ORDSTATUS=="00"){
+							 c="未支付";
+							}else if(result.data.ORDSTATUS=="01"){
+							 c="支付成功";
+							}
+							var d=result.data.BANK_FLOWNO;
+							var e=result.data.REMSG;
+							if(c=="未支付"){
+								springrain.layerInfo("订单号:"+a+"<br/>平台流水号:"+b+"<br/>返回信息:"+e+"<br/>支付状态:"+"<font style='color:red;'>"+c+"</font>");
+							}else if(c=="支付成功"){
+								springrain.layerInfo("订单号:"+a+"<br/>平台流水号:"+b+"<br/>返回信息:"+e+"<br/>支付状态:"+"<font style='color:green;'>"+c+"</font>");
+							}else{
+								springrain.layerInfo("订单号:"+a+"<br/>平台流水号:"+b+"<br/>返回信息:"+e+"<br/>支付状态:"+"<font>"+c+"</font>");							
+							}
+							/* layer.msg(result.data.REMSG,{offset:['','']});
+							layer.msg(result.data.REMSG,{offset:['','']}); */
+						}else if("error"==result.status){
+							/* layer.msg(result.data.REMSG,{offset:['','']}); */
+							springrain.alert(result.data.REMSG);
+						}
+					},
+					}) 
+			  	
+			  });
+		
+			//询问框
+		/* 	layer.confirm('确定重新提交订单？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betgold/update?id="+a+"&state=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已确认充值失败！',{offset:['','']});
+							window.location.href="${ctx}/betgold/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			}); 
+	
+	
+	
+	})*/
+	
+	
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+	$(".timedetail").mouseover(function(){
+		var a=$(this).attr('name');
+		layer.tips(a,this);
+   		
+    });
+})	
+//60秒刷新
+var t; 
+t=60; 
+function shua() 
+{ 
+t=t-1; 
+document.getElementById("hints").innerHTML=t+" 秒"; 
+if (t==0) 
+{ 
+document.location.reload(); 
+} 
+}
+
+//搜索pageindex设为1
+function clearpageindex(){
+	$('#pageIndex').val(1);
+}
+function kkk(){
+	window.location.href="${ctx}/betgold/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+}
+</script>
+
+</head>
+<body onload="window.setInterval(shua,1000); ">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+				<div class="xiao-ht-contentWrap" >
+					<div class="xiao-ht-content-bg layui-tab-brief">
+						<ul class="layui-tab-title site-demo-title">
+							  <li style="float:right;">
+				             	<@shiro.hasPermission name="/betgold/update" >
+				             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betgold/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+				             	</@shiro.hasPermission>
+				             </li> 
+			       		</ul>
+					
+					<!--<div class="layui-body layui-tab-content site-demo-body">
+						<div class="layui-tab-item layui-show">
+								<div class="layui-main">-->
+							    <div id="LAY_preview"  class="xiao-ht-content" style="overflow: scroll;"  >
+							          <!-- 查询  开始 -->
+								          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betgold/accounts?date=1" method="post">
+								          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+								          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+								          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+										  <div class="search-wrap">
+										  	
+										  		<div class="xiao-cell xiao-pull-left xiao-record" >
+										  		<#if yesterdayRecharge??>
+													昨日充值：<span class="xiao-color-e00 font-weight font-s20">${(yesterdayRecharge)!0}</span>&nbsp;&nbsp;&nbsp;今日充值：<span class="xiao-color-e00 font-weight font-s20">${(todayRecharge)!0}</span>
+													<#else>
+													<span class="xiao-color-e00 font-weight font-s20">充值：${(totolRecharge)!0}</span>
+													</#if>
+													&nbsp;&nbsp;&nbsp;充值笔数：<span>${(chargeNumber)!0}</span>&nbsp;&nbsp;&nbsp;用户：${(member)!0}人&nbsp;&nbsp;&nbsp;&nbsp;<!-- <a class="font-weight xiao-color-00e" href="${ctx}/betgold/update/pre?ddbt=1">订单补填</a>&nbsp;&nbsp;&nbsp; -->
+													<a class="font-weight xiao-color-00e" href="${ctx}/betgold/list?bdjl=1">补单记录</a>&nbsp;&nbsp;&nbsp;&nbsp;
+													<!--<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>-->
+												</div>
+								          		<div class="layui-inline xiao-pull-left ">
+										            <div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+												        </div>
+												      &nbsp;&nbsp;&nbsp;  支付类型：
+														 <div class="layui-input-inline">
+												           <select name="type" id="type" class="layui-input">
+									                        		<option value="">请选择</option>
+									                        		<option value="" <#if returnDatas.queryBean.type??></#if> >所有</option>
+																    <option value="1" <#if (returnDatas.queryBean.type)??><#if (returnDatas.queryBean.type==1)>selected="selected"</#if></#if> >银行卡转账</option>
+																	<option value="2" <#if (returnDatas.queryBean.type)??><#if (returnDatas.queryBean.type=2)>selected="selected"</#if></#if> >支付宝二维码</option>
+																	<option value="3" <#if (returnDatas.queryBean.type)??><#if (returnDatas.queryBean.type=3)>selected="selected"</#if></#if> >微信扫码支付</option>
+																	<option value="1001" <#if (returnDatas.queryBean.type)??><#if (returnDatas.queryBean.type=1001)>selected="selected"</#if></#if> >微信收款码D</option>
+																	<option value="2001" <#if (returnDatas.queryBean.type)??><#if (returnDatas.queryBean.type=2001)>selected="selected"</#if></#if> >支付宝收款码D</option>
+															</select>  
+
+												        </div>
+										            </div>
+										            
+									          		<div class="layui-inline">
+											            <button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											        </div>
+											        <div class="layui-inline xiao-pull-right">
+												        <span id="hints" >60秒</span><button id="reflesh" class="xiao-btn xiao-btn-success mb0">刷新</button>
+											        </div>
+								                </div>
+								          </div>
+										  <!-- 查询  结束 -->
+										</form>
+									<div class="xiao-ht-tableWrap"  >
+										<!--start_export-->
+										<table class="xiao-ht-table" lay-even>
+											  <!--end_no_export-->
+											  <!--first_start_export-->
+												<thead>
+													
+													<tr>
+													  		<th>订单编号</th>
+															<th>用户ID</th>
+															<th >提交时间</th>
+															<th  >充值时间</th>
+															<th>充值前分</th>
+															<th  >充值额</th>
+															<th >充值后分</th>
+															<th>支付类型</th>
+															<th>来源</th>
+															<th >账户名称</th>
+															<!-- <th >支付宝appid</th> -->
+															<th>补单</th>
+															<th id="th_money" >金额</th>
+															<th >备注</th>
+															<th >状态</th>
+															<th >操作人</th>
+															 <th width="180" style="text-align:center">操作</th>
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<td>
+																${(_data.id)!''}
+															</td>
+															<td >
+																<a class="xiao-color-00e" style="text-decoration:underline;"  href="${ctx}/betmember/look?id2=${(_data.memberid2)!''}&id=${(_data.memberid)!''}">${(_data.memberid2)!''}</a>
+															</td>
+															<td >
+																<!--日期型-->
+															<span class="timedetail" name="${((_data.submittime)?string('yyyy-MM-dd HH:mm:ss'))!''}">${((_data.submittime)?string('HH:mm:ss'))!''}</span>
+															
+															</td>
+															<td >
+																<!--日期型-->
+																<span class="timedetail" name="${((_data.rechargetime)?string('yyyy-MM-dd HH:mm:ss'))!''}">${((_data.rechargetime)?string('HH:mm:ss'))!''}</span>
+															</td>
+															<td>
+															<#if _data.state==2>
+															<input type="hidden" class="czqf" value="${(_data.brs)!0}">
+															</#if>
+																${(_data.brs)!''}
+															</td>
+															<td >
+															<#if _data.state==2>
+															<input type="hidden" class="cze" value="${(_data.money)!0}">
+															</#if>
+																${(_data.money)!''}
+															</td>
+															<td >
+															<#if _data.state==2>
+															<input type="hidden" class="czhf" value="${(_data.ars)!0}">
+															</#if>
+																${(_data.ars)!''}
+															</td>
+															<td>
+																<#if (_data.type??)>
+																	<#if (_data.type=10)>
+																		补单或者平台支付
+																	<#elseif (_data.type=1)>
+																		银行卡转账
+																	<#elseif (_data.type=2)>
+																		支付宝二维码
+																	<#elseif (_data.type=3)>
+																		微信扫码支付
+																	<#elseif (_data.type=4)>
+																		信用卡
+																	<#elseif (_data.type=5)>
+																		快捷支付
+																	<#elseif (_data.type=6)>
+																		扫码支付
+																	<#elseif (_data.type=8)>
+																		支付宝原生移动支付
+																	<#elseif (_data.type=9)>
+																		平台支付
+																	<#elseif (_data.type=30)>
+																		聚合支付宝H5支付
+																	<#elseif (_data.type=31)>
+																		太极支付宝H5支付
+																	<#elseif (_data.type=100)>
+																		新快捷支付
+																	<#elseif (_data.type=101)>
+																		优付支付宝WAP(信用卡)
+																	<#elseif (_data.type=102)>
+																		银联扫码支付
+																	<#elseif (_data.type=103)>
+																		微信app原生支付
+																	<#elseif (_data.type=104)>
+																		优付支付宝wap
+																	<#elseif (_data.type=105)>
+																		微信支付WAP
+																	<#elseif (_data.type=106)>
+																		QQ支付WAP
+																	<#elseif (_data.type=107)>
+																		京东扫码支付
+																	<#elseif (_data.type=108)>
+																		易支付原生APP企业通道
+																	<#elseif (_data.type=109)>
+																		易支付原生WAP企业通道
+																	<#elseif (_data.type=110)>
+																		易支付优付支付通道
+																	<#elseif (_data.type=111)>
+																		易支付个人转账通道
+																	<#elseif (_data.type=115)>
+																		易支付个人转账通道（新版）
+																	<#elseif (_data.type=116)>
+																		易支付聚合支付通道
+																	<#elseif (_data.type=117)>
+																		易支付聚合企业支付通道
+																	<#elseif (_data.type=120)>
+																		易支付个人转账Z通道
+																	<#elseif (_data.type=1001)>
+																		支付宝收款码2
+																	<#elseif (_data.type=2001)>
+																		微信收款码2
+																	</#if>
+																</#if>
+															</td>
+															<td >
+																${(_data.source)!''}
+															</td>
+															<td >
+																${(_data.accountname)!''}
+															</td>
+															<!-- <td >
+																${(_data.appid)!''}
+															</td> -->
+															<td>
+															<#if _data.isbt??>
+																<#if _data.isbt=1>
+																	补单
+																</#if>
+															</#if>
+															<#if (_data.isresubmit??)>
+															<#if (_data.isresubmit=1)>
+																已重新提交
+															</#if>															
+															</#if>
+															<#if (_data.type=10)> 
+																人工审核														
+															</#if>
+															<#if (_data.state=2 && _data.type=1)> 
+																人工审核														
+															</#if>
+															</td>
+															<td class="xiao-color-e00 font-weight">
+															<#if _data.state==2>
+															<input class="je" type="hidden" value="${(_data.realmoney)!0}">
+															</#if>
+															<#if _data.realmoney??>
+															<#if (_data.realmoney>999.99)>
+															<span style="color:red;">
+															${(_data.realmoney)!0}
+															</span>
+															<#else>
+															<span style="color:blue;">
+															${(_data.realmoney)!0}
+															</span>
+															</#if>
+															</#if>
+															</td>
+															<td class="xiao-color-e00 font-weight">
+																${(_data.remark)!"-"}
+															</td>
+															<td >
+																<#if _data.state==0>
+																	<font style="color:red;">未处理</font>
+																	<#elseif _data.state==1>
+																	未付款
+																	<#elseif _data.state==2>
+																	<p style="color:green">成功</p>
+																	<#else> 
+																</#if>
+															</td>
+															<td>
+															<#if (_data.operator??)&&((_data.operator?split('('))?size>0)> 
+															<#list (_data.operator)?split('(') as m>
+															<#if m_index=0>
+															${m}
+															</#if>
+															</#list>
+															</#if>
+															</td>
+															<td style="text-align:center">
+															<#if (_data.state??)&&(_data.state=0)>
+																<input type="hidden" value="${(_data.id)!''}">
+																<@shiro.hasPermission name="/betgold/update" >
+									                           		 <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="#" class="layui-btn xiao-btn-default layui-btn-mini confirm"><#if (_data.type??)&&(_data.type=1)>转账确认<#else>确定</#if></a>
+									                            </@shiro.hasPermission>
+									                            <@shiro.hasPermission name="/betgold/update" >
+									                            	<a style="padding:0  15px;line-height: 25px;height: 25px;" href="#" class="layui-btn xiao-btn-danger layui-btn-mini cancel">取消</a>
+									                            </@shiro.hasPermission>
+									                        </#if>
+									                        
+									                        <#if (_data.state??)&&(_data.state=1)>
+									                        <#if (_data.isresubmit??)&&(_data.isresubmit=0)>
+									                        <#if _data.isbt??>
+									                        <#if (_data.isbt=0)>
+									                        	<input type="hidden" value="${(_data.id)!''}">
+									                        	 <a style="padding: 0 15px;line-height: 25px;height: 25px; " href="#" class="layui-btn layui-btn-danger layui-btn-mini resubmit">重新提交</a>
+									                       	</#if>
+									                       	</#if>
+									                       	</#if>
+									                        </#if>
+									                         <@shiro.hasPermission name="/betgold/scancode/orderquery" >
+									                         <#if (_data.type??)&&((_data.type=5)||(_data.type=6))>
+									                        <input type="hidden" value="${(_data.id)!''}">
+									                        	 <a style="padding: 0 15px;line-height: 25px;height: 25px; " href="#" class="layui-btn layui-btn-normal layui-btn-mini orderquery">查</a>
+															</td>
+															</#if>
+															</@shiro.hasPermission>
+														</tr>
+													</#list>
+													<tr style="background-color:#eafcff;">
+														<td style="text-align: center;">小计</td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"><a id="czqf"></a></td>
+														<td style="text-align: center;"><a id="cze"></a></td>
+														<td style="text-align: center;"><a id="czhf"></a></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"><b><a id="je"></a></b></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+														<td style="text-align: center;"></td>
+													</tr>
+												 </#if>
+												</tbody>
+											</table>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv'></div>
+											<@h.layPage page=returnDatas.page /> 
+										</#if>
+									</div>
+								<!--</div>-->
+							<!--</div>
+						</div>-->
+					</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+<script type="text/javascript">
+ var czqf = 0.;
+	$(".czqf").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		czqf+= a*1;
+	});
+	
+	$("#czqf").text(Math.round(czqf*100)/100);
+	 
+
+var cze = 0.;
+	$(".cze").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		cze+= a*1;
+	});
+	
+	$("#cze").text(Math.round(cze*100)/100);
+	
+
+ var czhf = 0.;
+	$(".czhf").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		czhf+= a*1;
+	});
+	
+	$("#czhf").text(Math.round(czhf*100)/100); 
+
+var je = 0.;
+	$(".je").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		je+= a*1;
+	});
+	if(je>=0){
+		$("#je").css('color','blue');
+	}else if(t1<0){
+		$("#je").css('color','red');
+	}
+	
+	$("#je").text(Math.round(je* 100) / 100);
+	
+
+
+
+</script>
+</html>
+

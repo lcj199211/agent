@@ -1,0 +1,450 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<style>
+			form {
+				margin: 0;
+			}
+			textarea {
+				display: block;
+			}
+		</style>
+		<link rel="stylesheet" href="${ctx}/js/kindeditor/themes/default/default.css" />
+		<script charset="utf-8" src="${ctx}/js/kindeditor/kindeditor-min.js"></script>
+		<script charset="utf-8" src="${ctx}/js/kindeditor/lang/zh_CN.js"></script>
+		<script>
+			var editor;
+			KindEditor.ready(function(K) {
+				editor = K.create('textarea[name="gamerules"]', {
+					allowFileManager : true,
+					afterBlur : function(){this.sync();}
+				});
+				
+				/* K('input[name=getHtml]').click(function(e) {
+					alert(editor.html());
+					
+				});
+				K('input[name=isEmpty]').click(function(e) {
+					alert(editor.isEmpty());
+				});
+				K('input[name=getText]').click(function(e) {
+					alert(editor.text());
+				});
+				K('input[name=selectedHtml]').click(function(e) {
+					alert(editor.selectedHtml());
+				});
+				K('input[name=setHtml]').click(function(e) {
+					editor.html('<h3>Hello KindEditor</h3>');
+				});
+				K('input[name=setText]').click(function(e) {
+					editor.text('<h3>Hello KindEditor</h3>');
+				});
+				K('input[name=insertHtml]').click(function(e) {
+					editor.insertHtml('<strong>插入HTML</strong>');
+				});
+				K('input[name=appendHtml]').click(function(e) {
+					editor.appendHtml('<strong>添加HTML</strong>');
+				});
+				K('input[name=clear]').click(function(e) {
+					editor.html('');
+				}); */
+			});
+		</script>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+
+
+<style type="text/css">
+			#tk{
+				width:350px;
+				height: 500px;
+				border: 1px  solid #000;
+				position: absolute;
+				left: 40%;
+				z-index: 999;
+				 overflow-y:scroll;
+				 background-color:#fff;
+				 display:none;
+			}
+			#tk input{
+				cursor: pointer;
+			}
+			.tk_content{
+				width: 80%;
+				height: 400px;
+				margin: 10px auto;
+			}
+			.tk_add{
+				width: 100%;
+				text-align: center;
+				margin: 10px 0;
+			}
+			.tk_content table{
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 20px;
+			}
+			.tk_content table th,.tk_content table td{
+				border: 1px solid #ccc;
+				text-align: center;
+				padding: 3px 0;
+				cursor: pointer;
+			}
+			#tk_save{
+				padding: 10px 15px;
+				border: 0;
+				background-color: red;
+				color: #fff;
+				border-radius: 5px;
+				font-weight: bold;
+				margin-bottom: 20px;
+				outline:none;
+			}
+			#tk_cancel{
+				padding: 10px 15px;
+				border: 0;
+				background-color: green;
+				color: #fff;
+				border-radius: 5px;
+				font-weight: bold;
+				margin-bottom: 20px;
+				outline:none;
+			}
+			.btn_val{
+				width: 60px;
+				border: 0;
+				font-size:18px ;
+			}
+		</style>
+</head>
+<body class="nav-md">
+    <div class="container body">
+      	<div class="main_container">
+		<@h.naviHeader /><@h.leftMenu />
+			<div class="right_col" role="main">	
+				<!-- 主体内容 -->
+          		<div class="">
+          			<!-- 页面引导地址 -->
+					<div class="page-title">
+			            <div class="title_left">
+			                <i class="fa fa-home"></i>游戏管理 > 时时彩 > 重庆时时彩 > 添加游戏
+			            </div>
+		            </div>	
+		            <!-- 引导end -->
+		            
+		            <div class="clearfix"></div>
+		            
+		            <!--  -->
+		            <div class="row">
+		            	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="x_panel">
+			                  <div class="x_title">
+			                    <h2>添加游戏</h2>
+			                    <ul class="nav navbar-right panel_toolbox">
+			                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+			                      </li>
+			                      <li class="dropdown">
+			                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+			                        <ul class="dropdown-menu" role="menu">
+			                          <li><a href="#">Settings 1</a>
+			                          </li>
+			                          <li><a href="#">Settings 2</a>
+			                          </li>
+			                        </ul>
+			                      </li>
+			                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+			                      </li>
+			                    </ul>
+			                    <div class="clearfix"></div>
+			                  </div>
+			                  <div class="x_content">
+					             <form id="validForm" method="post" action="${ctx}/betgameclass/update" class="form-horizontal form-label-left">
+					             	<input type="hidden" id="gameclassid" name="gameclassid" value="${(returnDatas.data.gameclassid)!''}"/>	
+					             	<div class="col-md-12">
+			                   			<div class="col-md-4 col-sm-6 col-sm-12">
+					                      <div class="form-group">
+					                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">游戏名称 <span class="required">*</span>
+					                        </label>
+					                        <div class="col-md-6 col-sm-6 col-xs-12">
+					                          <input type="text" name="gcname" id="gcname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.gcname)!''}" class="form-control col-md-7 col-xs-12">
+					                        </div>
+					                      </div>
+					                      <div class="form-group">
+					                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">简称 <span class="required">*</span>
+					                        </label>
+					                        <div class="col-md-6 col-sm-6 col-xs-12">
+					                          <input type="text" name="gsname" id="gsname"  autocomplete="off" value="${(returnDatas.data.gsname)!''}" class="form-control col-md-7 col-xs-12">
+					                        </div>
+					                      </div>
+					                      <div class="form-group">
+					                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">最小号码<span class="required">*</span></label>
+					                        <div class="col-md-6 col-sm-6 col-xs-12">
+					                          <input type="text" name="nmin" id="nmin" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.nmin)!''}" class="form-control col-md-7 col-xs-12">
+					                        </div>
+					                      </div>
+					                      <div class="form-group">
+					                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">最大号码<span class="required">*</span></label>
+					                        <div class="col-md-6 col-sm-6 col-xs-12">
+					                          <input type="text" name="nmax" id="nmax" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.nmax)!''}" class="form-control col-md-7 col-xs-12">
+					                        </div>
+					                      </div>
+					                      <div class="form-group">
+					                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">号码数量<span class="required">*</span></label>
+					                        <div class="col-md-6 col-sm-6 col-xs-12">
+					                          <input type="text" name="nlen" id="nlen" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.nlen)!''}" class="form-control col-md-7 col-xs-12">
+					                        </div>
+					                      </div>
+					                      <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">开奖时间<span class="required">*</span></label>
+						                        <div class="col-md-63 col-sm-3 col-xs-12">
+						                        	<input  type="text" name="msh" id="msh" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.msh)!''}" class="form-control ">
+						                        </div>
+						                        <div class="col-md-3 col-sm-3 col-xs-12">
+						                        	<input  type="text" name="msm" id="msm" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.msm)!''}" class="form-control ">
+						                     	</div>
+						                     	<div class="col-md-3 col-sm-3 col-xs-12">
+						                        	<input  type="text" name="mss" id="mss" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mss)!''}" class="form-control ">
+						                    	</div>
+			                   			   </div>
+			                   			   <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">结束时间<span class="required">*</span></label>
+						                        <div class="col-md-3 col-sm-3 col-xs-12">
+						                        	<input  type="text" name="meh" id="meh" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.meh)!''}" class="form-control ">
+						                        </div>
+						                        <div class="col-md-3 col-sm-3 col-xs-12">
+						                        	<input  type="text" name="mem" id="mem" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mem)!''}" class="form-control ">
+						                     	</div>
+						                     	<div class="col-md-3 col-sm-3 col-xs-12">
+						                        	<input  type="text" name="mes" id="mes" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mes)!''}" class="form-control ">
+						                    	</div>
+			                   			   </div>
+			                   			   <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">首期时间<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="mstime" id="mstime" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mstime)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+			                   			</div>
+			                   			<div class="col-md-4 col-sm-6 col-sm-12">
+			                   				<div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">每天期数<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="mnums" id="mnums" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mnums)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">每天时间<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="mstep" id="mstep" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mstep)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">首期编码<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="msnum" id="msnum" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.msnum)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">开奖/秒<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="mopen" id="mopen" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mopen)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">截止/秒<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="mstop" id="mstop" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mstop)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label class="control-label col-md-3 col-sm-3 col-xs-12">状态<span class="required">*</span></label></label>
+						                        <div class="col-md-9 col-sm-9 col-xs-12">
+						                          <select class="form-control" name="state" id="state" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off">
+						                            <option value="1" <#if returnDatas.data??><#if returnDatas.data.state==1> selected</#if></#if>>正常</option>
+    												<option value="0" <#if returnDatas.data??><#if returnDatas.data.state==0> selected</#if></#if>>锁定</option>
+						                          </select>
+						                        </div>
+						                    </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">本期开奖<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="currenttickets" id="currenttickets"  autocomplete="off" value="${(returnDatas.data.currenttickets)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label class="control-label col-md-3 col-sm-3 col-xs-12">性质分类<span class="required">*</span></label></label>
+						                        <div class="col-md-7 col-sm-7 col-xs-12">
+						                          <select class="form-control col-md-12"  type="text" name="pt" id="pt" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.pt)!''}">
+						                            <option>---请选择性质分类--</option>
+						                          </select>
+						                        </div>
+						                        <div class="col-md-2 col-sm-2 col-xs-12">
+							                        <input  id="btn"  type="button" value="设置" class="btn btn-success btn-sm" />
+						                        </div>
+						                    </div>
+			                   			</div>	
+			                   			<div class="col-md-4 col-sm-6 col-sm-12">
+			                   				<div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">投注上限<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="bettingceiling" id="bettingceiling" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.bettingceiling)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">投注下限<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="bettinglimit" id="bettinglimit" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.bettinglimit)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">退佣<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="ty" id="ty" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.ty)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">排序状态<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="grank" id="grank" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.grank)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">官方网址<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="msurl" id="msurl"  autocomplete="off" value="${(returnDatas.data.msurl)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+					                        <div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">投注子菜单<span class="required">*</span></label>
+						                        <div class="col-md-6 col-sm-6 col-xs-12">
+						                          <input type="text" name="submenu" id="submenu"  autocomplete="off" value="${(returnDatas.data.submenu)!''}" class="form-control ">
+						                        </div>
+					                        </div>
+			                   			</div>
+					             	</div>
+					             	<div class="col-md-12">
+					             		<div class="form-group">
+						                        <label for="middle-name" class="control-label col-md-1 col-sm-1 col-xs-12">游戏规则<span class="required">*</span></label>
+						                        <div class="col-md-8 col-sm-8 col-xs-12">
+						                          <textarea name="gamerules" style="width:800px;height:400px;" class="form-control">${(returnDatas.data.gamerules)!''}</textarea>
+						                        </div>
+					                    </div>
+					             	</div>
+			                   		<div class="col-md-12">
+					                      <div class="ln_solid"></div>
+					                      <div class="form-group">
+					                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+					                          <button class="btn btn-primary" type="button" id="smtbtn" >保存</button>
+											  <button class="btn btn-primary" type="reset" id="rstbtn">重置</button>
+					                          <button type="submit" class="btn btn-success" onclick="history.go(-1)"><i class="btn-fh fa fa-mail-reply"></i>返回</button>
+					                        </div>
+					                      </div>
+					                </div>
+					             </form>
+			                  </div>
+			                </div>
+			              </div>
+		            </div>
+				</div>
+			</div>
+		<@h.footer />
+	</div>
+	<script>
+	jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betgameclass/list?springraintoken="+springraintoken});
+	 });
+	
+/* 	$("#btn").click(function(){
+		$("#tk").show();
+	})
+	$("#tk_save").click(function(){
+		$("#tk").hide()
+	})
+	$("#tk_cancel").click(function(){
+		$("#tk").hide()
+	}) */
+		
+jQuery(document).ready(function(){
+    //加载玩法名称
+    jQuery.ajax({
+        url : ctx+"/betpt/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+           			 //游戏分类设置
+          	  		jQuery("#xxx").append("<tr>"+"<td>"+_obj.name+"</td><td><input type='button' class='btn_edit1' value='编辑' /></td><td><input type='button' class='btn_delete1' value='删除' /></td>"+"</tr>");
+            	 	if(_obj.id=="${(returnDatas.data.pt)!''}"){
+						 jQuery("#pt").append("<option value='"+_obj.id+"' selected >"+_obj.name+"</option>");
+		 			}else{
+		 				jQuery("#pt").append("<option value='"+_obj.id+"'>"+_obj.name+"</option>");
+		 			}
+            });
+        }
+    });
+});
+
+jQuery("#btn").click(function(){
+	layer.open({
+  type: 2,
+  title: ' ',
+  shadeClose: true,
+      shade: false,
+      maxmin: true, //开启最大化最小化按钮
+      area: ['893px', '600px'],
+      content: '${ctx}/betpt/list',
+  end: function(){ //此处用于演示
+    window.parent.location.reload(); //刷新父页面
+  }
+});
+})
+
+/* var game_xz=document.getElementById("game_xz");
+				var tab=document.getElementById("tab");
+				var btn_add=document.getElementById("btn_add");
+				btn_add.onclick=function(){
+					if(game_xz.value!=""){
+						var otr=document.createElement("tr");
+						var otd=document.createElement("td");
+						otd.innerHTML=game_xz.value;
+						otr.appendChild(otd);
+					
+						var otd=document.createElement("td");
+						otd.innerHTML="<input type='button' class='btn_edit' value='编辑' />";
+						otr.appendChild(otd);	
+						otd.getElementsByClassName("btn_edit")[0].onclick=function(e){
+							var ele=e.target;
+							var val=ele.parentNode.previousElementSibling.innerHTML;
+							if(ele.parentNode.previousSibling.firstChild.nodeName!="INPUT"){
+								ele.parentNode.previousElementSibling.innerHTML="<input type='text' class='btn_val' value="+val+">";
+							}
+							$(".btn_val").blur(function(){
+							var a=$(this).val();
+							$(this).parent().text(a)
+							});
+						}
+
+					
+						var otd=document.createElement("td");
+						otd.innerHTML="<input type='button' class='btn_delete' value='删除' />";
+						otr.appendChild(otd);
+						otd.getElementsByClassName("btn_delete")[0].onclick=function(){
+							tab.tBodies[0].removeChild(this.parentNode.parentNode)
+						}
+						tab.tBodies[0].appendChild(otr);
+						game_xz.value=""
+					}
+				} */
+				
+	</script> 
+</body>
+</html>

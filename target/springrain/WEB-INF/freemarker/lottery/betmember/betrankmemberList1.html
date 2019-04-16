@@ -1,0 +1,300 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		var href = window.location.href;
+		var result = href.split('?')[href.split('?').length-1];
+		var url_list = $('.xiao-btnlist').find('a');
+		for(var i = 0; i < url_list.length ; i++){
+			if(url_list[i].href == href){
+	//			console.log(url_list[i].href);
+				url_list[i].style.backgroundColor = "#009688";
+				url_list[i].style.display = "block";
+				url_list[i].style.color = "#fff";
+			}
+		}
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betrankmember/delete");
+	}
+	
+	
+	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+				 <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+								   <a><cite>用户管理</cite><span class="layui-box">&gt;</span></a>
+								   <a><cite>每日输赢</cite></a>
+								</span>
+			            </li>
+		            <!--  <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>会员排行榜管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betrankmember/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betrankmember/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/betrankmember/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/betrankmember/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li> -->
+		              <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main" style="overflow: scroll;">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							       <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betmember/list?k=${k}&id=${(betMember.id)!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									 <!--  查询  结束 -->
+									 <div class="xiao-btnlist xiap-pull-left layui-inline" >
+									 				<div class="xiao-btnlist-item">
+													<a href="${ctx}/betmember/list?k=2&id=${(returnDatas.queryBean.memberid)!''}">本周</a>
+													</div>
+													<div class="xiao-btnlist-item">
+													<a href="${ctx}/betmember/list?k=5&id=${(returnDatas.queryBean.memberid)!''}">上周</a>
+													</div>
+													<div class="xiao-btnlist-item">
+													<a href="${ctx}/betmember/list?k=3&id=${(returnDatas.queryBean.memberid)!''}">本月</a>
+													</div>
+													<div class="xiao-btnlist-item">
+													<a href="${ctx}/betmember/list?k=4&id=${(returnDatas.queryBean.memberid)!''}">上月</a>
+													</div>
+									</div>
+									</form>
+									<!--start_export-->
+									
+									<table class="layui-table" lay-even ">
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">每日输赢&nbsp;&nbsp;&nbsp;用户ID：${(betMember.id2)!''}&nbsp;&nbsp;&nbsp; 真实姓名：${(betMember.realname)!''}&nbsp;&nbsp;&nbsp;输赢总计：<span <#if totalwinorloss??><#if (totalwinorloss>=0)>style="color:blue"<#else>style="color:red"</#if></#if>>${(totalwinorloss)!0}</span>  &nbsp;&nbsp;&nbsp;投注额：<span style="color:blue">${(totalbettingmoney)!0}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													
+													<font id='' class='recorsView'>共<span>${returnDatas.page.pageCount!''}</span>页,共 <span>
+													<#if showtoday11??>
+													${(returnDatas.page.totalCount+1)!''}
+													<#else>
+													${(returnDatas.page.totalCount)!''}
+													</#if>
+													
+													</span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												 <!--  <th>操作</th> -->
+												  <!--first_end_no_export-->
+													<!-- 	<th id="th_id" >表ID</th> -->
+													<th id="th_date" >时间</th>
+													<th id="th_dayscore" >每日输赢</th>
+													<th>投注额</th>
+													<th>银行分</th>
+													<th>游戏分</th>
+													<th>登录地址</th>
+													<th>操作</th>
+													
+														<!-- <th id="th_orderno" >排名</th>
+														<th id="th_memberid" >会员ID</th>
+														<th id="th_nickname" >昵称</th>
+														<th id="th_award" >奖励分</th>
+														<th id="th_state" >状态</th> -->
+													<!-- 	<th id="th_date" >排行榜日期</th> -->
+													
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="" align="center">
+														<!-- <td style="text-align:center">
+															<@shiro.hasPermission name="/betrankmember/update" >
+								                           		 <a href="#" data-action="${ctx}/betrankmember/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betrankmember/delete" >
+								                            	<a style="margin:2px 0 0 0" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+														<!--end_no_export-->
+														<!-- <td >
+															${(_data.id)!''}
+														</td> -->
+														<td style="white-space:nowrap">
+															 ${(_data.date)!''}
+														</td>
+														<td 
+														<#if _data.dayscore??>
+															<#if (_data.dayscore>=0)>
+																style="white-space:nowrap;color:blue;"		
+																<#else>
+																style="white-space:nowrap;color:red;"
+															</#if>
+														</#if>
+														>
+														<input type="hidden" class="t1" value="${(_data.dayscore)!0}">
+																${(_data.dayscore)!0}
+														</td>
+														<td style="white-space:nowrap">
+														<input type="hidden" class="tze" value="${(_data.bettingmoney)!0}">
+															<a href="${ctx}/betmember/list?k=14&memberid=${(_data.memberid)!''}&date1=${(_data.date)!''}" style="text-decoration:underline;">${(_data.bettingmoney)!0}</a>
+														</td>
+														<td style="white-space:nowrap">
+															<input type="hidden" class="t2" value="${(_data.bankmoney)!0}">
+															${(_data.bankmoney)!0}
+														</td>
+														<td style="white-space:nowrap">
+														<input type="hidden" class="t3" value="${(_data.gamemoney)!0}">
+															${(_data.gamemoney)!0}
+														</td>
+														<td style="white-space:nowrap">
+															<a style="text-decoration:underline;" href="${ctx}/betmember/list?k=22&ip2=${(_data.loginip)!''}">${(_data.loginip)!''}</a>&nbsp;<a href="${ctx}/betmember/list?k=22&memberid=${(_data.memberid)!''}" style="text-decoration:underline;">查</a>
+														</td>
+														<td style="white-space:nowrap">
+															<a href="${ctx}/betmember/list?k=14&memberid=${(_data.memberid)!''}&date1=${(_data.date)!''}" style="text-decoration:underline;">${(_data.operation)!''}</a>
+														</td>
+														
+													<!-- 	<td >
+															 ${_data_index+1}
+														</td>
+														<td >
+															<#if _data.memberid??>
+																${(_data.memberid)!''}
+															<#else>
+																${(_data.id)!''}
+															</#if>
+														</td>
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td >
+															${(_data.award)!0}
+														</td>
+														<td >
+																<#if _data.state??&&_data.state==1>
+																	领取
+																<#else>
+																	<p style="color:red">未领取</p>
+																</#if>
+														</td> -->
+													<!-- 	<td >
+															日期型
+														${((_data.date)?string('yyyy-MM-dd'))!''}
+														<#if _data.date??>
+															<#else>
+															${.now?string('yyyy-MM-dd')!''}
+														</#if>
+														</td> -->
+													</tr>
+												</#list>
+												<tr style="background-color:#eafcff;">
+												<td style="text-align: center;">小计</td>
+												<td style="text-align: center;"><a id="t1"></a></td>
+												<td style="text-align: center;"><a id="tze"></a></td>
+												<td style="text-align: center;"><a id="t2"></a></td>
+												<td style="text-align: center;"><a id="t3"></a></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script>
+var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	$("#t1").text(Math.round(t1*100)/100);
+	
+var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	
+	$("#t2").text(Math.round(t2*100)/100);
+	
+	var t3 = 0.;
+	$(".t3").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t3+= a*1;
+	});
+	
+	$("#t3").text(Math.round(t3*100)/100);
+
+	
+	var tze  = 0;
+	$(".tze").each(function(){
+		tze+=parseFloat($(this).val());
+	});
+	$("#tze").text(Math.round(tze*100)/100);
+</script>
+</html>
+

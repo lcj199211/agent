@@ -1,0 +1,338 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/lotteryphasedlt/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+	       		
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">	
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/lotteryphasedlt/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">大乐透开奖结果搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">期号</label>
+									                    <div class="layui-input-inline">
+									                        <input type="text" name="phaseno" value="${(returnDatas.queryBean.phaseno)!''}" placeholder="请输入期号 " class="layui-input"> 
+									                    </div>
+							                		</div>
+													&nbsp;&nbsp;&nbsp;&nbsp;
+									                <div class="layui-inline">
+									                    <label class="layui-form-label">是否修正</label>
+									                    <div class="layui-input-inline">
+									                        <select name="istrue" id="istrue" class="layui-input">
+									                        		<option value="100" >所有状态</option>
+																	<option value="1" 
+																	<#if returnDatas.queryBean.istrue??>
+																		 <#if returnDatas.queryBean.istrue=1> selected
+																		 </#if> 
+																    </#if> >已修正</option>
+																    <option value="0" 
+																	<#if returnDatas.queryBean.istrue??>
+																		 <#if returnDatas.queryBean.istrue=0> selected
+																		 </#if> 
+																    </#if> >未修正</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="18">大乐透开奖结果列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- 复选框，已注释掉，有需求可去掉注释 -->
+<!-- 												  <th class="center"> -->
+<!-- 															<input id="checkAll"  type="checkbox"> -->
+<!-- 												  </th> -->
+												  
+												  <!--first_end_no_export-->
+														<!-- <th id="th_lotterytype" >彩票类型</th> -->
+														<th id="th_phaseno" >期号</th>
+														<th id="th_wincode" >开奖号码</th>
+														<th id="th_win1" >一等奖基本和基本派奖奖金</th>
+														<th id="th_win2" >二等奖基本奖金</th>
+														<th id="th_win3" >三等奖基本奖金</th>
+														<th id="th_zwin1" >一等奖追加和追加派奖奖金</th>
+														<th id="th_zwin2" >二等奖追加奖金</th>
+														<th id="th_zwin3" >三等奖追加奖金</th>
+														<th id="th_poolamount" >奖池</th>
+														<th id="th_addpoolamount" >加奖奖池</th>
+														<th id="th_saleamount" >销售额</th>
+														<th id="th_endtime" >官方兑奖截止时间</th>
+														<th id="th_starttime" >官方开奖时间</th>
+														<th id="th_localendtime" >平台截止时间</th>
+														<th id="th_istrue" >是否修正（0否1是）</th>
+														<th width="165">操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- 复选框，已注释掉，有需求可去掉注释 -->
+<!-- 														<td class="center"> -->
+<!-- 																<input name="check_li" value="${_data.id}"  type="checkbox"> -->
+<!-- 														</td> -->
+														<!-- 
+														<td >
+															${(_data.lotterytype)!''}
+														</td>
+														 -->
+														<td >
+															${(_data.phaseno)!''}
+														</td>
+														<td >
+															${(_data.wincode)!''}
+														</td>
+														<td >
+														<!-- 一等奖的是基本奖加派奖 -->
+															${(((_data.win1)!0)+((_data.win1p)!0))!0}	
+														</td>
+														<td >
+															${(_data.win2)!0}
+														</td>
+														<td >
+															${(_data.win3)!0}
+														</td>
+														<td >
+														<!-- 追加一等奖的是追加奖加追加派奖 -->
+															${(((_data.zwin1)!0)+((_data.zwin1p)!0))!0}
+														</td>
+														<td >
+															${(_data.zwin2)!0}
+														</td>
+														<td >
+															${(_data.zwin3)!0}
+														</td>
+														<td >
+															${(_data.poolamount)!0}
+														</td>
+														<td >
+															${(_data.addpoolamount)!0}
+														</td>
+														<td >
+															${(_data.saleamount)!0}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.endtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.starttime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.localendtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<!--   ${(_data.state)!0}  --><!-- 1已修正 0未修正 -->
+															<#if _data.istrue==1> 
+																<span style="color:#288a53" >已修正</span>
+																<#else>
+																<span style="color:red" >未修正</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="restore"><u>已修正</u></span>
+															</#if>
+														</td>
+														<td>
+															<@shiro.hasPermission name="/lotteryphasedlt/update" >
+								                           		 <a href="#" data-action="${ctx}/lotteryphasedlt/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/lotteryphasedlt/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+								                            <!-- <@shiro.hasPermission name="/lotteryphasedlt/update" >
+								                            	<input type="hidden" value="${(_data.id)!''}"><a href="#" class="layui-btn layui-btn-warm layui-btn-mini jiesuan">重新结算</a>
+								                            </@shiro.hasPermission> -->
+														</td>
+															<!--end_no_export-->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script>
+$(".restore").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		layer.confirm('更改为已修正？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+				//layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/lotteryphasedlt/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("修改成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+	
+	$(".dongjie").click(function(){
+		var s=0;
+		var i=$(this).prev().val();
+		layer.confirm('冻结投注该场次所有用户？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+				$.ajax({
+					type:"post",
+					url:"${ctx}/bjdcresult/update?k=2",
+					data:{id:i,status:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("操作成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+	
+	$(".jiedong").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		layer.confirm('解冻投注该场次所有用户？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+				$.ajax({
+					type:"post",
+					url:"${ctx}/bjdcresult/update?k=2",
+					data:{id:i,status:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("操作成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+	//重新结算
+	$(".jiesuan").click(function(){
+		var i=$(this).prev().val();
+		layer.confirm('确认重新结算？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+			    layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/bjdcarrange/update?k=2",
+					data:{fid:i},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("重新结算成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+</script>
+</html>
+

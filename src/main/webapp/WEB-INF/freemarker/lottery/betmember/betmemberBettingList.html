@@ -1,0 +1,313 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script>
+jQuery(function(){
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})
+//120秒刷新
+/* var t; 
+t=30; 
+function shua() 
+{ 
+t=t-1; 
+document.getElementById("hints").innerHTML=t+" 秒"; 
+if (t==0) 
+{ 
+document.location.reload(); 
+} 
+}  */
+
+
+//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+</script>
+</head>
+<body <#-- onload="window.setInterval(shua,1000); " -->>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <!-- <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>BetMember管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             <!-- 	<@shiro.hasPermission name="/betmember/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmember/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission> -->
+		             	<!-- <@shiro.hasPermission name="/betmember/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button> -->
+		                <!-- <@shiro.hasPermission name="/betmember/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission> -->
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form id="searchForm" onkeydown="if(event.keyCode==13)return false;" action="${ctx}/betmember/bettinglist" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="layui-table search-wrap">
+									  	<div class="xiao-cell xiao-pull-left xiao-record">
+											昨日输赢:<span  class="xiao-color-e00 font-weight font-s20">${(yesterdaywinorloss)!0}</span>&nbsp;&nbsp;&nbsp;今日输赢:<span class="xiao-color-e00 font-weight font-s20">${(todaywinorloss)!0}</span> &nbsp;&nbsp;&nbsp;投注中：${concurrentUsers!0}人&nbsp;&nbsp;&nbsp;
+										</div>
+										<div class="layui-inline betmember_find xiao-input-wrap">
+											查询:<input class="xiao-input" id="find" type="text" <#if returnDatas.queryBean.id2??> value="${(returnDatas.queryBean.id2)!''}"
+											</#if>
+											<#if returnDatas.queryBean.account??>
+												value="${(returnDatas.queryBean.account)!''}"
+											</#if>
+											<#if returnDatas.queryBean.mobile??>
+												value="${(returnDatas.queryBean.mobile)!''}"
+											</#if>
+											<#if returnDatas.queryBean.realname??>
+												value="${(returnDatas.queryBean.realname)!''}"
+											</#if>
+											<#if returnDatas.queryBean.loginip??>
+												value="${(returnDatas.queryBean.loginip)!''}"
+											</#if>
+											<#if returnDatas.queryBean.signip??>
+												value="${(returnDatas.queryBean.signip)!''}"
+											</#if>
+											>
+											<input id="id2" class="allUser" type="radio" name="1" checked />ID
+											<input id="account" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.account??> checked
+											</#if>
+											/>用户名
+											<input id="mobile" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.mobile??> checked
+											</#if>
+											/>手机号码
+											<input id="realname" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.realname??> checked
+											</#if>
+											/>真实姓名
+											<input id="loginip" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.loginip??> checked
+											</#if>
+											/>登录IP
+											<input id="signip" class="allUser" type="radio" name="1" <#if returnDatas.queryBean.signip??> checked
+											</#if>
+											/>注册IP
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+										<div class="xiao-pull-right xiao-line40">
+											<!-- <font id="hints">30秒</font> --><button id="reflesh" class="xiao-btn xiao-btn-success">刷新</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									  
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												  
+												  <!--first_end_no_export-->
+												  		<th>序号</th>
+												  		<th id="th_id" >用户ID</th>
+														<th id="th_account" >用户名</th>
+														<th id="th_nickname" >昵称</th>
+														<th id="th_score" >总分数</th>
+														<th  >当前投注</th>
+														<th id="th_logintime" >登录时间</th>
+														<th id="th_loginip" >登录地址</th>
+														<th id="th_status" >今日输赢</th>
+														<th id="th_tool" >所在游戏</th>
+														<!-- <th style="text-align:center">操作</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr  align="center">
+														
+														<!--end_no_export-->
+														<td>
+															${_data_index+1}
+														</td>
+														<td >
+															<a  class="xiao-color-00e" style="text-decoration:underline;" href="${ctx}/betmember/look?id2=${(_data.id2)!''}&id=${(_data.id)!''}">${(_data.id2)!''}</a>
+														</td>
+														<td>
+															<a class="xiao-color-861db1" style="text-decoration:underline;" href="${ctx}/betmember/list?k=6&id2=${_data.id2!''}">${(_data.account)!''}</a>
+														</td>
+														<td style="white-space:nowrap">
+															${(_data.nickname)!''}
+														</td>
+														<td 
+																<#if _data.score??>
+																<#if (_data.score>=0)>
+																style="color:blue"
+																<#elseif (_data.score<0)>
+																style="color:red"
+																</#if>
+																</#if>
+															>
+															<input class="t1" type="hidden" value="${(_data.score)!''}">
+															${(_data.score)!0}
+														</td>
+														<td >
+															<input  class="t2" type="hidden" value="${(_data.currentBettingMoney)!''}">
+															<a 
+															<#if _data.currentBettingMoney??>
+																<#if (_data.currentBettingMoney>=0)>
+																style="color:blue;text-decoration:underline;"
+																<#elseif (_data.currentBettingMoney<0)>
+																style="color:red;text-decoration:underline;"
+																</#if>
+																</#if>
+															  href="${ctx}/betmember/list?k=7&p=1&id2=${(_data.id2)!''}&account=${(_data.account)!''}&id=${(_data.id)!''}" >${(_data.currentBettingMoney)!0}</a>
+														</td>
+														<td style="white-space:nowrap">
+															${(_data.logintime)!''}
+														</td>
+														<td style="white-space:nowrap">
+															<a style="text-decoration:underline;" href="${ctx}/betmemberloginlog/list?ip2=${(_data.loginip)!''}">${(_data.loginip)!''}</a> <a class="xiao-color-00e" href="${ctx}/betmemberloginlog/list?memberid2=${(_data.id2)!''}" style="text-decoration:underline;">查</a>
+														</td>
+														<td 
+														<#if _data.dayscore??>
+																<#if (_data.dayscore>=0)>
+																style="color:blue"
+																<#elseif (_data.dayscore<0)>
+																style="color:red"
+																</#if>
+																</#if>
+														>
+															<input class="t3" type="hidden" value="${(_data.dayscore)!''}">
+															${(_data.dayscore)!''}
+														</td>
+														<td style="white-space:nowrap">
+															<a  class="xiao-color-eb7c05" href="${ctx}/betmember/list?k=7&p=1&id2=${(_data.id2)!''}&account=${(_data.account)!''}&id=${(_data.id)!''}" style="text-decoration:underline;">${(_data.operate)!''}</a>
+														</td>
+														<!-- <td style="text-align:center">
+															<@shiro.hasPermission name="/betmember/update" >
+								                           		 <a href="#" data-action="${ctx}/betmember/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betmember/delete" >
+								                            	<a style="margin:2px" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+													</tr>
+												</#list>
+												<tr class="center" style="background-color:#eafcff;">
+												  		<td >小计</td>
+														<td  ></td>
+														<td  ></td>
+														<td ></td>
+														<td><a   id="t1"></a></td>
+														<td ><a  id="t2"></a></td>
+														<td ></td>
+														<td></td>
+														<td ><a  id="t3"></a></td>
+														<td ></td>
+												</tr> 
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<font id='recordsView' class='recorsView xiao-pull-left'>共<span></span>页,共 <span></span>条记录</font>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmember/delete");
+	}
+	
+	$(".allUser").change(
+		function(){
+			var a=$(this).attr("id");
+			$("#find").attr("name",a);
+		}
+	)
+	jQuery(function(){
+		var a=$("input[name='1']:checked").attr("id");
+			$("#find").attr("name",a);
+	})
+	
+	
+		var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	$("#t1").text(Math.round(t1*100)/100);
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	if(t2>=0){
+		$("#t2").css('color','blue');
+	}else if(t2<0){
+		$("#t2").css('color','red');
+	}
+	$("#t2").text(Math.round(t2*100)/100);
+	
+	var t3 = 0.;
+	$(".t3").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t3+= a*1;
+	});
+	if(t3>=0){
+		$("#t3").css('color','blue');
+	}else if(t3<0){
+		$("#t3").css('color','red');
+	}
+	$("#t3").text(Math.round(t3*100)/100);
+</script>
+</body>
+</html>
+

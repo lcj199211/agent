@@ -1,0 +1,121 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+	});
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>救济领取</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div style="overflow-x:scroll" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+									<!--start_export-->
+									<form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/seclist?k=13&date=${date}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          </form>
+						          
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">救济金<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th> -->
+												  
+												  <!--first_end_no_export-->
+														<th >用户ID</th>
+														<th id="th_reliefscore" style="white-space:nowrap" >领取的救济金</th>
+														<th id="th_date" >领取时间</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td> -->
+														<td style="text-align: center;">
+															<a href="${ctx}/betmember/look?id2=${(_data.memberid2)!''}" style="color: blue"><u>${(_data.memberid2)!''}</u></a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" value="${(_data.reliefscore)!0}" class="jjj">
+															${((_data.reliefscore)?string(',###'))!0}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.date)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color: #eafcff">
+												<td style="text-align: center;">小计</td>
+												<td style="text-align: center;"><a id="jjj"></a></td>
+												<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script>
+var jjj=0;
+$(".jjj").each(function(){
+	jjj+=parseFloat($(this).val());
+});
+$("#jjj").text(outputmoney(parseInt(jjj)));
+</script>
+</html>
+

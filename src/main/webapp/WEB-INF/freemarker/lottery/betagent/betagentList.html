@@ -1,0 +1,550 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<!-- <script src="${ctx}/js/custom/common/form.js"></script>
+ -->
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+					 <@shiro.hasPermission name="/betagent/list" >
+		             		<button type="button" class="layui-btn layui-btn-small" data-action="${ctx}/betagent/list?x=1"><i class="layui-icon layui-icon-specil">&#xe61f;</i>显示全部</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/betagent/update" >
+		             		<button type="button" class="layui-btn layui-btn-small" data-action="${ctx}/betagent/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form autocomplete="off" class="layui-form layui-form-pane" id="searchForm" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          
+							          <div class="layui-inline  xiao-input-wrap">
+											账号:<input class="xiao-input" id="account" type="text" name="account"  value="${(returnDatas.queryBean.account)!''}" />
+											昵称:<input class="xiao-input" id="nickname" type="text"name="nickname"  value="${(returnDatas.queryBean.nickname)!''}" />
+		<!-- 									<#if returnDatas.queryBean.nickname??>
+												value="${(returnDatas.queryBean.nickname)!''}"
+											</#if>
+											<#if returnDatas.queryBean.agentid??>
+												value="${(returnDatas.queryBean.agentid)!''}"
+											</#if>
+											
+											<input id="account" class="allUser" type="radio" title="账号" name="1" checked/>
+											<input id="nickname" class="allUser" type="radio" title="昵称" name="1" <#if returnDatas.queryBean.nickname??> checked
+											</#if>
+											/>
+											<input id="agentid" class="allUser" type="radio" title="代理id"  name="1" <#if returnDatas.queryBean.agentid??> checked
+											</#if>
+											/> -->
+											
+										</div>
+										<div class="layui-inline">
+									                    <label class="layui-form-label">启用状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+																  	<option value="1" 
+																		 <#if returnDatas.queryBean.active=1> selected="selected"
+																		 </#if> 
+																     >启用</option>
+																     <option value="0" 
+																		 <#if returnDatas.queryBean.active=0> selected="selected"
+																		 </#if> 
+																     >停用</option>
+															</select>   
+									                    </div>
+									                </div>
+							          <div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button"  onclick="clearpageindex();clearformurl();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col >
+										    <col >
+										</colgroup>
+							          	
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="">
+										    <col width="">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="3" style="text-align: left;border-right: 0px">
+													${(myagentid)!''}
+													<#if List??>
+														<#list List as _agent>
+															<font>-></font><a href="${ctx}/betagent/list?agentid=${((_agent.agentid)!'')}"><u>${(_agent.agentnickname)!''}</u></a>
+														</#list>													
+													</#if>
+													</th><th colspan="20" style="border-left: 0px;">代理列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<!-- <tr style="background-color:#eafcff;" >
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+														<th colspan="2">转账</th>
+														<th colspan="2">投注</th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												</tr> -->
+												<tr style="background-color:#eafcff;" >
+												  <!--first_end_no_export-->
+												  <!-- 		<th>所属</th> -->
+														<!-- <th>代理商ID</th> -->
+														<th >账号</th>
+														<th >昵称</th>
+														<th id="th_score">金额</th>
+														<!-- <th id="th_ty" style="width: 50px">转账退佣</th> -->
+														<th id="" >投注退佣比例</th>
+														<th id="" >投注退佣</th>
+														<th id="" >跟单退佣比例</th>
+														<th id="" >跟单退佣</th>
+													<!-- 	<th id="th_sx">金额</th>
+														<th id="th_ty2" style="width: 50px">退佣</th> -->
+														<th id="th_companyproportion">占成</th>
+													<!-- 	<th >输赢</th> -->
+														<th id="th_subordinate" >代理下线</th>
+														<th id="th_membernum" >会员</th>
+														<th id="th_login" >登录</th>
+														<th id="th_active" >状态</th>
+														<th  >设置</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														
+														<!--end_no_export-->
+													<!-- 	<td style="text-align: center;">
+															${(_data.parentid)!''}
+														</td> -->
+														<!-- <td style="text-align: center;">
+															${(_data.agentid)!''}
+														</td> -->
+														<td style="text-align: center;">
+															<!--  ${(_data.account)!''}  -->
+															<a class="xiao-color-00e" style="text-decoration:underline;"  href="${ctx}/betagent/look?k=3&id=${(_data.id)!''}&account=${(_data.account)!''}"><u>${(_data.account)!''}</u></a>
+														</td>
+														<td style="text-align: center;">
+															${(_data.nickname)!''}
+														</td>
+														
+														<td  style="text-align: center; ">
+														
+														
+														<input type="hidden" class="transferscore" value="${(_data.score)!0}">
+														<@shiro.hasPermission name="/bettransferagentaccounts/update" >
+														 <table>
+														<td style="border: 0px; width: 80%;text-align: center;">
+														<a style="text-decoration:underline;"  href="${ctx}/bettransferagentaccounts/list?a=4&xxx=${(_data.agentid)!''}"><u>
+														</@shiro.hasPermission>
+														<font style="color:blue;">${(_data.score)!0}</font>
+														<@shiro.hasPermission name="/bettransferagentaccounts/update" >
+														</u></a>
+														</td>
+														<td style="border: 0px;">
+															
+																<#if tran=="1">
+									                           		<a href="#" data-action="${ctx}/betagent/look?k=1&id=${(_data.id)!''}&agentid=${(_data.agentid!'')}" class="layui-btn xiao-btn-danger layui-btn-mini cancel">转账</a>
+																<#else>
+																	<a onclick="alert('你没有转账权限！')" style="background-color:#c5bbaf " class="layui-btn xiao-btn-danger layui-btn-mini cancel">转账</a>
+																</#if>
+									                       
+								                        </td>
+														</table> 
+														 </@shiro.hasPermission>
+														</td>
+														<td style="text-align: center;">
+															<input type="hidden" class="bettingrebate" value="${(_data.bettingrebate*100)!0}">
+														${(_data.bettingrebate*100)!0}%
+														</td>
+														<td style="text-align: center;">
+															<!-- <a class="xiao-color-00e" style="text-decoration:underline;"  href="${ctx}/bettransferagentaccounts/list?a=3&xxx=${(_data.agentid)!''}">${(_data.ty)!0}</a> -->
+															<input type="hidden" class="bettingty" value="${(_data.bettingty)!0}">
+															
+															${(_data.bettingty)!''}
+														</td>
+														<td style="text-align: center;">
+															<input type="hidden" class="bettingrebate2" value="${(_data.bettingrebate2*100)!0}">
+														${(_data.bettingrebate2*100)!0}%
+														</td>
+														<td style="text-align: center;">
+															<!-- <a class="xiao-color-00e" style="text-decoration:underline;"  href="${ctx}/bettransferagentaccounts/list?a=3&xxx=${(_data.agentid)!''}">${(_data.ty)!0}</a> -->
+															<input type="hidden" class="bettingty2" value="${(_data.bettingty2)!0}">
+															
+															${(_data.bettingty2)!''}
+														</td>
+														<!-- <td style="text-align: center;">
+														<input class="tz" type="hidden" value="${((_data.sx)?string('#'))!''}">
+															${((_data.sx)?string("#"))!''}
+														</td>
+														<td style="text-align: center;">
+														<input class="tzty" type="hidden" value="${((_data.ty2)?string('#'))!''}">
+															<a class="xiao-color-00e" style="text-decoration:underline;" href="${ctx}/betagent/list?t=1&agentid=${(_data.agentid!'')}">${((_data.ty2)?string("#"))!''}</a>
+														</td> -->
+														<td style="text-align: center;">
+															<input type="hidden" class="companyproportion" value="${(_data.companyproportion)!0}">
+															${(_data.companyproportion)!0}%
+														</td>
+														<#-- <td style="text-align: center;">
+														<input class="yxsy" type="hidden" value="${(_data.bettingwin)!0}">
+															<#if (_data.bettingwin??) >
+																<#if _data.bettingwin &gt;= 0 >
+																<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?k=1&agentid=${(_data.agentid)!''}">
+																<font style="color:blue;">
+																	${((_data.bettingwin))!0}
+																	</font>
+																	</a>
+																</#if>
+																<#if _data.bettingwin &lt; 0 >
+																<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?k=1&agentid=${(_data.agentid)!''}">
+																<font style="color:red;">
+																	${((_data.bettingwin))!0}
+																	</font>
+																	</a>
+																</#if>
+																<#else>
+																<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?k=1&agentid=${(_data.agentid)!''}">
+																<font style="color:blue;">
+																	${((_data.bettingwin))!0}
+																	</font>
+																	</a>
+															</#if>
+														</td> -->
+														<td style="text-align: center;">
+														<input type="hidden" class="subordinate" value="${(_data.subordinate)!0}">
+														<a class="xiao-color-00e" style="text-decoration:underline;" href="${ctx}/betagent/list?agentid=${(_data.agentid!'')}">${(_data.subordinate)!0}</a>
+														</td>
+														<td style="text-align: center;">
+															<input type="hidden" class="membernum" value="${(_data.membernum)!0}">
+															<a class="xiao-color-00e" style="text-decoration:underline;" href="${ctx}/betagent/list?m=1&agentid=${(_data.agentid!'')}">${(_data.membernum)!0}</a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" class="login" value="${(_data.login)!0}">
+															${(_data.login)!0}
+														</td>
+														<td style="text-align: center;">
+															
+															<#if _data.active==0>
+																<input type="hidden" value="${(_data.agentid)}"><span style="cursor:hand" class="run"><u>启用</u></span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" value="${(_data.agentid)}"><span style="cursor:hand;color:red" class="stop"><u>停用</u></span>
+																<#else>
+																<input type="hidden" value="${(_data.agentid)}"><span style="cursor:hand;color:#288a53" class="run"><u>启用</u></span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" value="${(_data.agentid)}"><span style="cursor:hand" class="stop"><u>停用</u></span>
+															</#if>
+														</td>
+														
+														<td style="text-align: center; ">
+															<@shiro.hasPermission name="/betagent/update" >
+								                           		 <a href="#" data-action="${ctx}/betagent/update/pre?a=2&id=${(_data.id)!''}&agentid=${(_data.agentid!'')}" class="layui-btn layui-btn-normal layui-btn-mini">管理</a>
+								                            </@shiro.hasPermission>
+								                           <#--  <@shiro.hasPermission name="/betagent/update" >
+								                           		 <a href="#" data-action="${ctx}/betagent/update/pre?a=3&id=${(_data.id)!''}&agentid=${(_data.agentid!'')}" style="background-color: green" class="layui-btn layui-btn-normal layui-btn-mini">权限</a>
+								                            </@shiro.hasPermission> -->
+								                          		 	<input type="hidden" value="${(_data.agentid)}">
+								                           		 <a href="#"  class="layui-btn layui-btn-normal layui-btn-mini transfermemberagent">转移用户代理</a>
+								                           		 <input type="hidden" value="${(_data.agentid)}">	
+								                           		 <a href="#"  class="layui-btn layui-btn-normal layui-btn-mini transferagent">转移代理</a>	
+														</td>
+													</tr>
+												</#list>
+											 
+											 
+											 <tr class="center" style="background-color:#eafcff;">
+											 <td><b>小计</b></td>
+											<!--  <td></td> -->
+											 <td></td>
+											 <td style="text-align: center;">
+												<a id="transferscore">
+											</td>
+											 <td style="text-align: center;">
+											 	<a  id="bettingrebate">
+											 </td>
+											<!--  <td style="text-align: center;">
+											 	<input style="border:0px;background-color:#eafcff;text-align: center;color: blue;" readonly="readonly" type="text" id="tz">
+											 </td>
+											 <td style="text-align: center;">
+											 	<input style="border:0px;background-color:#eafcff;text-align: center;color: blue;" readonly="readonly" type="text" id="tzty">
+											 </td> -->
+											 <td>
+											 <a  id="bettingty">
+											 </td>
+											 <!-- 跟单返利比例 -->
+											 <td style="text-align: center;">
+											 	<a  id="bettingrebate2">
+											 </td>
+											 <!-- 跟单返利金额 -->
+											 <td>
+											 <a  id="bettingty2">
+											 </td>
+											 <td>
+											  <a id="companyproportion">
+											 </td>
+											<!--  <td>
+											  <a id="yxsy">
+											 </td> -->
+											 <td>
+											<a id="subordinate">
+											 </td>
+											 <td>
+											 <a id="membernum">
+											 </td>
+											 <td>
+											  <a  id="login">
+											 </td>
+											 <td></td>
+											 <td></td>
+											 </tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+	</div>
+	<div class="footer"></div>
+</body>
+<script type="text/javascript">
+
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+	function clearformurl(){
+		$('#searchForm').attr("action","${ctx}/betagent/list?sr=1");
+	}
+
+	$(".allUser").change(
+		function(){
+			var a=$(this).attr("id");
+			$("#find").attr("name",a);
+		}
+	)
+	jQuery(function(){
+		var a=$("input[name='1']:checked").attr("id");
+			$("#find").attr("name",a);
+	})	
+	
+	
+ function getUrlParam(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg); //匹配目标参数
+      if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+if(getUrlParam("agentid")!=null){
+	$("#searchForm").attr("action","${ctx}/betagent/list?agentid="+getUrlParam("agentid"));
+}else{
+	$("#searchForm").attr("action","${ctx}/betagent/list?sr=1");
+}
+
+//启用1
+	$(".run").click(function(){
+		var s=1;
+		var a=$(this).prev().val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betagent/update?j=1",
+			data:{agentid:a,state:s},
+			success:function(result){
+				if("success"==result.status){
+					history.go(0);
+				}
+			},
+		})
+	})
+//停用0
+	$(".stop").click(function(){
+		var s=0;
+		var a=$(this).prev().val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betagent/update?j=1",
+			data:{agentid:a,state:s},
+			success:function(result){
+				if("success"==result.status){
+					history.go(0);
+				}
+			},
+		})
+	})
+	
+	
+	$(".transfermemberagent").click(function(){
+		var a=$(this).prev().val();
+				//prompt层
+				layer.prompt({title: '请输入要转入的代理账户，并确认',offset:['',''], formType: 2}, function(pass, index){
+				  layer.close(index);
+				   	$.ajax({
+						type:"post",
+						url:"${ctx}/betagent/updatememberagentid?agentaccount="+pass,
+						data:{a:a},
+						success:function(result){
+							if("success"==result.status){
+								layer.msg('修改成功！',{offset:['','']});
+								setTimeout(window.location.reload(),2000); 
+							}else if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								
+							}
+						},
+						}) 
+				  });
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betagent/updatememberagentid",
+			data:{agentid:a,state:s},
+			success:function(result){
+				if("success"==result.status){
+					history.go(0);
+				}
+			},
+		})
+	})
+	
+	$(".transferagent").click(function(){
+		var a=$(this).prev().val();
+				//prompt层
+				layer.prompt({title: '请输入要转入的代理账户，并确认',offset:['',''], formType: 2}, function(pass, index){
+				  layer.close(index);
+				   	$.ajax({
+						type:"post",
+						url:"${ctx}/betagent/transferagent?agentaccount="+pass,
+						data:{a:a},
+						success:function(result){
+							if("success"==result.status){
+								layer.msg('转入成功！',{offset:['','']});
+								setTimeout("history.go(0);",2000);
+							}else if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								setTimeout("history.go(0);",2000);
+								
+							}
+						},
+						}) 
+				  });
+		/* $.ajax({
+			type:"post",
+			url:"${ctx}/betagent/updatememberagentid",
+			data:{agentid:a,state:s},
+			success:function(result){
+				if("success"==result.status){
+					history.go(0);
+				}
+			},
+		}) */
+	})
+	
+	var transferscore = 0;
+	$(".transferscore").each(function(){
+		transferscore+= parseFloat($(this).val());
+	});
+	$("#transferscore").text(Math.round(transferscore* 100) / 100);
+	
+	
+	var bettingrebate = 0;
+	$(".bettingrebate").each(function(){
+		bettingrebate+= parseFloat($(this).val());
+	});
+	$("#bettingrebate").text((bettingrebate* 100) / 100+"%");
+	
+	var bettingty = 0;
+	$(".bettingty").each(function(){
+		bettingty+= parseFloat($(this).val());
+	});
+	$("#bettingty").text(Math.round(bettingty* 100) / 100);
+	
+	
+	var bettingrebate2 = 0;
+	$(".bettingrebate2").each(function(){
+		bettingrebate2+= parseFloat($(this).val());
+	});
+	$("#bettingrebate2").text(Math.round(bettingrebate2* 100) / 100+"%");
+	
+	var bettingty2 = 0;
+	$(".bettingty2").each(function(){
+		bettingty2+= parseFloat($(this).val());
+	});
+	$("#bettingty2").text(Math.round(bettingty2* 100) / 100);
+	
+	
+	
+	var companyproportion = 0;
+	$(".companyproportion").each(function(){
+		companyproportion+= parseFloat($(this).val());
+	});
+	$("#companyproportion").text(Math.round(companyproportion* 100) / 100+"%"); 
+	
+	var yxsy = 0;
+	$(".yxsy").each(function(){
+		yxsy+= parseFloat($(this).val());
+	});
+	$("#yxsy").text(yxsy); 
+	
+	var subordinate = 0;
+	$(".subordinate").each(function(){
+		subordinate+= parseFloat($(this).val());
+	});
+	$("#subordinate").text(subordinate); 
+	
+	var membernum = 0;
+	$(".membernum").each(function(){
+		membernum+= parseFloat($(this).val());
+	});
+	$("#membernum").text(membernum);
+	
+	var login = 0;
+	$(".login").each(function(){
+		login+= parseFloat($(this).val());
+	});
+	$("#login").text(login);
+	
+	var zzty = 0;
+	$(".zzty").each(function(){
+		zzty+= parseFloat($(this).val());
+	});
+	$("#zzty").text(zzty);
+	
+	var tz = 0;
+	$(".tz").each(function(){
+		tz+= parseFloat($(this).val());
+	});
+	$("#tz").text(tz);
+	
+	var tzty = 0;
+	$(".tzty").each(function(){
+		tzty+= parseFloat($(this).val());
+	});
+	$("#tzty").text(tzty);
+</script>
+</html>
+

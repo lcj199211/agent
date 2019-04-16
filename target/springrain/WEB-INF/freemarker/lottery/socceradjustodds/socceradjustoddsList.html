@@ -1,0 +1,393 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/socceradjustodds/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>调整足球赔率表管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/socceradjustodds/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/socceradjustodds/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/socceradjustodds/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/socceradjustodds/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/socceradjustodds/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">调整足球赔率表搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">调整足球赔率表列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <th>操作</th>
+												  <!--first_end_no_export-->
+														<th id="th_mid" >场次mid</th>
+														<th id="th_zid" >场次zid</th>
+														<th id="th_win" >主胜</th>
+														<th id="th_flat" >平</th>
+														<th id="th_lose" >客胜</th>
+														<th id="th_rqwin" >让球主胜</th>
+														<th id="th_rqflat" >让球平</th>
+														<th id="th_rqlose" >让球客胜</th>
+														<th id="th_ball0" >0球</th>
+														<th id="th_ball1" >1球</th>
+														<th id="th_ball2" >2球</th>
+														<th id="th_ball3" >3球</th>
+														<th id="th_ball4" >4球</th>
+														<th id="th_ball5" >5球</th>
+														<th id="th_ball6" >6球</th>
+														<th id="th_ball7" >7+球</th>
+														<th id="th_sp33" >胜胜</th>
+														<th id="th_sp31" >胜平</th>
+														<th id="th_sp30" >胜负</th>
+														<th id="th_sp13" >平胜</th>
+														<th id="th_sp11" >平平</th>
+														<th id="th_sp10" >平负</th>
+														<th id="th_sp03" >负胜</th>
+														<th id="th_sp01" >负平</th>
+														<th id="th_sp00" >负负</th>
+														<th id="th_win3A" >胜其它</th>
+														<th id="th_win10" >1:0</th>
+														<th id="th_win20" >2:0</th>
+														<th id="th_win21" >2:1</th>
+														<th id="th_win30" >3:0</th>
+														<th id="th_win31" >3:1</th>
+														<th id="th_win32" >3:2</th>
+														<th id="th_win40" >4:0</th>
+														<th id="th_win41" >4:1</th>
+														<th id="th_win42" >4:2</th>
+														<th id="th_win50" >5:0</th>
+														<th id="th_win51" >5:1</th>
+														<th id="th_win52" >5:2</th>
+														<th id="th_flat1A" >平其它</th>
+														<th id="th_flat00" >0:0</th>
+														<th id="th_flat11" >1:1</th>
+														<th id="th_flat22" >2:2</th>
+														<th id="th_flat33" >3:3</th>
+														<th id="th_lose0A" >负其它</th>
+														<th id="th_lose01" >0:1</th>
+														<th id="th_lose02" >0:2</th>
+														<th id="th_lose12" >1:2</th>
+														<th id="th_lose03" >0:3</th>
+														<th id="th_lose13" >1:3</th>
+														<th id="th_lose23" >2:3</th>
+														<th id="th_lose04" >0:4</th>
+														<th id="th_lose14" >1:4</th>
+														<th id="th_lose24" >2:4</th>
+														<th id="th_lose05" >0:5</th>
+														<th id="th_lose15" >1:5</th>
+														<th id="th_lose25" >2:5</th>
+														<th id="th_left_odds" >主胜/主不败</th>
+														<th id="th_right_odds" >客不败/客胜</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<td>
+															<@shiro.hasPermission name="/socceradjustodds/update" >
+								                           		 <a href="#" data-action="${ctx}/system/role/update/pre?id=" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/socceradjustodds/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+														<!--end_no_export-->
+														<td >
+															${(_data.mid)!''}
+														</td>
+														<td >
+															${(_data.zid)!''}
+														</td>
+														<td >
+															${(_data.win)!0}
+														</td>
+														<td >
+															${(_data.flat)!0}
+														</td>
+														<td >
+															${(_data.lose)!0}
+														</td>
+														<td >
+															${(_data.rqwin)!0}
+														</td>
+														<td >
+															${(_data.rqflat)!0}
+														</td>
+														<td >
+															${(_data.rqlose)!0}
+														</td>
+														<td >
+															${(_data.ball0)!0}
+														</td>
+														<td >
+															${(_data.ball1)!0}
+														</td>
+														<td >
+															${(_data.ball2)!0}
+														</td>
+														<td >
+															${(_data.ball3)!0}
+														</td>
+														<td >
+															${(_data.ball4)!0}
+														</td>
+														<td >
+															${(_data.ball5)!0}
+														</td>
+														<td >
+															${(_data.ball6)!0}
+														</td>
+														<td >
+															${(_data.ball7)!0}
+														</td>
+														<td >
+															${(_data.sp33)!0}
+														</td>
+														<td >
+															${(_data.sp31)!0}
+														</td>
+														<td >
+															${(_data.sp30)!0}
+														</td>
+														<td >
+															${(_data.sp13)!0}
+														</td>
+														<td >
+															${(_data.sp11)!0}
+														</td>
+														<td >
+															${(_data.sp10)!0}
+														</td>
+														<td >
+															${(_data.sp03)!0}
+														</td>
+														<td >
+															${(_data.sp01)!0}
+														</td>
+														<td >
+															${(_data.sp00)!0}
+														</td>
+														<td >
+															${(_data.win3A)!0}
+														</td>
+														<td >
+															${(_data.win10)!0}
+														</td>
+														<td >
+															${(_data.win20)!0}
+														</td>
+														<td >
+															${(_data.win21)!0}
+														</td>
+														<td >
+															${(_data.win30)!0}
+														</td>
+														<td >
+															${(_data.win31)!0}
+														</td>
+														<td >
+															${(_data.win32)!0}
+														</td>
+														<td >
+															${(_data.win40)!0}
+														</td>
+														<td >
+															${(_data.win41)!0}
+														</td>
+														<td >
+															${(_data.win42)!0}
+														</td>
+														<td >
+															${(_data.win50)!0}
+														</td>
+														<td >
+															${(_data.win51)!0}
+														</td>
+														<td >
+															${(_data.win52)!0}
+														</td>
+														<td >
+															${(_data.flat1A)!0}
+														</td>
+														<td >
+															${(_data.flat00)!0}
+														</td>
+														<td >
+															${(_data.flat11)!0}
+														</td>
+														<td >
+															${(_data.flat22)!0}
+														</td>
+														<td >
+															${(_data.flat33)!0}
+														</td>
+														<td >
+															${(_data.lose0A)!0}
+														</td>
+														<td >
+															${(_data.lose01)!0}
+														</td>
+														<td >
+															${(_data.lose02)!0}
+														</td>
+														<td >
+															${(_data.lose12)!0}
+														</td>
+														<td >
+															${(_data.lose03)!0}
+														</td>
+														<td >
+															${(_data.lose13)!0}
+														</td>
+														<td >
+															${(_data.lose23)!0}
+														</td>
+														<td >
+															${(_data.lose04)!0}
+														</td>
+														<td >
+															${(_data.lose14)!0}
+														</td>
+														<td >
+															${(_data.lose24)!0}
+														</td>
+														<td >
+															${(_data.lose05)!0}
+														</td>
+														<td >
+															${(_data.lose15)!0}
+														</td>
+														<td >
+															${(_data.lose25)!0}
+														</td>
+														<td >
+															${(_data.left_odds)!0}
+														</td>
+														<td >
+															${(_data.right_odds)!0}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

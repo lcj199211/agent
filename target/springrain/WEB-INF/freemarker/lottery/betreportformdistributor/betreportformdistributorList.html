@@ -1,0 +1,248 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betreportformdistributor/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+					 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportformdistributor/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							          			<div class="layui-inline">
+									                    <label>分销代理ID</label>
+									                    <input type="text" name="distributorid2" value="${(returnDatas.queryBean.distributorid2)!''}" placeholder="请输入分销代理ID "  class="xiao-input">
+							                		</div>
+													<div class="layui-inline">
+							          					时间：
+														<div class="layui-input-inline">
+															<input   name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+							                			</div>至
+														<div class="layui-input-inline">
+															<input   name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+							                			</div>
+										            </div>
+										          </td>
+										          
+										          <td>  
+										          
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>查询</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col >
+										    <col >
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="14">分销代理报表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												 
+												  <!--first_end_no_export-->
+														<th id="" >时间</th>
+														<th id="" >分销代理ID</th>
+														<th id="" >分销代理昵称</th>
+														<th id="" >分销下线</th>
+														<th id="" >下线投注</th>
+														<th id="" >下线充值</th>
+														<th id="" >下线游戏输赢</th>
+														
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														<td >
+															<!--日期型-->
+														${((_data.time)?string('yyyy-MM-dd'))!''}
+														</td>
+													
+														<!--end_no_export-->
+														<td >
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betmember/look?id2=${(_data.distributorid2)!''}">${(_data.distributorid2)!''}</a>
+														</td>
+														<td >
+															${(_data.distributornickname)!''}
+														</td>
+														<td >
+															<input class="t1" type="hidden" value="${(_data.recommendnum)!''}">
+															
+															<a style="color:blue;" href="${ctx}/betreportformdistributor/list?sub=1&distributorid2=${(_data.distributorid2)!''}&time=${((_data.time))!''}">${(_data.recommendnum)!0}</a>
+														</td>
+														<td style="color:blue;">
+															<input class="t2" type="hidden" value="${(_data.sb)!''}">
+															${(_data.sb)!0}
+														</td>
+														<td style="color:blue;">
+															<input class="t3" type="hidden" value="${(_data.sc)!''}">
+															${(_data.sc)!0}
+														</td>
+														<td 
+														<#if _data.sw??> 
+															<#if (_data.sw>=0)> 
+															 style="color:blue;"
+															 <#else>
+															  style="color:red;"
+															</#if>
+														</#if>
+														>
+														<input class="t4" type="hidden" value="${(_data.sw)!''}">
+															${(_data.sw)!0}
+														</td>
+														
+													</tr>
+												</#list>
+												<tr class="center" style="background-color:#eafcff;">
+														<td >
+															小计
+														</td>
+													
+														<td >
+														</td>
+														<td >
+														</td>
+														<td>
+															<a style="border:0px;text-align: center;"  id="t1"></a>
+														</td>
+														<td >
+															<a style="border:0px;text-align: center;"  id="t2"></a>
+														</td>
+														<td >
+															<a style="border:0px;text-align: center;"  id="t3"></a>
+														</td>
+														<td >
+															<a style="border:0px;text-align: center;"  id="t4"></a>
+														</td>
+														
+													</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+				<script>
+					var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	
+	$("#t1").text(Math.round(t1*100)/100);
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	if(t2>=0){
+		$("#t2").css('color','blue');
+	}else if(t2<0){
+		$("#t2").css('color','red');
+	}
+	$("#t2").text(Math.round(t2*100)/100);
+	
+	var t3 = 0.;
+	$(".t3").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t3+= a*1;
+	});
+	if(t3>=0){
+		$("#t3").css('color','blue');
+	}else if(t3<0){
+		$("#t3").css('color','red');
+	}
+	$("#t3").text(Math.round(t3*100)/100);
+	
+	var t4 = 0.;
+	$(".t4").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t4+= a*1;
+	});
+	if(t4>=0){
+		$("#t4").css('color','blue');
+	}else if(t4<0){
+		$("#t4").css('color','red');
+	}
+	$("#t4").text(Math.round(t4*100)/100);
+				</script>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,153 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+	});
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>卡收</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div style="overflow-x:scroll" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/list?k=17&date=${time}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="10">卡收<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												<!--   <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <th>操作</th> -->
+												  <!--first_end_no_export-->
+												  		<th id="th_ip">充值卡号</th>
+														<th id="th_password" >充值密码</th>
+														<th id="th_money" >面值/元</th>
+														<th id="th_state" >状态(0未冲1已冲2作废)</th>
+														<th id="th_ip" >充值地址IP</th>
+														<th id="th_time" >生成时间</th>
+														<th id="th_memberid2" >充值ID</th>
+														<th id="th_operator" >操作</th>
+														<th id="th_validity" >有效期/天</th>
+														<th id="th_rechargetime" >充值时间</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betrechargecard/update" >
+								                           		 <a href="#" data-action="${ctx}/system/role/update/pre?id=" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betrechargecard/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+														<!--end_no_export-->
+														<td style="text-align: center;">
+															${(_data.id)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.password)!''}
+														</td>
+														<td style="text-align: center;">
+															${((_data.money)?string('#'))!0}
+														</td>
+														<td style="text-align: center;">
+															<#if _data.state==0>
+																未冲
+																<#elseif _data.state==1>
+																已冲
+																<#elseif _data.state==2>
+																作废 
+															</#if>
+														</td>
+														<td style="text-align: center;">
+															${(_data.ip)!''}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.time)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.memberid2)!0}
+														</td>
+														<td style="text-align: center;">
+															${(_data.operator)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.validity)!0}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.rechargetime)?string('yyyy-MM-dd'))!''}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

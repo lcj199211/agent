@@ -1,0 +1,221 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	
+	
+	
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+						  <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm"  method="post" action="${ctx}/betsubordinaterebatedetail/list?subordinatedetailrebate=1">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="search-wrap xiao-input-wrap">
+							          				<div class="layui-inline">
+									                    <label>用户ID</label>
+									                    <input type="text" name="memberid2" value="${(returnDatas.queryBean.memberid2)!''}" placeholder="请输入用户ID "  class="xiao-input">
+							                		</div>
+													<div class="layui-inline">
+							          					时间：
+														<div class="layui-input-inline">
+															<input   name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+							                			</div>至
+														<div class="layui-input-inline">
+															<input   name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+							                			</div>
+										            </div>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>查询</button>
+									                </div>
+							          </div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even>
+											<thead>
+												<tr>
+														<th >日期</th>
+														<th  >用户ID</th>
+														<th id="t_nickname" >昵称</th>
+														<th id="subordinatebet" ><font color="red">下线投注</font></th>
+														<th id="recommendnum" >推广人数</th>
+														<th id="subordinaterecharge" >充值佣金</th>
+														<th id="subordinatelose" >流水佣金</th>
+														<th id="subordinatelose" >输佣金</th>
+														<th id="income" >结算</th>
+														<th id="state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+													<tr class="">
+													<td >
+															<!--日期型-->
+														${((_data.subtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.parentmemberid2)!''}
+														</td>
+														<td >
+															${(_data.parentnickname)!''}
+														</td>
+														<td >
+														<#if (_data.state=1)>
+														<input class="xxtz" type="hidden" value="${(_data.totalsb)!0}">
+														</#if>
+															<font color="red">${(_data.totalsb)!0}</font>
+														</td>
+														<td>
+														<#if (_data.state=1)>
+														<input class="tgrs" type="hidden" value="${(_data.recommendnum)!0}">
+														</#if>
+															${(_data.recommendnum)!0}
+														</td>
+														<td >
+														<#if (_data.state=1)>
+														<input class="czyj" type="hidden" value="${(_data.totalsubordinaterecharge)!0}">
+														</#if>
+															${(_data.totalsubordinaterecharge)!0}
+														</td>
+														<td >
+														<#if (_data.state=1)>
+														<input class="lsyj" type="hidden" value="${(_data.totalsubordinatebet)!0}">
+														</#if>
+															${(_data.totalsubordinatebet)!0}
+														</td>
+														<td >
+														<#if (_data.state=1)>
+														<input class="syj" type="hidden" value="${(_data.totalsubordinatelose)!0}">
+														</#if>
+															${(_data.totalsubordinatelose)!0}
+														</td>
+														<td >
+														<#if (_data.state=1)>
+														<input class="js" type="hidden" value="${(_data.totalincome)!0}">
+														</#if>	
+															${(_data.totalincome)!0}
+														</td>
+														<td >
+															<#if _data.state??>
+																<#if _data.state==0>
+																<font color="#555555">未领</font>
+																<#elseif _data.state==1>
+																<font color="red">已领</font>
+																</#if>
+															</#if>
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color:#eafcff;">
+													<td style="text-align: center;">小计</td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"><a id="xxtz"></a></td>
+													<td style="text-align: center;"><a id="tgrs"></a></td>
+													<td style="text-align: center;"><a id="czyj"></a></td>
+													<td style="text-align: center;"><a id="lsyj"></a></td>
+													<td style="text-align: center;"><a id="syj"></a></td>
+													<td style="text-align: center;"><a id="js"></a></td>
+													<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+										
+										<#if returnDatas.page??> 
+											<div id='laypageDiv' class="xiao-inline-block"></div>
+											<@h.layPage page=returnDatas.page /> 
+											<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span>${returnDatas.page.pageCount!''}</span>页,共 <span></span>${returnDatas.page.totalCount!''}条记录</font>
+										</#if>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+		<script type="text/javascript">
+		var href = window.location.href;
+		var result = href.split('?')[href.split('?').length-1];
+		var url_list = $('.xiao-btnlist').find('a');
+		for(var i = 0; i < url_list.length ; i++){
+			if(url_list[i].href == href){
+//				console.log(url_list[i].href);
+				url_list[i].style.backgroundColor = "#009688";
+				url_list[i].style.display = "block";
+				url_list[i].style.color = "#fff";
+			}
+		}
+		
+		var xxtz = 0;
+		$(".xxtz").each(function(){
+			xxtz+=parseFloat($(this).val());
+		});
+		$("#xxtz").text((Math.round(xtz*100)/100));
+		
+		var tgrs = 0;
+		$(".tgrs").each(function(){
+			tgrs+=parseFloat($(this).val());
+		});
+		$("#tgrs").text((Math.round(tgrs*100)/100));
+		
+		var czyj = 0;
+		$(".czyj").each(function(){
+			czyj+=parseFloat($(this).val());
+		});
+		$("#czyj").text((Math.round(czyj*100)/100));
+		
+		var lsyj = 0;
+		$(".lsyj").each(function(){
+			lsyj+=parseFloat($(this).val());
+		});
+		$("#lsyj").text((Math.round(lsyj*100)/100));
+		
+		var syj = 0;
+		$(".syj").each(function(){
+			syj+=parseFloat($(this).val());
+		});
+		$("#syj").text((Math.round(syj*100)/100));
+		
+		var js = 0;
+		$(".js").each(function(){
+			js+=parseFloat($(this).val());
+		});
+		$("#js").text((Math.round(js*100)/100));
+		            
+		</script>
+</body>
+</html>
+

@@ -1,0 +1,325 @@
+<#ftl output_format="HTML" auto_esc=true> <@h.commonHead title="后台管理系统"
+keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<script src="${ctx}/js/custom/common/springrain.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css"
+	media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/bankcard/list?springraintoken="+springraintoken});
+	 });
+	    
+</script>
+<script type="text/javascript">
+
+	function CheckBankNo(bankcardnum) {
+	var bankno = $.trim(bankcardnum.val());
+    if (bankno.length < 16 || bankno.length > 19) {
+      $("#banknoInfo").html("银行卡号长度必须在16到19之间");
+       return false;
+      }
+    var num = /^\d*$/; //全数字
+    if (!num.exec(bankno)) {
+      $("#banknoInfo").html("银行卡号必须全为数字");
+       return false;
+      }
+    //开头6位
+    var strBin="10,18,30,35,37,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,58,60,62,65,68,69,84,87,88,94,95,98,99";
+    if (strBin.indexOf(bankno.substring(0, 2))== -1) {
+       $("#banknoInfo").html("银行卡号开头6位不符合规范");
+       return false;
+      }
+    var lastNum=bankno.substr(bankno.length-1,1);//取出最后一位（与luhm进行比较）
+    var first15Num=bankno.substr(0,bankno.length-1);//前15或18位
+    var newArr=new Array();
+       for(var i=first15Num.length-1;i>-1;i--){ //前15或18位倒序存进数组
+          newArr.push(first15Num.substr(i,1));
+      }
+    var arrJiShu=new Array(); //奇数位*2的积 <9
+    var arrJiShu2=new Array(); //奇数位*2的积 >9
+    var arrOuShu=new Array(); //偶数位数组
+       for(var j=0;j<newArr.length;j++){
+         if((j+1)%2==1){//奇数位
+          if(parseInt(newArr[j])*2<9)
+            arrJiShu.push(parseInt(newArr[j])*2);
+          else
+            arrJiShu2.push(parseInt(newArr[j])*2);
+           }
+        else //偶数位
+           arrOuShu.push(newArr[j]);
+          }
+	var jishu_child1=new Array();//奇数位*2 >9 的分割之后的数组个位数
+	var jishu_child2=new Array();//奇数位*2 >9 的分割之后的数组十位数
+       for(var h=0;h<arrJiShu2.length;h++){
+		jishu_child1.push(parseInt(arrJiShu2[h])%10);
+		jishu_child2.push(parseInt(arrJiShu2[h])/10);
+       }
+	var sumJiShu=0; //奇数位*2 < 9 的数组之和
+	var sumOuShu=0; //偶数位数组之和
+	var sumJiShuChild1=0; //奇数位*2 >9 的分割之后的数组个位数之和
+	var sumJiShuChild2=0; //奇数位*2 >9 的分割之后的数组十位数之和
+	var sumTotal=0;
+       for(var m=0;m<arrJiShu.length;m++){
+            sumJiShu=sumJiShu+parseInt(arrJiShu[m]);
+        }
+		for(var n=0;n<arrOuShu.length;n++){
+		    sumOuShu=sumOuShu+parseInt(arrOuShu[n]);
+		}
+		for(var p=0;p<jishu_child1.length;p++){
+			sumJiShuChild1=sumJiShuChild1+parseInt(jishu_child1[p]);
+			sumJiShuChild2=sumJiShuChild2+parseInt(jishu_child2[p]);
+		}
+		//计算总和
+		sumTotal=parseInt(sumJiShu)+parseInt(sumOuShu)+parseInt(sumJiShuChild1)+parseInt(sumJiShuChild2);
+		//计算Luhm值
+	 var k= parseInt(sumTotal)%10==0?10:parseInt(sumTotal)%10;
+	 var luhm= 10-k;
+		if(lastNum==luhm){
+		   $("#banknoInfo").html("Luhm验证通过");
+		    return true;
+		 }
+		else{
+			$("#banknoInfo").html("银行卡号必须符合Luhm校验");
+			return false;
+		}
+    }
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+		<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title site-demo-title">
+				<li class="layui-this"><i class="layui-icon">&#xe630;</i> <span
+					class="layui-breadcrumb" style="visibility: visible;"> <a
+						href="${ctx}">首页<span class="layui-box">&gt;</span>
+					</a> <a><cite>BankCard管理</cite>
+					</a> </span></li>
+				<li style="float:right;">
+					<button type="button" onclick="history.go(-1)"
+						class="layui-btn layui-btn-small" style="margin-top:8px;">
+						<i class="layui-icon layui-icon-specil">&#xe603;</i>返回
+					</button></li>
+			</ul>
+
+			<div class="layui-body layui-tab-content site-demo-body">
+				<div class="layui-tab-item layui-show">
+					<div class="layui-main">
+						<div id="LAY_preview" class="layui-my-form">
+							<header class="larry-personal-tit">
+								<span>修改银行卡信息</span>
+							</header>
+							<div class="larry-personal-body clearfix changepwd">
+								<form id="validForm" class="layui-form <!--  -->" method="post" action="${ctx}/bankcard/update">
+										<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}" /> 
+										<input type="hidden" id="merchantcode" name="merchantcode" value="${(returnDatas.data.merchantcode)!''}" />
+									
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">开户名*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="accountname" id="accountname"
+												datatype="username" nullmsg="不能为空" errormsg="请输入正确姓名"
+												autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.accountname)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">银行卡号*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="bankcardnum" id="bankcardnum"
+												nullmsg="不能为空" errormsg="不能为空！"
+												onblur="CheckBankNo($('#bankcardnum'));" autocomplete="off"
+												class="layui-input"
+												value="${(returnDatas.data.bankcardnum)!''}">
+										</div>
+										<span id="banknoInfo"></span>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">银行名*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="bankname" id="bankname" autocomplete="off"
+												class="layui-input"
+												value="${(returnDatas.data.bankname)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">开户省*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="accountprovince"
+												id="accountprovince"  class="layui-input"
+												value="${(returnDatas.data.accountprovince)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">开户市*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="accountcity" id="accountcity"
+												autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.accountcity)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">开户支行*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="banksubbranoh" id="banksubbranoh"
+												autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.banksubbranoh)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">银行绑定手机号*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="bankphonenum" id="bankphonenum"
+												datatype="phone" nullmsg="不能为空" errormsg="请正确填写手机号码！！"
+												autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.bankphonenum)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">开户行联行号*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="accountbanknum" id="accountbanknum"
+												autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.accountbanknum)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">开户身份证号*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="accountidcard" id="accountidcard"
+												datatype="identity" nullmsg="不能为空" errormsg="身份证号码不正确"
+												autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.accountidcard)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">主卡/非主卡 *</label>
+										<div class="layui-inline col-lg-5">
+											<!-- <input type="text" name="iskey" id="iskey" datatype="*"
+												nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+												class="layui-input" value="${(returnDatas.data.iskey)!''}"> -->
+												<select name="iskey" id="iskey" class="layui-input">
+						                         <option  value="3" 
+														<#if returnDatas.data??>
+															 <#if returnDatas.data.iskey=3> selected
+															 </#if> 
+													    </#if> >非主卡</option>
+													  	<option value="1" 
+													  	<#if returnDatas.data??>
+															 <#if returnDatas.data.iskey=1> selected
+															 </#if> 
+													    </#if> >主卡</option>
+												</select>   
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">状态*</label>
+										<div class="layui-inline col-lg-5">
+											<!-- <input type="text" name="state" id="state" datatype="*"
+												nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+												class="layui-input" value="${(returnDatas.data.state)!''}"> -->
+											<select name="state" id="state" class="layui-input">
+						                         <option  value="3" 
+														<#if returnDatas.data??>
+															 <#if returnDatas.data.state=3> selected
+															 </#if> 
+													    </#if> >禁用</option>
+													  	<option value="1" 
+													  	<#if returnDatas.data??>
+															 <#if returnDatas.data.state=1> selected
+															 </#if> 
+													    </#if> >启用</option>
+												</select>   
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									
+									<!-- <div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">备注*</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="remark" id="remark"  autocomplete="off"
+												class="layui-input" value="${(returnDatas.data.remark)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div> -->
+									
+									<!-- <div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">审核 状态</label>
+										<div class="layui-inline col-lg-5">
+											<input type="text" name="audit" id="audit" datatype="*"
+												nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+												class="layui-input" value="${(returnDatas.data.audit)!''}">
+												<select name="audit" id="audit" class="layui-input">
+						                         <option  value="3" 
+														<#if returnDatas.data??>
+															 <#if returnDatas.data.audit=3> selected
+															 </#if> 
+													    </#if> >未审核</option>
+													  	<option value="1" 
+													  	<#if returnDatas.data??>
+															 <#if returnDatas.data.audit=1> selected
+															 </#if> 
+													    </#if> >已审核 </option>
+												</select>   
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div> -->
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label">对公/对私*</label>
+										<div class="layui-inline col-lg-5">
+											<!-- <input type="text" name="ispublic" id="ispublic" datatype="*"
+												nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+												class="layui-input"
+												value="${(returnDatas.data.ispublic)!''}"> -->
+												<select name="ispublic" id="ispublic" class="layui-input">
+						                         <option  value="3" 
+														<#if returnDatas.data??>
+															 <#if returnDatas.data.ispublic=3> selected
+															 </#if> 
+													    </#if> >对私</option>
+													  	<option value="1" 
+													  	<#if returnDatas.data??>
+															 <#if returnDatas.data.ispublic=1> selected
+															 </#if> 
+													    </#if> >对公</option>
+												</select>   
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item change-submit">
+										<label class="layui-form-label"></label>
+										<div class="layui-inline">
+											<button type="button" class="layui-btn" id="smtbtn">保存</button>
+											<button type="button" class="layui-btn layui-btn-primary"
+												id="rstbtn">重置</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmemberletter/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					  <li style="float:right;">
+		             	<@shiro.hasPermission name="/betmemberletter/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmemberletter/update/pre?id2=${(memberid2)!''}"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betmemberletter/list?id2=${(memberid2)!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">用户站内信搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				 &nbsp;&nbsp;&nbsp;&nbsp;
+							          				<div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入录入时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入录入时间" class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+							                		 &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">信息状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="state" id="state" class="layui-input">
+																    <option value="">请选择</option>
+																	<option value="1" 
+																	<#if returnDatas.queryBean.state??>
+																		 <#if returnDatas.queryBean.state=1> selected
+																		 </#if> 
+																    </#if> >已读取</option>
+																  	<option value="3" 
+																  	<#if returnDatas.queryBean.state??>
+																		 <#if returnDatas.queryBean.state=3> selected
+																		 </#if> 
+																    </#if> >未读取</option>
+															</select>   
+									                    </div>
+									                </div>
+									                 &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">信息类型</label>
+									                    <div class="layui-input-inline">
+									                        <select name="type" id="type" class="layui-input">
+																    <option value="">请选择</option>
+																	<option value="1" 
+																	<#if returnDatas.queryBean.type??>
+																		 <#if returnDatas.queryBean.type=1> selected
+																		 </#if> 
+																    </#if> >系统信息</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="11">用户站内信列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_end_no_export-->
+														<th id="th_entrytime" >录入时间</th>
+														<th id="th_memberid2" >用户id2</th>
+														<th id="th_type" >信息类型</th><!-- （1系统信息） -->
+														<th id="th_title" >信息标题</th>
+														<th id="th_message" >信息</th>
+														<th id="th_state" >信息状态</th><!-- （1已读取；3未读取） -->
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+														${((_data.entrytime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.memberid2)!''}
+														</td>
+														<td >
+															<#if _data.type==1>
+																<span>系统消息</span>
+															</#if>
+														</td>
+														<td >
+															${(_data.title)!''}
+														</td>
+														<td >
+															${(_data.message)!''}
+														</td>
+														<td >
+															<#if _data.state==1>
+																<span style="color:#288a53" >已读取</span>
+															<#elseif _data.state==3>
+																<span style="color:red" >未读取</span>
+															</#if>
+														</td>
+														<td>
+														<@shiro.hasPermission name="/betmemberletter/update" >
+															<#if _data.state==1>
+								                        	<a href="#"  class="layui-btn layui-btn-normal layui-btn-mini">无法编辑</a>
+								                        	<#elseif _data.state==3>
+								                        	<a href="#" data-action="${ctx}/betmemberletter/update/pre?id=${_data.id}&id2=${(memberid2)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                        	</#if>
+								                        </@shiro.hasPermission>
+								                        <@shiro.hasPermission name="/betmemberletter/delete" >
+								                            <a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                        </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

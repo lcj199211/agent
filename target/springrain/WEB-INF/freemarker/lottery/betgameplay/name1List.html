@@ -1,0 +1,353 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		$(".xxx").click(function(){
+			//询问框
+			var ddd= $(this).is(':checked');
+			var dddd=$(this).val();
+			var b=$(this).is(":checked");
+			if(ddd){
+				layer.confirm('确定选择'+dddd+'玩法？', {
+				offset:['',''],
+				  btn: ['确定','取消'] //按钮
+				}, function(){
+				  
+					var a=dddd;
+					
+					var c=${gameclassid!''};
+					$.ajax({
+						type:"post",
+						url:"${ctx}/betgameplay/name1list/update",
+						
+						data:{gameclassid:c,checked:b,name1:a},
+						success:function(result){
+							if("error"==result.status){
+								layer.msg('修改失败！',{offset:['','']});
+								setTimeout(" window.location.reload()",2000);
+							}else if("success"==result.status){
+								layer.msg('修改成功！',{offset:['','']});
+								setTimeout(" window.location.reload()",2000);
+							}
+						},
+					})
+				}, function(){
+				  window.location.reload();
+				});
+			}else if(!ddd){
+				layer.confirm('确定取消'+dddd+'玩法？', {
+				offset:['',''],
+				  btn: ['确定','取消'] //按钮
+				}, function(){
+				  
+					var a=dddd;
+					
+					var c=${gameclassid!''};
+					$.ajax({
+						type:"post",
+						url:"${ctx}/betgameplay/name1list/update",
+						
+						data:{gameclassid:c,checked:b,name1:a},
+						success:function(result){
+							if("error"==result.status){
+								layer.msg('修改失败！',{offset:['','']});
+								setTimeout(" window.location.reload()",2000);
+							}else if("success"==result.status){
+								layer.msg('修改成功！',{offset:['','']});
+								setTimeout(" window.location.reload()",2000);
+							}
+						},
+					})
+				}, function(){
+				  window.location.reload();
+				});
+			}
+			
+			})
+	});
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title ">
+			            <li class="layui-this">
+			            		
+			            		
+			             		<i class="layui-icon">&#xe630;</i>
+			             		<#if gameclassid=7>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>重庆时时彩</cite></a>
+								</span>
+								<#elseif gameclassid=8>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新疆时时彩</cite></a>
+								</span>
+								<#elseif gameclassid=9>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡5D</cite></a>
+								</span>
+								<#elseif gameclassid=5>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京28</cite></a>
+								</span>
+								<#elseif gameclassid=6>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大28</cite></a>
+								</span>
+								<#elseif gameclassid=10>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京11</cite></a>
+								</span>
+								<#elseif gameclassid=11>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京16</cite></a>
+								</span>
+								<#elseif gameclassid=12>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京36</cite></a>
+								</span>
+								<#elseif gameclassid=16>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大11</cite></a>
+								</span>
+								<#elseif gameclassid=17>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大16</cite></a>
+								</span>
+								<#elseif gameclassid=18>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大36</cite></a>
+								</span>
+								<#elseif gameclassid=19>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋28</cite></a>
+								</span>
+								<#elseif gameclassid=20>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋36</cite></a>
+								</span>
+								<#elseif gameclassid=21>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡11</cite></a>
+								</span>
+								<#elseif gameclassid=22>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡16</cite></a>
+								</span>
+								<#elseif gameclassid=23>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡28</cite></a>
+								</span>
+								<#elseif gameclassid=24>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡36</cite></a>
+								</span>
+								<#elseif gameclassid=29>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK10</cite></a>
+								</span>
+								<#elseif gameclassid=30>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK22</cite></a>
+								</span>
+								<#elseif gameclassid=31>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK冠军</cite></a>
+								</span>
+								<#elseif gameclassid=32>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK龙虎</cite></a>
+								</span>
+								<#elseif gameclassid=33>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK冠亚军</cite></a>
+								</span>
+								<#elseif gameclassid=34>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>韩国五朵金花</cite></a>
+								</span>
+								<#elseif gameclassid=35>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋11</cite></a>
+								<#elseif gameclassid=36>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋16</cite></a>
+								</span>
+								</#if>
+			             </li>
+						 <li style="float:right;">
+			             	
+			                   <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" ><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+									
+									<div style="display: block;" class="clearfix">
+										<div class="xiao-btnlist mb10">
+										<div class="xiao-btnlist-item">
+											<a href="${ctx}/betgameclass/list?gameclassid=${gameclassid!''}">彩票管理</a>
+										</div>
+										
+										<div class="xiao-btnlist-item">
+											<a href="${ctx}/betgameplay/list?currentBetting=1&gameclassid=${gameclassid!''}">赔率/限额</a>
+										</div>
+										<div class="xiao-btnlist-item">
+											<#if gameclassid=7>
+														<a href="${ctx}/betgameplay/list4">
+														<#elseif gameclassid=8>
+														<a href="${ctx}/betgameplay/list1">
+														<#elseif gameclassid=9>
+														<a href="${ctx}/betgameplay/list2">
+														<#elseif gameclassid=5>
+														<a href="${ctx}/betgameplay/list3">
+														<#elseif gameclassid=10>
+														<a href="${ctx}/betgameplay/list5">
+														<#elseif gameclassid=11>
+														<a href="${ctx}/betgameplay/list6">
+														<#elseif gameclassid=12>
+														<a href="${ctx}/betgameplay/list7">
+														<#elseif gameclassid=16>
+														<a href="${ctx}/betgameplay/list8">
+														<#elseif gameclassid=17>
+														<a href="${ctx}/betgameplay/list9">
+														<#elseif gameclassid=6>
+														<a href="${ctx}/betgameplay/list10">
+														<#elseif gameclassid=18>
+														<a href="${ctx}/betgameplay/list11">
+														<#elseif gameclassid=19>
+														<a href="${ctx}/betgameplay/list12">
+														<#elseif gameclassid=20>
+														<a href="${ctx}/betgameplay/list13">
+														<#elseif gameclassid=21>
+														<a href="${ctx}/betgameplay/list14">
+														<#elseif gameclassid=22>
+														<a href="${ctx}/betgameplay/list15">
+														<#elseif gameclassid=23>
+														<a href="${ctx}/betgameplay/list16">
+														<#elseif gameclassid=24>
+														<a href="${ctx}/betgameplay/list17">
+														<#elseif gameclassid=29>
+														<a href="${ctx}/betgameplay/list18">
+														<#elseif gameclassid=30>
+														<a href="${ctx}/betgameplay/list19">
+														<#elseif gameclassid=31>
+														<a href="${ctx}/betgameplay/list20">
+														<#elseif gameclassid=32>
+														<a href="${ctx}/betgameplay/list21">
+														<#elseif gameclassid=33>
+														<a href="${ctx}/betgameplay/list22">
+														<#elseif gameclassid=34>
+														<a href="${ctx}/betgameplay/list23">
+														<#elseif gameclassid=35>
+														<a href="${ctx}/betgameplay/list24">
+														<#elseif gameclassid=36>
+														<a href="${ctx}/betgameplay/list25">
+														</#if>
+														即时注单</a>
+										</div>
+										<!-- <div class="xiao-btnlist-item">
+												<a href="${ctx}/betcollectionaddress/list?id=${gameclassid!''}">采集地址</a>
+										</div> -->
+										<div class="xiao-btnlist-item">
+											<a href="${ctx}/betperiod/list?gameclassid=${gameclassid!''}">开奖管理</a>
+										</div>
+										<div class="xiao-btnlist-item"  style="background:#009688; color:#FFF">
+											<a href="#"><span style="color:#FFF">玩法状态</span></a>
+										</div>
+									</div>
+									</div>										
+									<!--start_export-->
+									<div >
+										  <!--first_end_export-->
+										  <!--start_export-->
+										    <#if (name1list??)&&(name1list?size>0)> 
+										    	<#list	name1list as _data>
+										    		${_data.name1!''} 
+										    		<#if _data.name1??>
+										    		<input type="checkbox" class="xxx" value="${_data.name1!''}"
+													     <#if _data.state??>
+													     <#if _data.state=1 >checked</#if>
+													     </#if>
+													     >
+													</#if>
+													     <br/>
+												</#list>
+											 </#if>
+									</div>	
+								</div>
+			</div>
+		</div> 
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

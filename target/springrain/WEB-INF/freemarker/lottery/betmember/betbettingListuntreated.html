@@ -1,0 +1,366 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		
+		$(".cancelbetting").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定撤销投注？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+			  
+				$.ajax({
+					type:"get",
+					url:"${ctx}/betbetting/update?id="+a+"&state=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已撤销！',{offset:['','']});
+								setTimeout("document.location.reload(); ",2000); 
+						}else if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+						}
+					},
+				})
+			}, function(){
+			  
+			});
+
+		})
+		
+		 $(".balancebetting").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定结算投注？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+			  
+				$.ajax({
+					type:"get",
+					url:"${ctx}/betbetting/update?id="+a+"&state=2",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已结算！',{offset:['','']});
+							setTimeout("document.location.reload(); ",2000); 
+						}else if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+						}
+					},
+				})
+			}, function(){
+			  
+			});
+
+		}) 
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betbetting/delete");
+	}
+	
+	//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+	
+	
+	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+		            <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+							  <a><cite>当前投注</cite></a>
+							</span>
+		             </li> 
+					 <li style="float:right;">
+		             	<button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li> 
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form-pane" id="searchForm" action="${ctx}/betmember/list?k=7&p=1&id=${betMember.id!''}&id2=${(returnDatas.queryBean.id2)!''}&account=${(returnDatas.queryBean.account)!''}&gameclassid=${gameclassid!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">投注搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    	 从<div class="layui-input-inline">
+									                    	 <#setting date_format="yyyy-MM-dd">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime?date)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>到
+									                    <div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime?date)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                     <div class="layui-input-inline">
+									                    		默认显示
+									                  		  <input type="radio" name="pageSize" value="50"
+																<#if returnDatas.page.pageSize==50>checked</#if> 									                  		  
+									                  		  >50条</input>
+															  <input type="radio" name="pageSize" value="100"
+															  <#if returnDatas.page.pageSize==100>checked</#if> 
+															  >100条</input>
+									                          <input type="radio" name="pageSize" value="200"
+									                          <#if returnDatas.page.pageSize==200>checked</#if> 
+									                          />200条
+									                    </div>
+									                </div>
+									                &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">游戏类型</label>
+									                    <div class="layui-input-inline">
+									                        <select name="type" id="type" class="layui-input">
+																	<option value="100" 
+																		 <#if "${type}"="100"> selected
+																		 </#if> 
+																     >所有游戏</option>
+																	<option value="0" 
+																		 <#if "${type}"="0"> selected
+																		 </#if> 
+																     >彩票</option>
+																  	<option value="1" 
+																		 <#if "${type}"="1"> selected
+																		 </#if> 
+																     >足球</option>
+																     <option value="3" 
+																		 <#if "${type}"="3"> selected
+																		 </#if> 
+																     >篮球</option>
+																     <option value="4" 
+																		 <#if "${type}"="4"> selected
+																		 </#if> 
+																     >北单</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="14">在线投注&nbsp;&nbsp;&nbsp;<#if gcname??>游戏：${gcname!''}&nbsp;&nbsp;&nbsp;</#if>用户ID：${(returnDatas.queryBean.id2)!''}&nbsp;&nbsp;&nbsp;  用户名：${(returnDatas.queryBean.account)!''}<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <th>操作</th> -->
+												  <!--first_end_no_export-->
+												  		<th>单号</th>
+														  <th id="th_bettingtime" >时间</th>
+														   <th id="th_gameclass">所在游戏</th>
+														    <th id="th_qibie">期数</th>
+														   <th id="th_bettingmoney" >投注内容</th>
+														   <th id="th_gameplay" >开奖结果</th>
+														   <th id="th_gameplay" >状态</th>
+														   <th id="th_gameplay" >登录地址</th>
+														   <th id="th_gameplay" >登录</th>
+														   <th>操作</th>
+														   
+														<!-- <th id="th_memberid" >用户ID</th>
+														<th id="th_gameplayid" >玩法ID</th>
+														<th id="th_qibie" >期数</th>
+														<th id="th_bettingnum" >投注数量</th>
+														<th id="th_bettingmoney" >投注金额</th>
+														<th id="th_bettingscore" >投注输赢</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="" align="center">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betbetting/update" >
+								                           		 <a href="#" data-action="${ctx}/betbetting/update/pre?id=${_data.id}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betbetting/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+														<!--end_no_export-->
+														<td style="white-space:nowrap"	>
+															${(_data.id)!''}
+														</td>
+														<td style="white-space:nowrap">
+															<!--日期型-->
+														${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td style="white-space:nowrap"	>
+															${(_data.gcname)!''}
+														</td>
+														<td>${(_data.qibie)!''}</td>
+														<td style="white-space:nowrap">
+														<input class="t1" type="hidden" value="${(_data.bettingmoney)!''}">
+															${_data.name1!''} ${_data.name2!''} ${(_data.detail)!''}-<span style="color:red;">${(_data.bettingmoney)!''}</span>
+														</td>
+														<td >
+															${_data.hs!''}
+														</td>
+														<td >
+															<#if _data.state??>
+															 <#if _data.state=1>
+															 	<span style="color:green;">已结算</span>
+															 	<#elseif _data.state=0>
+															 	<span style="color:red;">未结算</span>
+															 	<#elseif _data.state=2>
+															 	撤销
+															 </#if>
+															</#if>
+														</td>
+														<td style="white-space:nowrap">
+															${(_data.loginip)!''}
+														</td>
+														<td style="white-space:nowrap">
+															${(_data.logintool)!''}
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betperiod/update" >
+															<input type="hidden" value="${_data.id!''}">
+															<a  class="layui-btn layui-btn-danger layui-btn-mini cancelbetting">撤销</a>
+															<#if (_data.hs??)>
+															<input type="hidden" value="${_data.id!''}">
+															<a  class="layui-btn layui-icon-specil layui-btn-mini balancebetting">结算</a>
+															</#if>
+															</@shiro.hasPermission>
+														</td>
+														<!-- <td >
+															${(_data.memberid)!''}
+														</td>
+														<td >
+															${(_data.gameplayid)!0}
+														</td>
+														<td >
+															${(_data.qibie)!''}
+														</td>
+														<td >
+															${(_data.bettingnum)!0}
+														</td>
+														<td >
+															${(_data.bettingmoney)!0}
+														</td>
+														<td >
+															${(_data.bettingscore)!0}
+														</td> -->
+													</tr>
+												</#list>
+													<tr class="" align="center" style="background-color:#eafcff;">
+														<td >小计
+														</td>
+														<td	>
+														</td>
+														<td>
+														</td>
+														<td>
+														</td>
+														<td >
+															 <a  id="t1"></a>
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td>
+														</td>
+													</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	$("#t1").text(Math.round(t1*100)/100);
+	</script>
+</body>
+</html>
+

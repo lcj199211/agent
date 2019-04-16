@@ -1,0 +1,1183 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		
+		<!-- 20170412 新增样式引入 -->
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/bootstrap/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/build/css/custom.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/xiao/css/xiao-style.css"/>
+		<!-- 样式引入end -->
+		
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+					  <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+								   <a><cite>用户管理</cite><span class="layui-box">&gt;</span></a>
+								   <a><cite>查看用户</cite></a>
+								</span>
+			            </li>
+		            <!-- <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>会员管理</cite></a>
+							</span>
+		            </li> -->
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+		
+				<!-- 内容部分替换 right_col 替换 layui-body  -->
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="right_col" role="main">
+						<form id="searchForm" action="${ctx}/betmember/look" method="post">
+						<!-- 	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id2'}" /> -->
+				            <div class="page-title">
+				              <div class="title_left">
+				                <div class="col-md-12 col-sm-12 col-xs-12 form-group pull-left top_search">
+				                  <div class="input-group">
+				                    <input id="id2" type="text" name="id2" class="form-control" placeholder="输入用户ID" value="${(returnDatas.data.id2)!''}">
+				                    <span class="input-group-btn">
+				                      <button class="btn bnt-success" type="button" onclick="springrain.commonSubmit('searchForm');">查询</button>
+				                    </span>
+				                  </div>
+				                </div>
+				              </div>
+				
+				              <div class="title_right">
+				                <!--<h3>余额： <small>Some examples to get you started</small></h3>-->
+				                <div class="xiao-springrain-row">
+				                	<p class="xiao-springrain-item pull-left">总分: <span class="xiao-color-e00">${(returnDatas.data.score)!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">游戏分: <span class="xiao-color-e00">${(returnDatas.data.gamescore)!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">银行分: <span class="xiao-color-00e">${(returnDatas.data.bankscore)!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">冻结分: <span class="xiao-color-0e0">${(returnDatas.data.freezingscore)!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">投注中: <span class="xiao-color-0e0">
+				                	<a style="color:red;text-decoration:underline;" href="${ctx}/betmember/list?k=7&p=1&id2=${(returnDatas.data.id2)!''}&account=${(returnDatas.data.account)!''}&id=${(returnDatas.data.id)!''}">${(currentbettingmoney)!0}</a>
+				                	</span> </p>
+				                	<@shiro.hasPermission name="/bettransferaccounts/update" >
+				                		<a  class="xiao-springrain-item pull-left btn btn-success" href="${ctx}/betmember/list?k=9&id2=${(returnDatas.data.id2)!''}">线下支付加分</a>
+				                	</@shiro.hasPermission>
+				                	<@shiro.hasPermission name="/betgold/update" >
+				                		<a  class="xiao-springrain-item pull-left btn btn-success" href="${ctx}/betgold/update/pre?memberid=${(returnDatas.data.id2)!''}">平台支付加分</a>
+				             		</@shiro.hasPermission>
+				                	<@shiro.hasPermission name="/betmemberletter/update" >
+				                		<a  class="xiao-springrain-item pull-left btn btn-success" href="${ctx}/betmemberletter/list?id2=${(returnDatas.data.id2)!''}">站内信</a>
+				                	</@shiro.hasPermission>
+				                	<div class="clearfix"></div>
+				                </div>
+				              </div>
+				              <div class="clearfix"></div>
+				            </div>
+				        </form>
+							<div class="clearfix"></div>
+							<div class="xiao-springrain-operationList">
+								<a  href="${ctx}/betmember/list?k=12&memberid=${(returnDatas.data.id)!''}"><i class="fa fa-pencil-square-o"></i>充值记录</a>
+								<a  href="${ctx}/betmember/list?k=13&memberid=${(returnDatas.data.id)!''}"><i class="fa fa-paint-brush"></i>提现记录</a>
+								<a  href="${ctx}/betmember/list?k=1&id=${(returnDatas.data.id)!''}"><i class="fa fa-bomb"></i>每日输赢</a>
+								<a  href="${ctx}/betmember/list?parentid=${(returnDatas.data.id2)!''}"><i class="fa fa-sitemap"></i>下线列表</a>
+								<a  href="${ctx}/betmember/list?k=6&id2=${(returnDatas.data.id2)!''}"><i class="fa fa-file-text-o"></i>操作日志</a>
+								<a  href="${ctx}/betmember/list?k=7&id2=${(returnDatas.data.id2)!''}&account=${(returnDatas.data.account)!''}&id=${(returnDatas.data.id)!''}"><i class="fa fa-space-shuttle"></i>在线投注</a>
+								<a  href="${ctx}/betmember/list?k=8&id2=${(returnDatas.data.id2)!''}&account=${(returnDatas.data.account)!''}"><i class="fa fa-database"></i>金币记录</a>
+								<#if agentparentid?? && agentparentid=='A101'>
+								<a  href="${ctx}/betmember/look?k=1&id2=${(returnDatas.data.id2)!''}"><i class="fa fa-key"></i>权限管理</a>
+								</#if>
+								<@shiro.hasPermission name="/bettransferaccounts/list" >
+								<a  href="${ctx}/betmember/list?k=10&id2=${(returnDatas.data.id2)!''}">转账记录</a>
+								</@shiro.hasPermission>
+							</div>
+				
+				            <div class="clearfix"></div>
+				
+				            <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>用户基本信息 <small>填写后无法修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				                  <div class="x_content">
+				
+				                    <table class="xiao-springrain-userNews table">
+				                      <!--<thead>
+				                        <tr>
+				                          <th>#</th>
+				                          <th>First Name</th>
+				                          <th>Last Name</th>
+				                          <th>Username</th>
+				                        </tr>
+				                      </thead>-->
+				                      <tbody>
+				                        <tr>
+				                          <td scope="row">用户ID</td>
+				                          <td>${(returnDatas.data.id2)!''}</td>
+				                          <td>用户名</td>
+				                          <td>${(returnDatas.data.account)!''}</td>
+				                        </tr>
+				                        <tr>
+				                          <td scope="row">用户头像</td>
+				                          <td colspan="3">
+				                              <span> <img  height="50" width="50" alt="" src="${(returnDatas.data.avatar)!''}" /></span> 
+					                          <@shiro.hasPermission name="/betmember/updateheadimg" >
+					                          	<input class="pull-right" type="button" id="updateheadimg" value="修改为默认" />
+					                          </@shiro.hasPermission>
+				                          </td>
+				                        </tr>
+				                        <tr>
+				                          <td scope="row">昵称</td>
+				                          <td>
+				                          <span>${(returnDatas.data.nickname)!''}</span> 
+				                           <@shiro.hasPermission name="/betmember/updatenickname" >
+				                          <input class="pull-right" type="button" id="updatenickname" value="修改" />
+				                           </@shiro.hasPermission>
+				                          </td>
+				                          <td>状态</td>
+				                          <td>
+				                          <#if (returnDatas.data.status)??>
+				                          <#if (returnDatas.data.status)==1>
+												<a style="color:green;">启用</a>
+												<#elseif returnDatas.data.status==0>
+												
+												<a style="color:red;">冻结</a>
+												<#if returnDatas.data.freezeremark??><br/>
+												冻结人：${(returnDatas.data.freezeoperator)!''}<br/>
+												冻结时间：${(returnDatas.data.freezeaddtime)!''}<br/>
+												冻结原因：${(returnDatas.data.freezeremark)!''}<br/>
+												</#if>
+											</#if> 
+											</#if> 
+				                          </td>
+				                        </tr>
+				                      <!--   <tr>
+				                          <td scope="row">当前经验</td>
+				                          <td>
+				                          <span>${(returnDatas.data.exp)!''}</span> <input class="pull-right" type="button" id="updateexp" value="修改" />
+				                          </td>
+				                          <td>今日经验</td>
+				                          <td>${(returnDatas.data.todayexp)!''}</td>
+				                        </tr> -->
+				                        <tr>
+				                        	<td>vip等级</td>
+				                        	<td>LV${(returnDatas.data.level)!''}</td>
+				                        	<td>所在游戏</td>
+				                        	<#setting date_format="yyyy-MM-dd">
+				                        	<td><a style="color:red;text-decoration:underline;" href="${ctx}/betmember/list?k=7&p=1&id2=${(returnDatas.data.id2)!''}&account=${(returnDatas.data.account)!''}&id=${(returnDatas.data.id)!''}">${(operation)!''}</a></td>
+				                        	
+				                        </tr>
+				                        <tr>
+				                        	<td>推荐人ID</td>
+				                        	<td>
+				                        	<a class="xiao-color-00e"  style="text-decoration:underline;"  href="${ctx}/betmember/look?id2=${(returnDatas.data.parentid)!''}">${(returnDatas.data.parentid)!''}</a>
+				                        	</td>
+				                        	<td>推荐收益</td>
+				                        	<td>一层：<a class="xiao-color-00e"  style="text-decoration:underline;"  href="${ctx}/betmember/list?k=21&p=1&memberid2=${(returnDatas.data.id2)!''}">${(subordinaterebate)!0}</a>  </td>
+				                        	<!--  ${(subordinaterebate)!0}   -->
+				                        </tr>
+				                        <tr>
+				                        	<td>注册IP</td>
+				                        	<td >${(returnDatas.data.signip)!''}</td>
+				                        	<td>注册时间</td>
+				                        	<td >${(returnDatas.data.signdate)!''}</td>
+				                        </tr>
+				                        <tr>
+				                        	<td>流水</td>
+				                        	<td colspan="3">总投注： <a class="xiao-color-00e" style="text-decoration:underline;" href="${ctx}/betmember/look?k=2&id=${(returnDatas.data.id)!''}">${(totalbettingmoney)!0}</a>，今日：<span style="color:red;">${(todaybettingmoney)!0}</span>，昨日：<span style="color:red;">${(yesterdaybettingmoney)!0}</span>  <a class="pull-right" href="${ctx}/betmember/look?k=2&id=${(returnDatas.data.id)!''}">查询</a></td>
+				                        </tr>
+				                        <tr>
+				                        	<td>用户类型</td>
+				                        	<td >
+				                        	<#if (returnDatas.data.isinternal)??>
+											<#if ((returnDatas.data.isinternal)=1)>
+												内部用户
+												<#else>
+												玩家
+											</#if>
+											</#if>
+				                        	
+				                        	
+				                        	</td>
+				                        	<td>是否出票</td>
+				                        	<td >
+				                        	<#if (returnDatas.data.isinternal)??>
+											<#if ((returnDatas.data.isinternal)=1)>
+												<font style="color:red;">否</font>
+												<#else>
+												<#if (returnDatas.data.isissue)??>
+													<#if (returnDatas.data.isissue=1)>
+														<font style="color:green;">是</font>
+													<#else>
+														<font style="color:red;">否</font>
+													</#if>
+													<@shiro.hasPermission name="/betmember/updateisissue" >
+						                          		<input class="pull-right" type="button" id="updateisissue" value="修改" />
+						                          	</@shiro.hasPermission>
+												</#if>
+											</#if>
+											</#if>
+				                        	
+				                        	
+				                        	</td>
+				                        </tr>
+				                        <tr>
+				                        <td>所属代理账号</td>
+				                        <td>${agentdetail1!''}</td>
+				                        <td>所属代理昵称</td>
+				                        <td>${agentdetail2!''}</td>	 
+				                        </tr>
+				                        
+										<#if (agentdetail3??)> 
+				                        	<tr>
+				                        		<td>所属分级代理账号</td>
+				                        		<td>${agentdetail3!''}</td>
+				                        		
+				                        		<td>是否允许修改头像</td>
+				                        		<td>
+				                        			<#if (returnDatas.data.isavatarupdate)??>
+														<#if ((returnDatas.data.isavatarupdate)=0)>
+															<font style="color:red;">否</font>
+														<#else>
+															<font style="color:green;">是</font>
+														</#if>
+														<@shiro.hasPermission name="/betmember/updateisavatar" >
+						                          			<input class="pull-right" type="button" id="updateisavatar" value="修改" />
+						                          		</@shiro.hasPermission>
+													</#if>
+				                        		</td>
+				                       		</tr>
+				                        </#if>				                       
+				                        <tr>
+			                        		<td>栏目版本</td>
+			                        		<td>
+				                        		<span><#if returnDatas.data.versioncontrol??><#if returnDatas.data.versioncontrol == "A">资讯版（A版）<#elseif returnDatas.data.versioncontrol == "B">彩票版（B版）<#else>请设置</#if></#if></span> 
+					                            <@shiro.hasPermission name="/betmember/update_versioncontrol" >
+					                            <input class="pull-right" type="button" id="updateVersioncontrol" value="修改" />
+					                            </@shiro.hasPermission>
+					                        </td>
+			                        		<td></td>
+			                        		<td>
+			                        			
+			                        		</td>
+			                       		</tr>
+				                      </tbody>
+				                    </table>
+				
+				                  </div>
+				                </div>
+				              </div>
+				
+				
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>用户主要信息 <small>可以修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				                  <div class="x_content">
+				
+				                    <table class="xiao-springrain-userNews table table-striped">
+				                      <!--<thead>
+				                        <tr>
+				                          <th>#</th>
+				                          <th>First Name</th>
+				                          <th>Last Name</th>
+				                          <th>Username</th>
+				                        </tr>
+				                      </thead>-->
+				                      <tbody>
+				                        <tr>
+				                          <td scope="row">真实姓名</td>
+				                          <td id="">
+				                          	<span>${(returnDatas.data.realname)!''}</span> 
+					                          	<@shiro.hasPermission name="/betmember/updaterealname" >
+					                          		<input class="pull-right" type="button" id="updaterealname" value="解绑" />
+					                          	</@shiro.hasPermission>
+				                          </td>
+				                          <td>手机号码</td>
+				                          <td>
+				                          	<span>${(returnDatas.data.mobile)!''}</span> 
+				                          	<@shiro.hasPermission name="/betmember/updatemobile" >
+				                          	<input class="pull-right" type="button" id="updatemobile" value="修改" />
+				                          	</@shiro.hasPermission>
+				                          </td>
+				                        </tr>
+				                        <!--<tr>
+				                          <td scope="row">手机号码</td>
+				                          <td colspan="3">13736492804 <a class="pull-right" href="#">修改</a></td>
+				                        </tr>-->
+				                        <tr>
+				                          <td>银行密码</td>
+				                          <td>
+				                          	<span>******</span>
+				                          	<@shiro.hasPermission name="/betmember/updatepassword2" >
+				                          	<input class="pull-right" type="button" id="updatepassword2" value="修改" />
+				                          	</@shiro.hasPermission>
+				                          </td>
+				                          <td>登录密码</td>
+				                          <td>
+				                         	<span>******</span>
+				                         	<@shiro.hasPermission name="/betmember/updatepassword" >
+				                         	<input class="pull-right" type="button" id="updatepassword" value="修改" />
+				                         	</@shiro.hasPermission>
+				                          </td>
+				                        </tr>
+				                        <!--<tr>
+				                          <td scope="row">登录密码</td>
+				                          <td colspan="3">123456789<a class="pull-right" href="#">修改</a></td>
+				                        </tr>-->
+				                        <tr>
+				                          <td>身份证</td>
+				                          <td colspan="3">
+				                          	
+				                          	<span>${(returnDatas.data.idno)!''}</span>
+				                          	<@shiro.hasPermission name="/betmember/updateidno" >
+				                          	<input class="pull-right" type="button" id="updateidno" value="解绑" />
+				                          		</@shiro.hasPermission>
+				                          </td>
+				                        </tr>
+				                      </tbody>
+				                    </table>
+									
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>绑定账户信息 <small>可以修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				
+				                    <p>提示：填写的信息 <code>一定要真实有效</code>,否则不予<code>提现</code></p>
+				
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action">
+				                        <thead>
+				                          <tr class="headings">
+				                           <!--  <th>
+				                              <input type="checkbox" id="check-all" class="flat">
+				                            </th> -->
+				                            <th class="column-title">默认 </th>
+				                            <th class="column-title">类别 </th>
+				                            <th class="column-title">账户 </th>
+				                            <th class="column-title">绑定时间 </th>
+				                            <!--<th class="column-title">Status </th>
+				                            <th class="column-title">Amount </th>-->
+				                          <!--   <th class="column-title no-link last"><span class="nobr">操作</span> -->
+				                            </th>
+				                            <th class="bulk-actions" colspan="7">
+				                              <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+				                            </th>
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                           <!--  <td class="a-center ">
+				                              <input type="checkbox" class="flat" name="table_records">
+				                            </td> -->
+				                             <#if (betMemberbankcardList??)&&(betMemberbankcardList?size>0)> 
+										    	<#list	betMemberbankcardList as _data>
+										    		<!--start_no_export-->
+													<tr  class="even pointer">
+														<td class=" ">
+															<input type="checkbox" class="flat" name="table_records"
+															
+																<#if (_data.isdefault??)&&(_data.isdefault==1)>
+																	checked
+																</#if>
+															>
+															<!-- ${(_data.isdefault)!0} -->
+														</td>
+														<td class=" ">
+															${(_data.banktype)!''}
+														</td>
+														<td class=" ">
+															${(_data.account)!''}
+														</td>
+														<td class=" ">
+															<!--日期型-->
+														${((_data.bindtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+									
+									
+									
+				                  </div>
+				                </div>
+				              </div>
+				
+				              <div class="clearfix"></div>
+				
+				              
+				              <!--绑定账号信息end-->	
+				            	
+				              <!-- 统计输赢结果信息 -->
+				               <div class="col-md-12 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                   <!--  <h2>风控值：${(returnDatas.data.score-reresult)!'error'} <span>
+				                    
+				                    </span></h2> -->
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action">
+				                        <thead>
+				                          <tr class="headings">
+				                            <th class="column-title">扣分 </th>
+				                            <th class="column-title">在线充值 </th>
+				                            <th class="column-title">提现 </th>
+				                            
+				                          
+				                           <th class="column-title">红包 </th>
+				                          
+				                            <th class="column-title">注册 </th>
+				                            <th class="column-title">推广 </th>
+				                            <th class="column-title">首冲 </th>
+				                            
+				                            <th class="column-title">当日充值 </th>
+				                            <th class="column-title">单笔充值</th>
+				                          
+				                            
+				                            <th class="column-title">游戏输赢 </th>
+				                              <!--   <th class="column-title">投注退佣 </th>  -->
+				                             <th class="column-title">结果 </th>
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                           <tr class="even pointer">  
+					                           <td class=" ">
+						                            <a 
+						                              <#if membertransferaccounts??>
+													<#if (membertransferaccounts>=0)>
+													style="color:blue"
+													<#elseif (membertransferaccounts<0)>
+													style="color:red"
+													</#if>
+													<#else>
+													style="color:blue"
+													</#if>
+						                             href="${ctx}/betmember/list?k=10&id2=${(returnDatas.data.id2)!''}">${(membertransferaccounts)!0}</a>
+					                            </td>
+					                            <td class=" " >
+						                            <a href="${ctx}/betmember/list?k=12&memberid=${(returnDatas.data.id)!''}"
+						                            <#if membergold??>
+													<#if (membergold>=0)>
+													style="color:blue"
+													<#elseif (membergold<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(membergold)!0}</a>
+					                            </td>
+					                            <td class=" " >
+						                            <a  href="${ctx}/betmember/list?k=13&memberid=${(returnDatas.data.id)!''}"
+						                            <#if memberwithdrawcash??>
+													<#if (memberwithdrawcash>=0)>
+													style="color:blue"
+													<#elseif (memberwithdrawcash<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                            >${(memberwithdrawcash)!0}</a> 
+					                            </td>
+					                            <td class=" ">
+						                            <a  href="${ctx}/betmember/list?k=15&memberredenvelope=1&memberid2=${(returnDatas.data.id2)!''}"
+						                            <#if memberredenvelope??>
+													<#if (memberredenvelope>=0)>
+													style="color:blue"
+													<#elseif (memberredenvelope<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                            >${(memberredenvelope)!0}</a>  
+					                            </td>
+				                            	<td class=" ">
+						                            <a href="${ctx}/betmember/list?k=16&memberregisterreward=1&memberid2=${(returnDatas.data.id2)!''}"
+						                            <#if registerreward??>
+													<#if (registerreward>=0)>
+													style="color:blue"
+													<#elseif (registerreward<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >
+						                             ${(registerreward)!0}
+						                             </a> 
+					                            </td>
+					                            <td class=" ">
+						                            <a href="${ctx}/betmember/list?k=17&subordinatedetailrebate=1&memberid2=${(returnDatas.data.id2)!''}"
+						                            <#if subordinatedetailrebate??>
+													<#if (subordinatedetailrebate>=0)>
+													style="color:blue"
+													<#elseif (subordinatedetailrebate<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(subordinatedetailrebate)!0}</a> 
+					                            
+					                            </td>
+				                            
+					                            <td class=" ">
+						                              <a href="${ctx}/betmember/list?k=18&firstrechargerebate=1&memberid2=${(returnDatas.data.id2)!''}"
+						                            <#if firstrechargerebate??>
+													<#if (firstrechargerebate>=0)>
+													style="color:blue"
+													<#elseif (firstrechargerebate<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(firstrechargerebate)!0}</a> 
+					                             </td>
+					                           	<td class=" ">
+						                             <a href="${ctx}/betmember/list?k=19&todayrechargerebate=1&memberid2=${(returnDatas.data.id2)!''}"
+						                            <#if todayrechargerebate??>
+													<#if (todayrechargerebate>=0)>
+													style="color:blue"
+													<#elseif (todayrechargerebate<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(todayrechargerebate)!0}</a> 
+					                            </td>
+				                           
+				                           		<td class=" ">
+						                             <a href="${ctx}/betmember/list?k=20&todaysinglerecharge=1&memberid2=${(returnDatas.data.id2)!''}"
+						                            <#if todaysinglerecharge??>
+													<#if (todaysinglerecharge>=0)>
+													style="color:blue"
+													<#elseif (todaysinglerecharge<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(todaysinglerecharge)!0}</a>
+					                            </td>
+				                            
+					                            <td class=" ">
+						                             <u><a    href="${ctx}/betmember/look?k=2&id=${(returnDatas.data.id)!''}"
+						                            <#if memberwinorfail??>
+													<#if (memberwinorfail>=0)>
+													style="color:blue"
+													<#elseif (memberwinorfail<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(memberwinorfail?string(',###'))!0}</a>
+					                            </u></td>
+				                           
+				                            <!--  <td class=" ">${(summemberty)!0} </td>   -->
+				                           
+					                           <td class=" ">
+						                            <a 
+						                            <#if reresult??>
+													<#if (reresult>=0)>
+													style="color:blue"
+													<#elseif (reresult<0)>
+													style="color:red"
+													</#if>
+													</#if>
+						                             >${(reresult?string(',###'))!0}</a>
+					                            </td>
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+				              </div>
+				              
+				              
+				              
+				              
+				              
+				              
+				              
+				              
+				              
+				               <div class="col-md-12 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>最近登录 、充值、提现<span class="xiao-color-e00"></span></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action" style="display:inline" >
+				                        <thead>
+				                        <tr ><th colspan="5">最近登录</th></tr>
+				                          <tr class="headings">
+				                          <th class="column-title">时间 </th>
+				                            <th class="column-title">IP</th>
+				                          <!--   <th class="column-title">分数 </th>
+				                            <th class="column-title">银行 </th>
+				                            
+				                            <th class="column-title">经验 </th>
+ -->				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                          
+				                          
+				                          <#if (memberloginloglist??)&&(memberloginloglist?size>0)> 
+										    	<#list	memberloginloglist as _data>
+										    		<!--start_no_export-->
+													<tr  class="even pointer">
+														<td class=" ">
+															${(_data.time)!''}
+														</td>
+														<td class=" ">
+															${(_data.ip)!''}
+														</td>
+														<!-- <td class=" ">
+															${(_data.score?string('#'))!0}
+														</td>
+														<td class=" ">
+															${(_data.bankscore?string('#'))!0}
+														</td>
+														<td class=" ">
+															日期型
+														${(_data.exp)!0}
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				                       <table class="table table-striped jambo_table bulk_action"  style="display:inline">
+				                        <thead>
+				                         <tr ><th colspan="5">最近充值</th></tr>
+				                          <tr class="headings">
+				                          <th class="column-title">时间 </th>
+				                            <th class="column-title">渠道</th>
+				                            <th class="column-title">分数 </th>
+				                            
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                          
+				                          <#if (membergoldlist??)&&(membergoldlist?size>0)> 
+										    	<#list	membergoldlist as _data>
+										    		<!--start_no_export-->
+													<tr  class="even pointer">
+														<td class=" ">
+															${(_data.submittime)!''}
+														</td>
+														<td class=" ">
+															${(_data.source)!''}
+														</td>
+														<td class=" ">
+															${(_data.money?string('#'))!0}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+				                          
+				                          
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                      
+				                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				                       <table class="table table-striped jambo_table bulk_action"  style="display:inline">
+				                        <thead>
+				                          <tr ><th colspan="5">最近提现</th></tr>
+				                          <tr class="headings">
+				                          <th class="column-title">时间 </th>
+				                            <th class="column-title">金额（RMB）</th>
+				                            <th class="column-title">分数 </th>
+				                            
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                          <#if (memberwithdrawcashlist??)&&(memberwithdrawcashlist?size>0)> 
+										    	<#list	memberwithdrawcashlist as _data>
+										    		<!--start_no_export-->
+													<tr  class="even pointer">
+														<td class=" ">
+															${(_data.applicationtime)!''}
+														</td>
+														<td class=" ">
+															${(_data.money?string('#'))!0}
+														</td>
+														<td class=" ">
+															${(_data.awcs?string('#'))!0}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+				                          
+				                          
+				                          
+				                          
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+				              </div>
+				              
+				              
+				            </div>
+				    </div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+	<script>
+		$("#updaterealname").click(function(){
+			//询问框
+			layer.confirm('确定解绑真实姓名？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betmember/updaterealname?id2="+${(returnDatas.data.id2)!''},
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken;
+						}else if("error"==result.status){
+							layer.msg("error");
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+		})
+	
+	
+		$("#updatemobile").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','savemobile');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#savemobile").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updatemobile?id2="+c+"&mobile="+b,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+	
+		$("#updateqq").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','saveqq');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#saveqq").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updateqq?id2="+c+"&qq="+b,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+		
+		$("#updatepassword").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','savepassword');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#savepassword").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updatepassword?id2="+c+"&password="+b,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+		$("#updateisissue").click(function(){
+			//询问框
+			layer.confirm('确定修改是否出票状态？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+			  	var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updateisissue?id2="+c,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			}, function(){
+			  
+			});
+		})
+		
+		$("#updateisavatar").click(function(){
+			//询问框
+			layer.confirm('确定修改是否允许修改头像状态？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+			  	var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updateisavatar?id2="+c,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			}, function(){
+			  
+			});
+		})
+		
+		$("#updatenickname").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','savenickname');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#savenickname").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/updatenickname?id2="+c,
+				data:{nickname:b},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+		
+		
+		$("#updateheadimg").click(function(){
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/updateheadimg?id2="+c,
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+			})
+		})
+		
+		$("#updatepassword2").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','savepassword2');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#savepassword2").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updatepassword2?id2="+c+"&password2="+b,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+		$("#updateidno").click(function(){
+			//询问框
+			layer.confirm('确定解绑身份证？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betmember/updateidno?id2="+${(returnDatas.data.id2)!''},
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken;
+						}else if("error"==result.status){
+							layer.msg("error");
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+		})
+		$("#updateexp").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','saveexp');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#saveexp").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updateexp?id2="+c+"&exp="+b,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+		$("#updatetx").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<input type='text' style='width:80;' value='"+a+"' >");
+			$(this).attr('id','savetx');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#savetx").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"get",
+				url:"${ctx}/betmember/updatetx?id2="+c+"&tx="+b,
+				data:{},
+				success:function(){
+					window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+		
+		$(".cancelparentd").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定取消此用户代理？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betmember/updatedistributor?id2="+a+"&cancel=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('取消代理成功！',{offset:['','']});
+							setTimeout("location.reload(true);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+		})
+		
+		
+		
+		
+		$(".addparentd").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定将此用户添加为代理？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betmember/updatedistributor?id2="+a,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('添加代理成功！',{offset:['','']});
+							setTimeout("location.reload(true);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+		})
+		
+		// 修改版本控制
+		$("#updateVersioncontrol").click(function(){
+			var a=$(this).prev().html();
+			$(this).prev().html("<select>" +
+								"<option value='' >请选择</option>" +
+								"<option value='A' <#if returnDatas.data.versioncontrol??><#if returnDatas.data.versioncontrol == 'A'>SELECTED</#if></#if> >资讯版（A版）</option>" +
+								"<option value='B' <#if returnDatas.data.versioncontrol??><#if returnDatas.data.versioncontrol == 'B'>SELECTED</#if></#if> >彩票版（B版）</option>" +
+								"</select>");
+			$(this).attr('id','saveVersiontrol');
+			$(this).val("保存");
+			$(this).unbind('click');
+			$("#saveVersiontrol").click(function(){
+				var b=$(this).prev().children().val();
+				var c=${(returnDatas.data.id2)!''};
+				$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/update_versioncontrol?id2="+c,
+				data:{"versioncontrol":b},
+				success:function(result){
+					if ("success"==result.status){
+						window.location.href="${ctx}/betmember/look?id2="+${(returnDatas.data.id2)!''}+"&id="+"${(returnDatas.data.id)!''}"+"&springraintoken="+springraintoken
+					}else if("error"==result.status){
+						layer.msg(result.message);
+						return;
+					}
+				},
+				error:function(result){
+					alert("error");
+				}
+				})
+			})
+		})
+	</script>
+</body>
+</html>

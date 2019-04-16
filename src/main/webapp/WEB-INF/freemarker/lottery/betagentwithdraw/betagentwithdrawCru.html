@@ -1,0 +1,139 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		  springrain.initValid(null,function(data) {
+		 	 var data=data;
+			  if("success"==data.status){
+			  	layer.msg('申请提现成功！',{offset:['','']});
+				window.location.href="${ctx}/betagentwithdraw/list?springraintoken="+springraintoken;
+			  }else if("error"==data.status){
+			 	 layer.msg(data.message,{offset:['','']});
+			  }	
+			});
+		 	
+		 
+		    
+				
+		  $(":radio").click(function(){
+
+		  		if($(this).val()=="0"){
+		  			$("#bank_").css('display','none');
+
+
+		  		}else if($(this).val()=="1"){
+		  			$("#bank_").css('display','block');
+
+		  		}
+			});
+		 
+	 });
+</script>
+
+<
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		           <!--  <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>BetAgentwithdraw管理</cite></a>
+							</span>
+		            </li> -->
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加代理提现</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betagentwithdraw/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">提现金额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="money" id="money" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.money)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">真实姓名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="realname" id="realname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.realname)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	
+																	<div class="layui-form-item col-lg-6">
+																	    <label class="layui-form-label">提现方式*</label>
+																	    <div class="layui-inline col-lg-5">  
+																            <label class="custom-control custom-radio">
+																                <input type="radio" checked='checked' name="paytype"  title="支付宝" id="storeSquirrel"  value=0 />
+															            	</label>
+															            	<label class="custom-control custom-radio">
+															               		<input type="radio" name="paytype" title="银行卡" id="storeSquirrel"  value=1 />
+															            	</label>
+															            </div>
+															            <div class="layui-inline valid-info"></div>	
+															        </div>
+															            
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">账号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="remark" id="remark" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.remark)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6" id="bank_" style="display: none" >
+																		<label class="layui-form-label">银行/<br>开户行*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="bank" id="bank"   autocomplete="off" class="layui-input" value="${(returnDatas.data.bank)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!-- <div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">备注*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<textarea name="remark" class="layui-textarea" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"></textarea>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div> -->
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

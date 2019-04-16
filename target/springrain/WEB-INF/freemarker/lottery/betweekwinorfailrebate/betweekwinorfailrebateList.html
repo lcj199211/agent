@@ -1,0 +1,174 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		
+		
+		
+		$("#weekwinorfailrebatesmtbtn").click(function(){
+		var rebate=$("#rebate").val();
+		$.ajax({
+						type:"post",
+						url:"${ctx}/betsubordinaterebate/update",
+						
+						data:{rebate:rebate,remark:'z'},
+						success:function(result){
+							if("error"==result.status){
+								alert(result.message);
+								
+							}else if("success"==result.status){
+								alert(result.message);
+								location.reload(true);
+							}
+						},
+					})
+	})
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betweekwinorfailrebate/delete");
+	}
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betweekwinorfailrebate/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="search-wrap xiao-input-wrap">
+							          				<div class="layui-inline">
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="xiao-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <div class="layui-input-inline xiao-input">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn xiao-mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" >&#xe615;</i>搜索</button>
+									                </div>
+							          </div>
+									</form>
+									查询  结束 -->
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+										<div class="xiao-btnlist xiap-pull-left">
+											<div class="xiao-btnlist-item">
+													周输赢返利
+											</div>
+											<div class="xiao-btnlist-item">
+													<a href="${ctx}/betweekwinorfailrebate/list?date0=week" >本周 </a>
+											</div>
+											<div class="xiao-btnlist-item">
+													<a href="${ctx}/betweekwinorfailrebate/list?date0=month" >本月 </a>
+											</div>
+										</div>
+										<div>
+														返利设置<input name="rebate" id="rebate" value="${(rebate[0].rebate)*100!''}" style="width:50px;">%
+														<input id="weekwinorfailrebatesmtbtn" type="submit" value="确定设置"/>
+											</div>
+										<table class="xiao-ht-table" lay-even>
+											<thead>
+												<tr>
+														<th id="memberid2" >用户ID</th>
+														<th id="nickname" >昵称</th>
+														<th id="th_weekscore" >输赢</th>
+														<th id="th_weekbetting" >流水</th>
+														<th id="th_rebate" >返利</th>
+														<th id="th_receivetime" >领取时间</th>
+														<th id="receiveip" >领取IP</th>
+														<th id="th_gamescore" >游戏积分</th>
+														<th id="th_bankscore" >银行积分</th>
+														<th id="th_state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+													<tr class="">
+														<td >
+															${(_data.memberid2)!0}
+														</td>
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td >
+															${(_data.weekscore)!0}
+														</td>
+														<td >
+															${(_data.weekbetting)!0}
+														</td>
+														<td >
+															${(_data.rebate)!0}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.receivetime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.receiveip)!''}
+														</td>
+														<td >
+															${(_data.gamescore)!0}
+														</td>
+														<td >
+															${(_data.bankscore)!0}
+														</td>
+														<td >
+															<#if _data.state??>
+																<#if _data.state==1>
+																<font color="#555555">未领</font>
+																<#elseif _data.state==0>
+																<font color="red">已领</font>
+																</#if>
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv' class="xiao-inline-block"></div>
+											<@h.layPage page=returnDatas.page /> 
+											<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font>
+										</#if>
+								</div>
+							</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

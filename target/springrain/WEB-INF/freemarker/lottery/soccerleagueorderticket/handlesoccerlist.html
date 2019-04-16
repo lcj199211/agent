@@ -1,0 +1,216 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<style type="text/css">
+tr.change:hover
+{
+background-color:#eafcff;
+}
+</style>
+<style>
+.xiao-ht-table td, .xiao-ht-table th {
+    padding: 0px 0;
+}
+</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/soccerleagueorderticket/handlesoccerlist" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col >
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							                		<div class="layui-input-inline xiao-input-wrap pull-left">
+												        <div class="layui-input-inline">
+												            <button class="layui-btn" type="button" id="chupiao"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>刷新</button>
+												            <button class="layui-btn" type="button" id="endchupiao"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>结束出票</button>
+												        </div>
+	
+										            </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col >
+										    <col >
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="18">足球出票订单列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <tr　>
+																	
+																</tr>
+												  
+												  		<th id="th_bettingtime" rowspan="2">投注时间</th>
+														 <th rowspan="2">订单id</th> 
+														<th rowspan="2" >投注玩法</th><!-- (逗号隔开) -->
+														<th colspan="3">投注内容</th>
+														<th rowspan="2" >倍数</th>
+														<th rowspan="2" id="th_bettingmoney">投注金额</th>
+														<th rowspan="2">操作</th>
+												</tr> 
+												 <tr>
+														<th>编号</th>
+														<th>主队vs客队/投注</th>
+														
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+													<tr class="change">
+														<td >
+														${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														 <td >
+															${(_data.orderid)!''}
+														</td> 
+														<td >
+														<#if (_data.contents??)>
+															<#if _data.contents=1>
+																单关
+															<#else>
+																${(_data.contents)!''}串1
+															</#if>
+														</#if>
+														</td>
+														<td min-width="400" colspan="3">
+															<table width="100%" style="border-top: 0">
+																
+										    				<#if (_data.content??)&&(_data.content?size>0)> 
+										    					<#list	_data.content as _schemecontent>
+											    					<tr>
+											    						<td rowspan="2">${(_schemecontent.num)!''}<br/>${((_schemecontent.starttime)?string('MM-dd HH:mm'))!''}
+												    						<br/>
+											    						</td>
+											    						<td>
+											    							${(_schemecontent.leftteamname)!''} VS ${(_schemecontent.rightteamname)!''}
+											    						</td>
+											    					</tr>
+												    					<tr>
+												    						<td>${(_schemecontent.betname)!''} : 
+												    							<#if _schemecontent.result=1>
+													    							<font style="color:red">${(_schemecontent.oddsrealname)!''}</font>
+													    						<#elseif _schemecontent.result=3 >
+													    							<font >${(_schemecontent.oddsrealname)!''}</font>
+													    						<#else>
+													    							${(_schemecontent.oddsrealname)!''}
+													    						</#if>
+													    						(<a   >${(_schemecontent.odds)!''}</a>)
+													    						
+													    						</td>
+												    						<td>
+													    						<#if _schemecontent.result=1>
+													    							<font style="color:red">${(_schemecontent.resultname)!''}</font>
+													    						<#elseif _schemecontent.result=3 >
+													    							<font >${(_schemecontent.resultname)!''}</font>
+													    						<#else>
+													    							${(_schemecontent.resultname)!''}
+													    						</#if>
+												    						</td>
+												    					</tr>
+										    					</#list>
+											 				</#if>
+															</table>
+														</td>
+														<td>
+																${(_data.betmulriple)!''}											
+														</td>
+														<td >
+																${((_data.bettingmoney))!''}
+														</td>
+														<td>
+														<input type="hidden" value="${(_data.schemeid)!''}">
+														<input type="hidden" value="${(_data.orderid)!''}">
+									                    <a href="#" class="layui-btn xiao-btn-default layui-btn-mini manualissue">出票</a>
+									                    <a href="#" class="layui-btn xiao-btn-default layui-btn-mini eatissue">吃票</a>
+									                    <a href="#" class="layui-btn xiao-btn-default layui-btn-mini timeout">超时</a>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+	$(".manualissue").click(function(){
+			var b=$(this).prev().val();
+			var a=$(this).prev().prev().val();
+			//询问框
+			layer.confirm('确定手动出票？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				$.ajax({
+					type:"get",
+					url:"${ctx}/soccerleagueorderticket/updateissuestate?schemeid="+a+"&orderid="+b,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('手动出票成功！',{offset:['','']});
+							setTimeout("history.go(0);",2000);	
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			});
+		})
+		
+		
+			$("#chupiao").click(function(){
+				$.ajax({
+					type:"get",
+					url:"${ctx}/soccerleagueorderticket/refresh
+				})
+			})
+</script>
+</html>
+

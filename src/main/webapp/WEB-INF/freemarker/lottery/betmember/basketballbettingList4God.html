@@ -1,0 +1,735 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var now = new Date(); //当前日期
+	var nowDayOfWeek = now.getDay(); //今天本周的第几天
+	var nowDay = now.getDate(); //当前日
+	var nowMonth = now.getMonth(); //当前月
+	var nowYear = now.getYear(); //当前年
+	nowYear += (nowYear < 2000) ? 1900 : 0; //
+	var lastMonthDate = new Date(); //上月日期
+	lastMonthDate.setDate(1);
+	lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+	var lastYear = lastMonthDate.getYear();
+	var lastMonth = lastMonthDate.getMonth();
+	//格式化日期：yyyy-MM-dd
+	function formatDate(date) {
+	    var myyear = date.getFullYear();
+	    var mymonth = date.getMonth() + 1;
+	    var myweekday = date.getDate();
+	    if (mymonth < 10) {
+	        mymonth = "0" + mymonth;
+	    }
+	    if (myweekday < 10) {
+	        myweekday = "0" + myweekday;
+	    }
+	    return (myyear + "-" + mymonth + "-" + myweekday);
+	}
+	jQuery(function(){
+		
+		var href = window.location.href;
+		
+		var result = href.split('?')[href.split('?').length-1];
+		var url_list = $('.xiao-btnlist').find('a');
+		for(var i = 0; i < url_list.length ; i++){
+			if(url_list[i].href == href){
+	//				console.log(url_list[i].href);
+				url_list[i].style.backgroundColor = "#009688";
+				url_list[i].style.display = "block";
+				url_list[i].style.color = "#fff";
+			}
+		}	
+		
+	})
+
+	function getWeekEndDate() {
+		var weekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
+		return formatDate(weekEndDate);
+	}
+	
+	function getWeekStartDate() {
+		var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+1);
+		return formatDate(weekStartDate);
+	}
+	function getLastWeekStartDate() {
+	    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 6);
+	    return formatDate(weekStartDate);
+	}
+	function getLastWeekEndDate() {
+	    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek );
+	    return formatDate(weekEndDate);
+	}
+	function getMonthStartDate() {
+	    var monthStartDate = new Date(nowYear, nowMonth, 1);
+	    return formatDate(monthStartDate);
+	}
+	function getMonthEndDate() {
+	    var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
+	    return formatDate(monthEndDate);
+	}
+	function getMonthDays(myMonth) {
+	    var monthStartDate = new Date(nowYear, myMonth, 1);
+	    var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+	    var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+	    return days;
+	}
+	//获得上月开始时间
+	function getLastMonthStartDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthStartDate;
+		if(lastMonth==11){
+			lastMonthStartDate = new Date(LastYear, lastMonth, 1);	
+		}else{
+			lastMonthStartDate = new Date(nowYear, lastMonth, 1);
+		}
+	    
+	    return formatDate(lastMonthStartDate);
+	}
+	//获得上月结束时间
+	function getLastMonthEndDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthEndDate;
+		if(lastMonth==11){
+			lastMonthEndDate = new Date(LastYear, lastMonth, getMonthDays(lastMonth));
+		}else{
+			lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
+		}
+	    return formatDate(lastMonthEndDate);
+	}
+	
+	function settoday(){
+	//今日
+		var day1 = new Date();
+		var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+		$("#startTime").val(s1);
+		$("#endTime").val(s1);
+	}
+	
+	function setadfgfg(){
+	//昨日
+		var day1 = new Date();
+		day1.setTime(day1.getTime()-24*60*60*1000);
+		var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+		$("#startTime").val(s1);
+		$("#endTime").val(s1);
+	}
+	
+	function setdfgfgr(){
+	//本周
+		var firstDay3=getWeekStartDate();
+		var lastDay3=getWeekEndDate();
+		$("#startTime").val(firstDay3);
+		$("#endTime").val(lastDay3);
+	}
+	
+	function setsadfff(){
+	//上周
+		var firstDay=getLastWeekStartDate();
+		var lastDay=getLastWeekEndDate();
+		$("#startTime").val(firstDay);
+		$("#endTime").val(lastDay);
+	}
+	
+	function setadger(){
+	//本月
+		var firstDay1=getMonthStartDate();
+		var lastDay1=getMonthEndDate();
+		$("#startTime").val(firstDay1);
+		$("#endTime").val(lastDay1);
+	}
+	
+	function setasdtret(){
+	//上月
+		var firstDay2=getLastMonthStartDate();
+		var lastDay2=getLastMonthEndDate();
+		$("#startTime").val(firstDay2);
+		$("#endTime").val(lastDay2);
+	}
+  
+
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/basketballscheme/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+<style type="text/css">
+tr.change:hover
+{
+background-color:#eafcff;
+}
+</style>
+<style>
+.xiao-ht-table td, .xiao-ht-table th {
+    padding: 0px 0;
+}
+</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+				<!--
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>BasketballScheme管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/basketballscheme/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/basketballscheme/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/basketballscheme/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/basketballscheme/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+		             -->
+		             <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/soccerallbetting/currentbettingGod" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">篮球方案搜索</th>
+							          			<!--  
+							          			<div class="layui-inline">
+									                    	<div class="layui-form-label">
+																<a id="today" href="javascript:settoday()">今日</a>
+															</div>
+															<div class="layui-form-label">
+																<a id="adfgfg" href="javascript:setadfgfg()">昨日</a>
+															</div>
+															<div class="layui-form-label">
+																<a id="dfgfgr" href="javascript:setdfgfgr()">本周</a>
+															</div>
+															<div class="layui-form-label">
+																<a id="sadfff" href="javascript:setsadfff()">上周</a>
+															</div>
+															<div  class="layui-form-label">
+																<a id="adger" href="javascript:setadger()">本月</a>
+															</div>
+															<div  class="layui-form-label">
+																<a id="asdtret" href="javascript:setasdtret()">上月</a>
+															</div>
+							                		</div>
+							                		-->
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          			<!--  
+							          				<div class="xiao-cell xiao-pull-left xiao-record">
+														&nbsp;&nbsp;&nbsp;
+														总投注金额:
+														${((bettingmoneyTotal?floor)?string(',###'))!''}
+														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														总投注赢:
+														${((bettingwinTotal?floor)?string(',###'))!''}
+														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													</div>
+													
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">会员id</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="memberid2" value="${(returnDatas.queryBean.memberid2)!''}" placeholder="请输入会员id " class="layui-input">
+									                    </div>
+							                		</div>
+							                		 &nbsp;&nbsp;&nbsp;
+										            
+									                -->
+									                <div class="layui-inline">
+									                    <label class="layui-form-label">游戏类型</label>
+									                    <div class="layui-input-inline">
+									                        <select name="type" id="type" class="layui-input">
+																	<!-- <option value="100" 
+																		 <#if "${type}"="100"> selected
+																		 </#if> 
+																     >所有游戏</option> -->
+																  	<option value="1" 
+																		 <#if "${type}"="1"> selected
+																		 </#if> 
+																     >足球</option>
+																  	<option value="3" 
+																		 <#if "${type}"="3"> selected
+																		 </#if> 
+																     >篮球</option>
+																  	<option value="4" 
+																		 <#if "${type}"="4"> selected
+																		 </#if> 
+																     >北单</option>
+															</select>   
+									                    </div>
+									                </div>
+							                		  &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input id="startTime" name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input id="endTime"  name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>
+												        <div class="layui-input-inline xiao-input-wrap pull-left">
+														<div class="layui-input-inline">
+												            <input name="theoreticalbonusmax" value="${(theoreticalbonusmax)!''}" placeholder="请输入最大理论奖金 " >
+												        </div>
+												        <div class="layui-input-inline">
+												            <input name="maxmultiple" value="${(maxmultiple)!''}" placeholder="请输入最大理论奖金倍数" >
+												        </div>
+												        
+												        <div class="layui-inline">
+									                    <label class="layui-form-label">出票状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="issuestate" id="issuestate" class="layui-input">
+																	<option value="0" <#if "${issuestate}"="0"> selected
+																		 </#if> 
+																     >未出票</option>
+																  	<option value="2" <#if "${issuestate}"="2"> selected
+																		 </#if> 
+																     >已出票</option>
+															</select>   
+									                    </div>
+									                </div>
+										            </div>
+												        &nbsp;&nbsp;&nbsp;&nbsp;
+										            </div>
+									                 
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="12">篮球方案列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  
+												  <th>操作</th>
+												  -->
+												  <!--first_end_no_export-->
+												  		<th rowspan="2" id="bettingtime" width="200">投注时间</th>
+														<th rowspan="2" id="schemeid" >方案id</th>
+														<th rowspan="2"  >代理昵称</th>
+														<th rowspan="2" id="memberid2" >用户id(昵称)</th>
+														<th rowspan="2" id="playtype" >投注玩法</th><!-- (逗号隔开) -->
+														<th rowspan="2" id="playmethodid" >玩法</th>
+														<th colspan="3">投注内容</th>
+														<th rowspan="2" id="betmulriple" >倍数</th>
+														<th rowspan="2" id="th_bettingmoney" >投注金额</th>
+														<th rowspan="2" id="bettingmoney" >最大理论奖金</th>
+														<th rowspan="2" id="bettingmoney" >最大理论奖金倍数</th>
+														<th rowspan="2" id="bettingwin" >派彩</th>
+														<th rowspan="2" id="situation" >开奖情况</th><!-- 0:未开奖  1:已开奖 2:已撤销3:非正常 -->
+														<th rowspan="2" id="situation" >出票状态</th>
+														
+														<!--  
+														<th id="th_bettingip" >投注ip</th>
+														<th id="th_bettingtool" >投注工具</th>
+														-->
+														<!--  
+														<th id="th_state" >状态1:正常 3:删除</th>
+														<th id="th_matches" >比赛数量</th>
+														-->
+														<!-- 
+														<th id="th_settlementtime" >结算时间</th>
+														<th id="th_theoreticalbonus" >理论奖金</th>
+														<th id="th_buytype" >购买类型 0自购 1跟买 2神单</th>
+														<th id="th_brokerage" >佣金比例</th>
+														<th id="th_schemeid2" >合买号,跟单号</th>
+														<th id="th_endtime" >神单截止时间</th>
+														<th id="th_brokeragemoney" >佣金</th>
+														<th id="th_minbetting" >起投</th>
+														<th id="th_bettingnum" >人气</th>
+														<th id="th_bettingalready" >已跟单金额</th>
+														 -->
+												</tr> 
+												<tr>
+														<th>编号</th>
+														<th>客队vs主队/投注</th>
+														<th>赛事情况</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center change">
+													<!-- 
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														 
+														<td>
+															<@shiro.hasPermission name="/basketballscheme/update" >
+								                           		 <a href="#" data-action="${ctx}/system/role/update/pre?id=" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/basketballscheme/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+														-->
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+															${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--  ${(_data.schemeid)!''} -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/soccerallbetting/currentbettingGod?k=3&schemeid=${(_data.schemeid)!''}">${(_data.schemeid)!''}</a>
+														</td>
+														<td >
+															<!--  ${(_data.memberid2)!0}  -->
+															(${(_data.agentnickname)!''})
+														</td>
+														<td >
+															<!--  ${(_data.memberid2)!0}  -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/betmember/look?id2=${(_data.memberid2)!0}">${(_data.memberid2)!0}</a>
+															(${(_data.membernickname)!''})
+														</td>
+														<td >
+															${(_data.playtype)!''}
+														</td>
+														<td >
+															${(_data.playmethod)!''}
+														</td>
+														<!-- 
+														<td >
+															${(_data.playmethodid)!0}
+														</td>
+														 -->
+														 <td min-width="400" colspan="3">
+															<table width="100%" style="border-top: 0">
+																
+										    				<#if (_data.schemecontent??)&&(_data.schemecontent?size>0)> 
+										    					<#list	_data.schemecontent as _schemecontent>
+											    					<tr>
+											    						<td rowspan="${((_schemecontent.resultMap?size)+1)!1}">${(_schemecontent.num)!''}<br/>${((_schemecontent.starttime)?string('MM-dd HH:mm'))!''}
+												    						<br/>
+												    						<#if _schemecontent.score??>
+												    						<#else>
+												    							<input type="hidden" value="${(_schemecontent.zid)!''}"> <span style="cursor:hand" class="invalid"><u>设为无效比赛</u></span> 
+												    							
+												    						</#if>
+											    						</td>
+											    						<td><#if _schemecontent.dan=1>
+													    							<font style="color:red">(胆)</font>
+													    						<#else>
+													    							
+													    						</#if>
+											    							${(_schemecontent.awayteam)!''} VS ${(_schemecontent.hometeam)!''} 
+											    						</td>
+											    						<td>
+											    						<#if _schemecontent.score??>
+											    						${(_schemecontent.score)!''}
+											    						<#else>
+											    						未结赛<br/> <a  style="text-decoration:underline;"  href="${ctx}/basketballscheme/update/pre?k=1&zid=${(_schemecontent.zid)!''}">手动开奖</a>
+											    						</#if>
+											    						
+											    						</td>
+											    					</tr>
+											    					<#if (_schemecontent.resultMap??)&&(_schemecontent.resultMap?size>0)> 
+											    						<#list	_schemecontent.resultMap as _resultMap>
+												    					<tr>
+												    						<td>${(_resultMap.betname)!''} : 
+												    							<#if _resultMap.result=1>
+													    							<font style="color:red">${(_resultMap.shortname)!''}</font>
+													    						<#elseif _resultMap.result=3 >
+													    							<font >${(_resultMap.shortname)!''}</font>
+													    						<#else>
+													    							${(_resultMap.shortname)!''}
+													    						</#if>
+													    						(<a style="text-decoration:underline;"  href="${ctx}/basketballscheme/update/pre?k=2&schemeid=${(_data.schemeid)!''}&zid=${(_schemecontent.zid)!''}&oddsname=${(_resultMap.oddsname)!''}">${(_resultMap.odds)!''}</a> )</td>
+													    						
+												    						<td>
+													    						<#if _resultMap.result=1>
+													    							<font style="color:red">${(_resultMap.resultname)!''}</font>
+													    						<#elseif _resultMap.result=3 >
+													    							<font >${(_resultMap.resultname)!''}</font>
+													    						<#else>
+													    							${(_resultMap.resultname)!''}
+													    						</#if>
+												    						</td>
+												    					</tr>
+												    					</#list>
+												 					</#if>
+										    					</#list>
+											 				</#if>
+															</table>
+														</td>
+														<td >
+															<#if (_data.betmulriple)=-1>
+																奖金优化
+															<#else>
+																${(_data.betmulriple)!''}											
+															</#if>
+														</td>
+														<td >
+															<!--  ${(_data.bettingmoney)!0}  -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/basketballscheme/list?k=1&schemeid=${(_data.schemeid)!''}">${(_data.bettingmoney)!0}</a>
+														</td>
+														<td >
+															${(_data.theoreticalbonusmax)!'0'}
+														</td>
+														<td >
+															${(_data.maxmultiple)!'0'}
+														</td>
+														<td >
+															<font style="color:red">${((_data.bettingwin))!''}</font>
+															
+														</td>
+														
+														<td >
+															<!-- 0:未开奖  1:已开奖 2:已撤销3:非正常 
+															${(_data.situation)!0}  -->
+															<#if _data.situation==1>
+																<span style="color:#288a53" >已开奖</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																	
+																	<@shiro.hasPermission name="/basketballscheme/update" >
+																		<input type="hidden" value="${_data.id!''}"><span style="cursor:hand" class="cancelbetting"><u>撤销</u></span>
+			             											</@shiro.hasPermission>
+			             											
+															<#elseif _data.situation==0>
+																<span style="color:red" >未开奖</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																	
+																	<@shiro.hasPermission name="/basketballscheme/update" >
+																		<input type="hidden" value="${_data.id!''}"><span style="cursor:hand" class="cancelbetting"><u>撤销</u></span>
+			             											</@shiro.hasPermission>
+																	<@shiro.hasPermission name="/basketballscheme/update" >
+																		<input type="hidden" value="${_data.id!''}"><span style="cursor:hand" class="settlebetting"><u>结算</u></span>
+			             											</@shiro.hasPermission>
+			             											
+															<#elseif _data.situation==2>
+																<span >已撤销</span>
+															<#else>
+																<span >非正常</span>
+															</#if>
+														</td>
+														<td >
+															<#if _data.issnestate==0>
+																<span style="color:red" >未出票</span>
+															<#elseif _data.issnestate==1> 
+																<span style="color:red" >部分出票</span>
+															<#elseif _data.issnestate==2> 
+																<span style="color:red" >已出票</span>
+															</#if>
+														</td>
+														<!-- 
+														<td >
+															${(_data.bettingip)!''}
+														</td>
+														<td >
+															${(_data.bettingtool)!''}
+														</td>
+														 -->
+														<!--  
+														<td >
+															${(_data.state)!0}
+														</td>
+														<td >
+															${(_data.matches)!0}
+														</td>
+														-->
+														<!-- 
+														<td >
+															日期型
+															${((_data.settlementtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														
+														<td >
+															${(_data.theoreticalbonus)!''}
+														</td>
+														<td >
+															${(_data.buytype)!0}
+														</td>
+														<td >
+															${(_data.brokerage)!0}
+														</td>
+														<td >
+															${(_data.schemeid2)!''}
+														</td>
+														<td >
+															日期型
+															${((_data.endtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.brokeragemoney)!0}
+														</td>
+														<td >
+															${(_data.minbetting)!0}
+														</td>
+														<td >
+															${(_data.bettingnum)!0}
+														</td>
+														<td >
+															${(_data.bettingalready)!0}
+														</td>
+														 -->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+//撤销方案
+	$(".cancelbetting").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定撤销方案？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				layer.load();
+				$.ajax({
+					type:"get",
+					url:"${ctx}/basketballscheme/update?id="+a+"&cancel=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已撤销！',{offset:['','']});
+							setTimeout("history.go(0);",2000);	
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			  
+			});
+
+		})
+		
+//无效比赛	
+		$(".invalid").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定设为无效比赛？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				layer.load();
+				$.ajax({
+					type:"get",
+					url:"${ctx}/basketballscheme/update?k=1&zid="+a,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已设为无效比赛！',{offset:['','']});
+							setTimeout("history.go(0);",2000);	
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			  
+			});
+
+		})
+
+	//结算方案
+	$(".settlebetting").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定结算方案？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				layer.load();
+				$.ajax({
+					type:"get",
+					url:"${ctx}/basketballscheme/update?id="+a+"&settle=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已结算！',{offset:['','']});
+							setTimeout("history.go(0);",2000);	
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			  
+			});
+
+		})
+
+</script>
+</html>
+

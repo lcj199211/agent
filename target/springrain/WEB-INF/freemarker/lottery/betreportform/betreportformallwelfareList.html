@@ -1,0 +1,242 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+	});
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>总福利</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/list?k=20&date=${time}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+												    <th>日期</th>
+													<th>签到</th>
+													<th>救济领取</th>
+													<th>排行奖励</th>
+													<th>注册送</th>
+													<th>首冲返利</th>
+													<th>推广返利</th>
+													<th>单笔充值返利</th>
+													<th>当日充值返利</th>
+													<th>周输赢返利</th>
+													<th>当日输赢返利</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td style="text-align: center; white-space:nowrap">
+															<!--日期型-->
+														${(time)!''}
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=15&&date=${(time)!''}">
+															<#if _data.signin &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.signin)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.signin &lt; 0 >
+															<font style="color: red;">
+															${((_data.signin)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=13&&date=${(time)!''}">
+															<#if _data.relief &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.relief)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.relief &lt; 0 >
+															<font style="color: red;">
+															${((_data.relief)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=14&&date=${(time)!''}">
+															<#if _data.rank &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.rank)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.rank &lt; 0 >
+															<font style="color: red;">
+															${((_data.rank)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=21&&date=${(time)!''}">
+															<#if _data.registersend &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.registersend)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.registersend &lt; 0 >
+															<font style="color: red;">
+															${((_data.registersend)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=16&&date=${(time)!''}">
+															<#if _data.firstrecharge &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.firstrecharge)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.firstrecharge &lt; 0 >
+															<font style="color: red;">
+															${((_data.firstrecharge)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=8&&date=${(time)!''}">
+															<#if _data.subordinaterebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.subordinaterebate)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.subordinaterebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.subordinaterebate)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=22&&date=${(time)!''}">
+															<#if _data.payrebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.payrebate)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.payrebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.payrebate)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=23&&date=${(time)!''}">
+															<#if _data.todayrechargerebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.todayrechargerebate)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.todayrechargerebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.todayrechargerebate)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=24&&date=${(time)!''}">
+															<#if _data.weekwinorfailrebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.weekwinorfailrebate)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.weekwinorfailrebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.weekwinorfailrebate)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"   href="${ctx}/betreportform/list?k=12&&date=${(time)!''}">
+															<#if _data.daywinorfailrebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.daywinorfailrebate)?string(',###'))!0}
+															</font>
+															</#if>
+															<#if _data.daywinorfailrebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.daywinorfailrebate)?string(',###'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+</html>
+

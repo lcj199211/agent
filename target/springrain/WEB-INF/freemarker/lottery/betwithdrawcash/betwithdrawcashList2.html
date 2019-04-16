@@ -1,0 +1,313 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betwithdrawcash/delete");
+	}
+	
+	$(document).ready(function(){	
+	$('.confirm').click(function(){
+		var a=$(this).prev().val();
+		var b=$(this).prev().prev().val();
+		var c=$(this).prev().prev().prev().val();
+		var d=$(this).prev().prev().prev().prev().val();
+		var e=$(this).prev().prev().prev().prev().prev().val();
+		var f=$(this).prev().prev().prev().prev().prev().prev().val();
+		var g=$(this).prev().prev().prev().prev().prev().prev().prev().val();
+		var h=$(this).prev().prev().prev().prev().prev().prev().prev().prev().val();
+		$.ajax({
+			type:"get",
+			url:"${ctx}/betwithdrawcash/look/json?k=1",
+			data:{memberid2:h},
+			success:function(result){
+				if("success"==result.status){
+					
+					layer.confirm('订单号：'+a+'<br/>'+'金额：'+'<font style="color:red;">'+b+'</font>'+'<br/>'+'真实姓名：'+c+'<br/>'+'来源：'+d+'<br/>'+'账户：'+e+'<br/>'+'电话：'+f+'<br/>'+'QQ：'+g+'<br/>'+'充值：'+result.data.membertotalrecharge+'，提现：'+result.data.membertotalwithdrawcash+'，福利：？，输赢：'+result.data.memberwinorfail+'  结果：？（本用户的所有历史数据累加'+'<br/>'+'必须实名认证，核对输赢、流水', {
+						  btn: ['确定','取消'] //按钮
+						}, function(){
+						  $.ajax({
+							type:"get",
+							url:"${ctx}/betwithdrawcash/update?id="+a+"&state=2",
+							data:{},
+							success:function(result){
+								if("success"==result.status){
+									alert(result.message);
+									window.location.href="${ctx}/betwithdrawcash/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+								}else if("error"==result.status){
+									alert(result.message);	
+									window.location.href="${ctx}/betwithdrawcash/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken			
+								}
+							},
+							error:function(result){
+								alert("error");
+							}
+							})
+						}, function(){
+						  /* layer.msg('已取消', {
+						    time: 2000, //20s后自动关闭
+						  }); */
+						});
+				}else if("error"==result.status){
+					alert(result.message);	
+				}
+			},
+			error:function(result){
+				alert("error");
+			}
+			})
+			
+			
+			
+		
+		/* var a=$(this).prev().val();
+		$.ajax({
+			type:"get",
+			url:"${ctx}/betwithdrawcash/update?id="+a+"&state=2",
+			data:{},
+			success:function(){
+				window.location.href="${ctx}/betwithdrawcash/list?date=1&applicationtime=${(returnDatas.queryBean.applicationtime?string('yyyy-MM-dd'))!''}&springraintoken="+springraintoken
+			},
+			error:function(result){
+				alert("error");
+			}
+			}) */
+	})
+	$('.cancel').click(function(){
+		var a=$(this).prev().prev().val();
+		if(confirm("确定充值失败？")){
+			$.ajax({
+			type:"get",
+			url:"${ctx}/betwithdrawcash/update?id="+a+"&state=1",
+			data:{},
+			success:function(result){
+				if("success"==result.status){
+						alert("已确认提现失败！")
+						window.location.href="${ctx}/betgold/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+					}else if("error"==result.status){
+						alert(result.message)
+					}
+				window.location.href="${ctx}/betwithdrawcash/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+			},
+			error:function(result){
+				alert("error");
+			}
+			})
+		}
+	})
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+	
+
+})	
+	//30秒刷新
+var t; 
+t=30; 
+function shua() 
+{ 
+t=t-1; 
+document.getElementById("hints").innerHTML=t+" 秒"; 
+if (t==0) 
+{ 
+document.location.reload(); 
+} 
+}
+</script>
+
+</head>
+<body onload="window.setInterval(shua,1000); ">
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <!-- <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>提现管理</cite></a>
+							</span>
+		             </li> -->
+					 <!-- <li style="float:right;">
+		             	<@shiro.hasPermission name="/betwithdrawcash/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betwithdrawcash/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/betwithdrawcash/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/betwithdrawcash/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li> -->
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betwithdrawcash/list?date=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="layui-table search-wrap">
+									  		<div class="xiao-cell xiao-pull-left xiao-record">
+									  		<#if yesterdayWithdrawcash??>
+												昨日提现：${yesterdayWithdrawcash!0}&nbsp;&nbsp;&nbsp;今日提现：${todayWithdrawcash!0}
+											<#else>
+												提现：${totolWithdrawcash!0}
+											</#if>
+												&nbsp;&nbsp;&nbsp;剩余：${memberRemain!0}&nbsp;&nbsp;&nbsp;
+												<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+											</div>
+							          		<div class="layui-inline">
+												<div class="layui-input-inline xiao-input-wrap pull-left">
+													<!-- <input  name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input"> -->
+													从
+													<div class="layui-input-inline">
+														<input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+													</div>到
+													<div class="layui-input-inline">
+														<input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+													</div>
+											
+												</div>
+											</div>
+							          		<div class="layui-inline">
+									            <button class="layui-btn xiao-mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									        </div>
+									        <div class="xiao-pull-right xiao-line40">
+									        	<font id="hints" >30秒</font><button id="reflesh" class="xiao-btn xiao-btn-success">刷新</button>
+									        </div>
+							          </div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												  
+												  <!--first_end_no_export-->
+														<th id="th_memberid" >会员ID</th>
+														<th width="160">申请时间</th>
+														<th width="160">审核时间</th>
+														<th>提现前分</th>
+														<th>冻结分</th>
+														<th>提现后分</th>
+														<th>收款方式</th>
+														<th>账号</th>
+														<th id="th_money" >提现金额</th>
+														<th>真实姓名</th>
+														<th id="th_state" >状态</th>
+														<th>来源</th>
+														<th width="180" >操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															<a class="xiao-color-00e" href="${ctx}/betmember/list?id=${(_data.memberid)!''}">${(_data.memberid2)!''}</a>
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.applicationtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.audittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.bwcs)!0}
+														</td>
+														<td >
+															${(_data.freezingscore)!0}
+														</td>
+														<td >
+															${(_data.awcs)!0}
+														</td>
+														<td >
+															${(_data.paymentmethod)!''}
+														</td>
+														<td >
+															${(_data.account)!''}
+														</td>
+														<td >
+															${(_data.money)!0}
+														</td>
+														<td >
+															${(_data.realname)!''}
+														</td>
+														<td >
+															<#if _data.state==0>
+																未处理
+																<#elseif _data.state==1>
+																取消
+																<#elseif _data.state==2>
+																<p style="color:red">成功</p>
+																<#else> 
+															</#if>
+														</td>
+														<td >
+															${(_data.source)!''}
+														</td>
+														<td>
+															<input type="hidden" value=${(_data.memberid2)!''}>
+															<input type="hidden" value=${(_data.qq)!''}>
+															<input type="hidden" value=${(_data.mobile)!''}>
+															<input type="hidden" value=${(_data.account)!''}>
+															<input type="hidden" value=${(_data.paymentmethod)!''}>
+															<input type="hidden" value=${(_data.realname)!''}>
+															<input type="hidden" value=${(_data.money)!''}>
+															<input type="hidden" value=${(_data.id)!''}>
+															<@shiro.hasPermission name="/betwithdrawcash/update" >
+								                           		  <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="#" class="layui-btn xiao-color-b00e layui-btn-mini confirm">确认</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betwithdrawcash/delete" >
+								                            	<a style="padding: 0 15px;line-height: 25px;height: 25px; " href="#" class="layui-btn layui-btn-default layui-btn-mini cancel">取消</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,190 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betdaywinorfailrebate/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>当日输赢返利管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betdaywinorfailrebate/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betdaywinorfailrebate/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/betdaywinorfailrebate/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/betdaywinorfailrebate/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betdaywinorfailrebate/list?k=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="layui-table search-wrap xiao-input-wrap">
+											<div class="layui-inline">
+												<div class="layui-input-inline">
+													<input type="text" name="memberid2" value="${(returnDatas.queryBean.memberid2)!''}" placeholder="请输入用户ID " class="layui-input xiao-input">
+												</div>
+											</div>
+											<div class="layui-inline">
+												<label>时间</label>
+												<div class="layui-input-inline ">
+													从
+													<div class="layui-input-inline">
+														<input  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+													</div>到
+													<div class="layui-input-inline">
+														<input  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+													</div>
+												</div>
+											</div>
+											<div class="layui-inline">
+												<button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											</div>
+										</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<div class="mb10 xiao-input-wrap">
+										返利设置
+										<input type="text" class="xiao-input"/>  
+										<button class="xiao-btn xiao-color-b00e" style="background-color: #007700;color:#fff;" type="button">确定设置</button>
+										<a href="${ctx}/betdaywinorfailrebate/list" >昨日 </a>
+										<a href="${ctx}/betdaywinorfailrebate/list?k=1&startTime=${.now?date}&endTime=${.now?date}">今日</a>
+									</div>
+									<table class="layui-table" lay-even>
+											<thead>
+												
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <!--first_end_no_export-->
+														<th id="th_memberid2" >用户ID</th>
+														<th id="th_nickname" >昵称</th>
+														<th id="th_dayscore" >输赢</th>
+														<th id="th_daybettingmoney" >流水</th>
+														<th id="th_rebate" >返利</th>
+														<th id="th_receivetime" >领取时间</th>
+														<th id="th_receiveip" >领取IP</th>
+														<th id="th_gamescore" >游戏积分</th>
+														<th id="th_bankscore" >银行积分</th>
+														<th id="th_state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<!-- <td>
+															<@shiro.hasPermission name="/betdaywinorfailrebate/update" >
+								                           		 <a href="#" data-action="${ctx}/system/role/update/pre?id=" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betdaywinorfailrebate/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+														<!--end_no_export-->
+														<td >
+															${(_data.memberid2)!0}
+														</td>
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td >
+															${(_data.dayscore)!0}
+														</td>
+														<td >
+															${(_data.daybettingmoney)!0}
+														</td>
+														<td >
+															${(_data.rebate)!0}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.receivetime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.receiveip)!''}
+														</td>
+														<td >
+															${(_data.gamescore)!0}
+														</td>
+														<td >
+															${(_data.bankscore)!0}
+														</td>
+														<td >
+															${(_data.state)!0}
+														</td>
+														<!-- <td >
+															日期型
+														${((_data.date)?string('yyyy-MM-dd'))!''}
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

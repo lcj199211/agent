@@ -1,0 +1,611 @@
+<#ftl output_format="HTML" auto_esc=true> <@h.commonHead title="代理管理系统"
+keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript" src="${ctx}/js/ztree/js/ztreeUtils.js"></script>
+<script type="text/javascript" src="${ctx}/js/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/select2/js/i18n/zh-CN.js"></script>
+<script type="text/javascript" src="${ctx}/js/custom/common/select2remote.js"></script>
+<script type="text/javascript" src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/select2/css/select2.min.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/css/custom/common/myztree.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+
+</head>
+<body>
+<style>
+.layui-table {
+    min-width: 600px;
+    width: auto;
+    }
+
+</style>
+
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+		<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title">
+				<li class="layui-this"><i class="layui-icon">&#xe630;</i> <span
+					class="layui-breadcrumb" style="visibility: visible;"> 
+					<a>首页<span class="layui-box">&gt;</span></a>
+					<a><cite>代理管理</cite></a></span></li>
+				<li style="float:right;">
+					<button type="button" onclick="history.go(-1)"
+						class="layui-btn layui-btn-small" style="margin-top:8px;">
+						<i class="layui-icon layui-icon-specil">&#xe603;</i>返回
+					</button></li>
+			</ul>
+ 
+			<div class="layui-body layui-tab-content site-demo-body">
+				<div class="layui-tab-item layui-show">
+				  <div class="layui-main">
+						<div id="LAY_preview" class="layui-my-form">
+							<header class="larry-personal-tit">
+								<span>添加代理</span>
+							</header>
+							<div class="larry-personal-body clearfix changepwd">
+									<form action="${ctx}/betagent/update" id="validForm" name="updateForm" class="layui-form <!--  -->" method="post" onsubmit="submitTest();">
+									<div class="layui-form-item col-lg-6">
+										<input type="hidden" name="id" id="id" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.id)!''}">
+											<input type="hidden" name="parentids" id="parentids" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.parentids)!''}">
+											<input type="hidden" name="transferaccountsscore" id="transferaccountsscore" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.transferaccountsscore)!''}">
+											<input type="hidden" name="ty" id="ty" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.ty)!''}">
+											<input type="hidden" name="ty2" id="ty2" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.ty2)!''}">
+											<input type="hidden" name="sx" id="sx" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.sx)!''}">
+											<input type="hidden" name="subordinate" id="subordinate" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.subordinate)!''}">
+											<input type="hidden" name="login" id="login" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.login)!''}">
+											<input type="hidden" name="login" id="login" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.login)!''}">
+											<input type="hidden" name="rechargerebate" id="rechargerebate" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.rechargerebate)!''}">
+											<input type="hidden" name="qq" id="qq" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.qq)!''}">
+											<input type="hidden" name="weixin" id="weixin" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.weixin)!''}">
+											
+											<input type="hidden" name="winorlossrebate" id="winorlossrebate" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.winorlossrebate)!''}">
+											<input type="hidden" name="winorlossrebate" id="winorlossrebate" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.winorlossrebate)!''}">
+											<input type="hidden" name="winorlossrebate" id="winorlossrebate" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.winorlossrebate)!''}">
+											<input type="hidden" name="membernum" id="membernum" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.membernum)!''}">
+										<#if returnDatas.data??> 
+										<label class="layui-form-label" style="width:150px">代理商id</label>
+										<div class="layui-inline col-lg-5">
+											<input style="border:0;background:transparent;" 
+											 readonly="readonly" type="text" name="agentid"
+												id="agentid" autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.agentid)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<div class="layui-form-item col-lg-6">
+										<label class="layui-form-label" style="width:150px">所属</label>
+										<div class="layui-inline col-lg-5">
+											<input style="border:0;background:transparent;" 
+											 readonly="readonly" type="text" name="parentid"
+												id="parentid" autocomplete="off" class="layui-input"
+												value="${(returnDatas.data.parentid)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+									<#else> <!-- <label class="layui-form-label" style="width:150px">代理商id*</label>
+									<div class="layui-inline col-lg-5">
+										<input type="text" name="agentid" id="agentid" datatype="*"
+											nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+											class="layui-input" value="${(returnDatas.data.agentid)!''}">
+									</div>
+									<div class="layui-inline valid-info"></div> -->
+							</div>
+							<div class="layui-form-item col-lg-6">
+							
+								<label class="layui-form-label" style="width:150px">所属*</label>
+								
+								<div class="layui-inline col-lg-5">
+											<input style="border:0;background:transparent;"  readonly="readonly" type="text" name="parentid"
+												id="parentid" autocomplete="off" class="layui-input"
+												value="${(agentid)!''}">
+										</div>
+									<!-- 	<div class="layui-inline col-lg-5">
+								
+								
+								<div id="div_menuZtree" style='display:inline-block; padding: 10px; border: 1px solid #ddd; overflow: auto;'>
+									<ul id="menuZtree" class="ztree"></ul>
+								</div>
+								 
+								</div> -->
+										<div class="layui-inline valid-info"></div>
+							</div>
+							</#if> 
+							<#if returnDatas.data??>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">代理账号</label>
+								<div class="layui-inline col-lg-5">
+									<input style="border:0;background:transparent;" 
+									 type="text" readonly="readonly" name="account" id="account" autocomplete="off"
+										class="layui-input" value="${(returnDatas.data.account)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<#else>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">代理账号*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="account" id="naccount" autocomplete="off" 
+									datatype="*" nullmsg="不能为空" errormsg="不能为空！"
+										class="layui-input" value="${(returnDatas.data.account)!''}">
+										<span id="spaccount"></span>
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							</#if>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">昵称*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="nickname" id="nickname" datatype="*"
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${(returnDatas.data.nickname)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">备注*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="company" id="company" datatype="*"
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${(returnDatas.data.company)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<#if returnDatas.data??>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">登录密码</label>
+								<div class="layui-inline col-lg-5">
+									<input readonly="readonly" type="password" name="password" id="password"
+										autocomplete="off" class="layui-input"
+										value="${(returnDatas.data.password)!''}">
+								</div>
+								<input style="margin-top:5px;margin-left: -15px;height: 25px;width: 35px;" type="button" id="btnlogin" value="清密"/>
+								<div class="layui-inline valid-info"></div>
+							</div>
+
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">银行密码</label>
+								<div class="layui-inline col-lg-5">
+									<input readonly="readonly" type="password" name="bankpassword" id="bankpassword"
+										autocomplete="off" class="layui-input"
+										value="${(returnDatas.data.bankpassword)!''}">
+								</div>
+								<input style="margin-top:5px;margin-left: -15px;height: 25px;width: 35px;" type="button" id="btnbank" value="清密"/>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<#else>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">登录密码*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="password" name="password" id="password"
+										datatype="*" nullmsg="不能为空" errormsg="不能为空！"
+										autocomplete="off" class="layui-input"
+										value="${(returnDatas.data.password)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">银行密码*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="password" name="bankpassword" id="bankpassword"
+										datatype="*" nullmsg="不能为空" errormsg="不能为空！"
+										autocomplete="off" class="layui-input"
+										value="${(returnDatas.data.bankpassword)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							</#if>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">联系电话</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="mobile" id="mobile" 
+										 autocomplete="off"
+										class="layui-input" value="${(returnDatas.data.mobile)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<!--  
+							<#if lock??>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">代理吃成</label>
+								<div class="layui-inline col-lg-5">
+									<input readonly="readonly" style="width: 40px;display: inline" type="text" name="companyproportion" id="companyproportion"  
+										class="layui-input" value="${(returnDatas.data.companyproportion)!'0'}">&nbsp;% (≤${agent.companyproportion!'0'}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<#else>
+							 <div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">代理吃成*</label>
+								<div class="layui-inline col-lg-5">
+									<input style="width: 60px;display: inline" type="text" name="companyproportion" id="companyproportion" datatype="*" 
+									onkeyup="value=value.replace(/[^\d\.]/g,'')"
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${(returnDatas.data.companyproportion)!'0'}">&nbsp;%(≤${agent.companyproportion!'0'}%)
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div> 
+							</#if>
+							-->
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">下单退佣*</label>
+								<div class="layui-inline col-lg-5">
+									<input style="width: 60px;display: inline" type="text" name="bettingrebate" id="bettingrebate" datatype="*" 
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${((returnDatas.data.bettingrebate)*100)!'0'}">&nbsp;%(≤${(agent.bettingrebate*100)!'0'}%)
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div> 
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">跟投退佣*</label>
+								<div class="layui-inline col-lg-5">
+									<input style="width: 60px;display: inline" type="text" name="bettingrebate2" id="bettingrebate2" datatype="*" 
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${((returnDatas.data.bettingrebate2)*100)!'0'}">&nbsp;%(≤${(agent.bettingrebate2*100)!'0'}%)
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div> 
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">状态</label>
+								<div class="layui-inline col-lg-5">
+									<select name="active" id="active">
+										<option value="1"<#if
+											returnDatas.data??> <#if returnDatas.data.active=1> selected
+											</#if> </#if> >启用</option>
+										<option value="0"<#if
+											returnDatas.data??> <#if returnDatas.data.active=0> selected
+											</#if> </#if> >停用</option>
+									</select>
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<#if isRobot=1>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">是否机器人</label>
+								<div class="layui-inline col-lg-5">
+									<select name="isrobot" id="isrobot">
+										<option value="1"<#if
+											returnDatas.data??> <#if returnDatas.data.isrobot=1> selected
+											</#if> </#if> >是</option>
+										<option value="0"<#if
+											returnDatas.data??> <#if returnDatas.data.isrobot=0> selected
+											</#if> </#if> >否</option>
+									</select>
+								</div><span style="color:red">如果设置成机器人，该代理底下用户全部改成虚拟用户，即不出票用户！</span>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							</#if>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">提现权限</label>
+								<div class="layui-inline col-lg-5">
+									<select name="iswithdraw" id="iswithdraw">
+										<option value="0"<#if
+											returnDatas.data??> <#if returnDatas.data.iswithdraw=0> selected
+											</#if> </#if> >允许</option>
+										<option value="1"<#if
+											returnDatas.data??> <#if returnDatas.data.iswithdraw=1> selected
+											</#if> </#if> >禁止</option>
+									</select>
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+		
+							<#if returnDatas.data??>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">金币</label>
+								<div class="layui-inline col-lg-5">
+									<input style="border:0;background:transparent;" 
+									 readonly="readonly" type="text" name="score" id="score" autocomplete="off"
+										class="layui-input" value="${(returnDatas.data.score)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div> 
+							</#if>
+							
+							<#if returnDatas.data??>
+							<table class="layui-table" lay-even style='min-width:100px'>
+									<thead>
+										<tr>
+											<th colspan="20" style="border-left: 0px;">充值返利设置<font id='recordsView' class='recorsView'>
+											<button id="addbetagentrechargerebate" type="button" data-action="${ctx}/betagentrechargerebate/update/pre?agentid=${(returnDatas.data.agentid)!''}"  class="layui-btn layui-btn-small" >新增</button>
+											</th>
+										</tr>
+										<tr>
+											<th>充值金额下限</th>
+											<th>充值金额上限</th>
+											<th>返利</th>
+											<th>操作</th>
+										</tr> 
+									</thead>
+							   <tbody>
+							<#if (betagentrechargerebatelist??)&&(betagentrechargerebatelist?size>0)>
+							<#list	betagentrechargerebatelist as _data> 
+									<tr class="">
+										<td >
+											≥${(_data.lowerlimit)!''}
+										</td>
+										<td >
+											<#if _data.upperlimit??>
+												&lt;${(_data.upperlimit)!''}
+											<#else>
+												&lt;+∞
+											</#if>
+										</td>
+										<td >
+											${(_data.rebate)*1000!''}‰
+										</td>
+										<td>
+											<@shiro.hasPermission name="/betagentrechargerebate/update" >
+				                           		 <a  data-action="${ctx}/betagentrechargerebate/update/pre?id=${(_data.id)!''}&returnpage=1&xxxxxx=${(returnDatas.data.agentid)!''}"  class="layui-btn layui-btn-normal layui-btn-mini updatebetagentrechargerebate">编辑</a>
+				                            </@shiro.hasPermission>
+				                            <@shiro.hasPermission name="/betagentrechargerebate/delete" >
+				                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+				                            </@shiro.hasPermission>
+										</td>
+									</tr>
+							</#list>
+							</#if>
+							</tbody>
+							</table>
+							</#if>
+							<#if returnDatas.data??>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">注册时间</label>
+								<div class="layui-inline col-lg-5">
+									<input style="border:0;background:transparent;" 
+									 readonly="readonly" type="datetime"
+										name="registrationtime" id="registrationtime"
+										class="layui-input"
+										value="${(returnDatas.data.registrationtime)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							</#if>
+							<#if returnDatas.data??>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">代理系统</label>
+								<div class="layui-inline col-lg-5">
+								<input lay-filter="allowagent" title="允许开下级代理" id="allowagent" type="checkbox" name="allowagent" value="${returnDatas.data.allowagent}"
+											<#if returnDatas.data.allowagent=1 >checked</#if>>
+							</div>
+							</div>
+							<div class="layui-inline valid-info"></div>
+							
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">财务</label>
+								<div class="layui-inline col-lg-5">
+								 <input lay-filter="transferaccount" title="转账" id="transferaccount" type="checkbox" name="transferaccount" value="${returnDatas.data.transferaccount}"
+											<#if returnDatas.data.transferaccount=1 >checked</#if>>
+										 <input lay-filter="recharge" title="充值" id="recharge" type="checkbox" name="recharge" value="${returnDatas.data.recharge}"
+											<#if returnDatas.data.recharge=1 >checked</#if>>
+											 <#--  <input lay-filter="exchange" title="兑换" id="exchange" type="checkbox" name="exchange" value="${returnDatas.data.exchange}"
+											<#if returnDatas.data.exchange=1 >checked</#if>> -->
+								</div>
+							</div>
+							<div class="layui-inline valid-info"></div>
+							</div>
+								</#if>
+							
+						<div class="layui-form-item change-submit">
+							<label class="layui-form-label"></label>
+							<div class="layui-inline">
+								<button type="submit" class="layui-btn" style="width: 100px; margin-left: 50px" id="smtbtn">保存</button>
+								<#if returnDatas.data??> <#else>
+									<button type="button" style="background-color: #e13127;margin-left: 30px" class="layui-btn"
+										id="rstbtn">重置</button>
+								</#if>
+							</div>
+						</div>
+						</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<!-- 主体内容结束 -->
+	<@h.footer />
+	</div>
+	<script>
+	 var _flag=true;
+	$("#naccount").blur(function(){
+	var naccount = $("#naccount").val();
+	$("#spaccount").html("");
+	if (naccount) {
+        if (/[\u4E00-\u9FA5]/g.test(naccount)) {
+        	$("#spaccount").html("<font style='color:red;'><h4>不能输入汉字</h4></font>");
+        	_flag=false;
+        }
+	}
+	
+		 $.ajax({
+			type:"post",
+			url:"${ctx}/betagent/update?u=1",
+			data:{account:naccount},
+			success:function(result){
+				if("error"==result.status){
+					$("#spaccount").html("<font style='color:red;'><h4>账户名已存在！</h4></font>");
+					_flag=false;
+				}
+			},
+		})
+		
+	});
+	function submitTest(){
+		return _flag;
+	}
+	
+	jQuery(function() {
+		/*
+		init_valid(_before,_after)
+		@_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		@_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		springrain.initValid(null,
+			function(data) {
+			  var data=data;
+			  if("success"==data.status){
+			  	layer.msg('保存成功！',{offset:['','']});
+			  	if(typeof($("#parentid").value) == "undefined"){
+				  	window.location.href = "${ctx}/betagent/list"
+				  }else{
+					window.location.href = "${ctx}/betagent/list?agentid=${(returnDatas.data.parentid)!''}"
+				  }
+			  	
+			  }else if("error"==data.status){
+			 	 layer.msg(data.message,{offset:['','']});
+			  }		  
+			  /* if(typeof($("#parentid").value) == "undefined"){
+			  	window.location.href = "${ctx}/betagent/list"
+			  }else{
+				window.location.href = "${ctx}/betagent/list?agentid=${(returnDatas.data.parentid)!''}"
+			  } */
+		}); 
+	}); 
+    $("#btnlogin").click(function(){
+    	$("#password").val(123456);
+    	$("#password").attr("type","text");
+    });
+    $("#btnbank").click(function(){
+    	$("#bankpassword").val(123456);
+    	$("#bankpassword").attr("type","text");
+    });
+    layui.use(['form'], function () {
+            var form = layui.form()
+            , layer = layui.layer;
+            
+            form.on('checkbox(allowagent)', function (data) {
+	            var result = $("input:checkbox[name=allowagent]").is(':checked')
+	            if(result==true){
+	            	$("#allowagent").val(1)
+	            }else{
+	            	$("#allowagent").val(0)
+	            }
+             });
+            
+             form.on('checkbox(transferaccount)', function (data) {
+            var result = $("input:checkbox[name=transferaccount]").is(':checked')
+            if(result==true){
+            $("#transferaccount").val(1)
+            }else{
+            $("#transferaccount").val(0)
+            }
+             });
+            
+            form.on('checkbox(recharge)', function (data) {
+            var result = $("input:checkbox[name=recharge]").is(':checked')
+            if(result==true){
+            $("#recharge").val(1)
+            }else{
+            $("#recharge").val(0)
+            }
+             });
+             
+             form.on('checkbox(exchange)', function (data) {
+            var result = $("input:checkbox[name=exchange]").is(':checked')
+            if(result==true){
+            $("#exchange").val(1)
+            }else{
+            $("#exchange").val(0)
+            }
+             });
+        });
+</script>
+<script type="text/javascript">
+	var selectMenuZtree;
+	var menujsondata4select;
+	$(document).ready(function() {
+		
+		/*
+		加载菜单的JSON
+		*/
+		jQuery.post("${ctx}/betagent/list/json",function(_json) {
+			if (_json.status == "success") {
+				
+				//alert(_json.data);
+				var json = eval('(' + _json.data + ')'); 
+				//alert(json);
+				menujsondata4select = _json;
+				selectMenuZtree=springrain.tree({
+					'hasMenu':false,
+					'id':'menuZtree',
+					'data':json,
+					'treeNodeClick':function(event, treeId, treeNode){
+						//saveType=1;
+						//alert(treeId);
+						//alert(treeNode.agentid);
+						document.getElementById("parentid").value=treeNode.agentid;
+					} 
+					
+				});
+				
+				selectMenuZtree.expandAll(true);
+				//selectZtreeOneNode(jQuery("#pid").val(), "menuZtree");
+			
+			} else {
+				myalert(_json.message);
+			}
+		});
+		/* $("#addbetagentrechargerebate").click(function(){
+			var agentid=$(this).val();
+		}) */
+	});
+	
+	
+	/*
+	点击父级
+	*/
+	function showMenuZTree() {
+		if (!selectMenuZtree) {
+			selectMenuZtree=springrain.tree({
+				'hasMenu':false,
+				'id':'menuZtree',
+				'data':menujsondata4select.data,
+				'treeNodeClick':function(event, treeId, treeNode){
+					debugger;
+					jQuery("#pname").val(treeNode.name);
+					jQuery("#pid").val(treeNode.id);
+				}
+			});
+
+			selectMenuZtree.expandAll(true);
+			selectZtreeOneNode(jQuery("#pid").val(), "menuZtree");
+		}
+	}
+	
+	
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betagentrechargerebate/delete");
+	}
+</script>
+<div class="footer"></div>
+</body>
+</html>

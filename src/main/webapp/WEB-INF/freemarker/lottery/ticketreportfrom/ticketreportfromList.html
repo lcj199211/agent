@@ -1,0 +1,126 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+				  <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						         
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/ticketreportfrom/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							          				<label class="layui-form-label">日期</label>
+							          				<div class="layui-input-inline xiao-input-wrap pull-left">从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									               </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<table>
+									<tr>
+										<td style="width: 100px">&nbsp;票务统计</td>
+										<td>足球成功/失败金额:</td>
+										<td><font style="color: blue">${(soccersuccess)!'0'}</font>/<font style="color: red">${(soccerfail)!'0'}</font>&nbsp;&nbsp;&nbsp;</td>
+										<td>篮球成功/失败金额:</td>
+										<td><font style="color: blue">${(lqsuccess)!'0'}</font>/<font style="color: red">${(lqfail)!'0'}</font>&nbsp;&nbsp;&nbsp;</td>
+										<td>北单成功/失败金额:</td>
+										<td><font style="color: blue">${(bjdcsuccess)!'0'}</font>/<font style="color: red">${(bjdcfail)!'0'}</font>&nbsp;&nbsp;&nbsp;</td>
+										<td>大乐透成功/失败金额:</td>
+										<td><font style="color: blue">${(lotterysuccess)!'0'}</font>/<font style="color: red">${(lotteryfail)!'0'}</font>&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									</table>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+											<thead>
+												<tr>
+													<th colspan="5">出票统计列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+														<th id="th_date" >日期</th>
+														<th>足球成功/失败(金额)</th>
+														<th>篮球成功/失败(金额)</th>
+														<th>北单成功/失败(金额)</th>
+														<th>大乐透成功/失败(金额)</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr style="text-align: center;">
+														<td>
+															<!--日期型-->
+														${((_data.date)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<a href="${ctx}/ticketreportfrom/list?k=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: blue;">${(_data.soccersuccess)!0}</u></a>/<a href="${ctx}/ticketreportfrom/list?k=11&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: red;">${(_data.soccerfail)!0}</u></a>
+														</td>
+														<td >
+															<a href="${ctx}/ticketreportfrom/list?k=2&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: blue;">${(_data.lqsuccess)!0}</u></a>/<a href="${ctx}/ticketreportfrom/list?k=22&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: red;">${(_data.lqfail)!0}</u></a>
+														</td>
+														<td >
+															<a href="${ctx}/ticketreportfrom/list?k=3&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: blue;">${(_data.bjdcsuccess)!0}</u></a>/<a href="${ctx}/ticketreportfrom/list?k=33&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: red;">${(_data.bjdcfail)!0}</u></a>
+														</td>
+														<td >
+															<a href="${ctx}/ticketreportfrom/list?k=4&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: blue;">${(_data.lotterysuccess)!0}</u></a>/<a href="${ctx}/ticketreportfrom/list?k=44&date=${((_data.date)?string('yyyy-MM-dd'))!''}"><u style="color: red;">${(_data.lotteryfail)!0}</u></a>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

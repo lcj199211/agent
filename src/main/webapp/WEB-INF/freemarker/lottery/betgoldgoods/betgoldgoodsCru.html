@@ -1,0 +1,357 @@
+<#ftl output_format="HTML" auto_esc=false>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+	<link rel="stylesheet" href="${ctx}/js/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="${ctx}/js/ueditor/third-party/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ztree/js/jquery.ztree.core-3.5.js"></script>
+	<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script src="${ctx}/js/webuploader/webuploader.html5only.min.js"></script>
+<script src="${ctx}/js/custom/common/springrain.js"></script>
+<link rel="stylesheet" type="text/css" href="${ctx}/js/webuploader/webuploader.css">
+<link rel="stylesheet" href="${ctx}/js/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="${ctx}/js/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="${ctx}/js/kindeditor/lang/zh_CN.js"></script>
+<style>
+li {list-style: circle;font-size: 12px;}
+li.title {list-style: none;}
+ul.list {margin-left: 47px;}
+div.content_wrap {width: 600px;height:380px;}
+div.content_wrap div.left{float: left;width: 250px;}
+div.content_wrap div.right{float: right;width: 340px;}
+div.zTreeDemoBackground {width:250px;height:362px;text-align:left;}
+ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;width:220px;height:360px;overflow-y:scroll;overflow-x:auto;}
+ul.log {border: 1px solid #617775;background: #f0f6e4;width:300px;height:170px;overflow: hidden;}
+ul.log.small {height:45px;}
+ul.log li {color: #666666;list-style: none;padding-left: 10px;}
+ul.log li.dark {background-color: #E3E3E3;}
+
+/* ruler */
+div.ruler {height:20px; width:220px; background-color:#f0f6e4;border: 1px solid #333; margin-bottom: 5px; cursor: pointer}
+div.ruler div.cursor {height:20px; width:30px; background-color:#3C6E31; color:white; text-align: right; padding-right: 5px; cursor: pointer}
+</style>
+	<SCRIPT type="text/javascript">
+		<!--
+		var setting = {
+			view: {
+				dblClickExpand: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				beforeClick: beforeClick,//(点击之前)用于捕获 勾选 或 取消勾选 之前的事件回调函数，并且根据返回值确定是否允许 勾选 或 取消勾选 
+				onClick: onClick
+			}
+		};
+ 
+		var zNodes =${(returnDatas.data.category)!''};
+        
+		function beforeClick(treeId, treeNode) {
+			var check = (treeNode && !treeNode.isParent);//是节点，并且不是父级
+			if (!check) //alert("只能选择城市...");
+			return check;
+		}
+		
+		function onClick(e, treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			nodes = zTree.getSelectedNodes(),//获取 zTree 当前被选中的节点数据集合（按Ctrl多选择）
+			v = "";
+			ids="";
+			nodes.sort(function compare(a,b){return a.id-b.id;});//按照id从小到大进行排序
+			for (var i=0, l=nodes.length; i<l; i++) {
+				v = nodes[i].name+"," ;
+				ids = nodes[i].id ;
+			}
+			if (v.length > 0 ) v = v.substring(0, v.length-1);
+			var cityObj = $("#citySel");
+			cityObj.val(v);//设置文本框的值
+			 $("#citySelid").val(ids);
+		}
+ 
+		function showMenu() {
+			var cityObj = $("#citySel");//输入框
+			var cityOffset = $("#citySel").offset();//获取匹配元素在当前视口的相对偏移
+			//cityOffset.left 元素在当前视口的相对偏移
+			//slideDown 通过高度变化（向下增大）来动态地显示所有匹配的元素，在显示完成后可选地触发一个回调函数。
+			$("#menuContent").css({left:100 + "px", top:20 + "px"}).slideDown("fast");
+            
+			$("body").bind("mousedown", onBodyDown);//给body绑定鼠标按下事件
+		}
+		function hideMenu() {
+			$("#menuContent").fadeOut("fast");
+			$("body").unbind("mousedown", onBodyDown);
+		}
+		//event 代表事件的状态，比如事件在其中发生的元素、键盘按键的状态、鼠标的位置、鼠标按钮的状态。
+		//event.target 直接接受事件的目标DOM元素
+		function onBodyDown(event) {
+		    //如果接受事件的目标DOM元素的id 不是menuBtn（选择） 或 不是menuContent（菜单内容） 或  menuContent对象中元素的个数不大于0
+			//点击不是选择按钮，不是菜单内容的时候就隐藏下拉目录
+			if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
+				hideMenu();
+			}
+		}
+ 
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		});
+		//-->
+// 		--!>
+	</SCRIPT>
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betgoldgoods/list?springraintoken="+springraintoken});
+		 
+		  var uploader = WebUploader.create({
+			 auto:true,
+		    // swf文件路径
+		    swf: '${ctx}/js/webuploader/Uploader.swf',
+		    // 文件接收服务端。
+		    server: '${ctx}/bethomepageimage/upload?springraintoken='+springraintoken,
+		    // 选择文件的按钮。可选。
+		    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+		    pick: '#filePicker',
+		    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+		     accept: {
+		        title: 'Images',
+		        extensions: 'gif,jpg,jpeg,bmp,png',
+		        mimeTypes: 'image/*'
+		    }
+		});
+		
+		 uploader.on( 'fileQueued', function( file ) {
+		    var $li = $('<div id="' + file.id + '" class="file-item thumbnail layui-inline">' +
+		                '<img>' +
+		                '<div class="info">' + file.name + '</div>' 
+		                +'</div>'),
+	        $img = $li.find('img');
+
+			$('#imgtmp').hide();
+		    // $list为容器jQuery实例
+		    $list = $("#fileList");
+		    $list.html( $li );
+			
+		    // 创建缩略图
+		    // 如果为非图片文件，可以不用调用此方法。
+		    // thumbnailWidth x thumbnailHeight 为 100 x 100
+		    var thumbnailWidth = thumbnailHeight = 100;
+		    uploader.makeThumb( file, function( error, src ) {
+		        if ( error ) {
+		            $img.replaceWith('<span>不能预览</span>');
+		            return;
+		        }
+
+		        $img.attr( 'src', src );
+		    }, thumbnailWidth, thumbnailHeight );
+		});
+		 
+		// 文件上传过程中创建进度条实时显示。
+		 uploader.on( 'uploadProgress', function( file, percentage ) {
+		     var $li = $( '#'+file.id ),
+		         $percent = $li.find('.progress span');
+
+		     // 避免重复创建
+		     if ( !$percent.length ) {
+		         $percent = $('<p class="progress"><span></span></p>')
+		                 .appendTo( $li )
+		                 .find('span');
+		     }
+
+		     $percent.css( 'width', percentage * 100 + '%' );
+		 });
+
+		 // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+		 uploader.on( 'uploadSuccess', function( file,response ) {
+			 alert(response.data);
+			 $("[name=image]").val(response.data);
+		     $( '#'+file.id ).addClass('upload-state-done');
+		 });
+
+		 // 文件上传失败，显示上传出错。
+		 uploader.on( 'uploadError', function( file ) {
+		     var $li = $( '#'+file.id ),
+	         $error = $li.find('div.error');
+
+		     // 避免重复创建
+		     if ( !$error.length ) {
+		         $error = $('<div class="error"></div>').appendTo( $li );
+		     }
+
+		     $error.text('上传失败');
+		 });
+
+		 // 完成上传完了，成功或者失败，先删除进度条。
+		 uploader.on( 'uploadComplete', function( file ) {
+		     $( '#'+file.id ).find('.progress').remove();
+		 });
+	 });
+	 function isPositiveInteger(s){//是否为正整数
+	     var re = /^[0-9]+$/ ;
+	     var f = re.test(s);
+		 if(!f){
+			alert("请输入正整数"); 
+			return ;
+		 }
+	 }  
+	 
+	 function chenckNum(){
+		 var money = Number($('#money').val());
+	     var minnum = Number($('#minrecharge').val());
+	     var maxnum = Number($('#maxrecharge').val());
+	     console.log(money+'    '+minnum+'   '+maxnum);
+	     if(minnum==''){
+	    	 alert("请输入最小值");
+	    	 return false;
+	     }
+	     if(maxnum==''){
+	    	 alert("请输入最大值");
+	    	 return false;
+	     }	 
+	     if(minnum>maxnum){
+	    	 alert("请输入正确的最小最大值");
+	    	 return false;
+	     }
+	     console.log(money<minnum);
+	     if(money<minnum){
+	    	 alert("兑换金额必须大于等于最小值");
+	    	 return false;
+	     }
+	     console.log(money > maxnum);
+	     if(money > maxnum){
+	    	 alert("兑换金额必须小于等于最大值");
+	    	 return false;
+	     }
+	 }
+		var editor;
+		KindEditor.ready(function(K) {
+			editor = K.create('textarea[name="content"]', {
+				 filterMode: false,
+				allowFileManager : true,
+				afterBlur : function(){this.sync();}
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betgoldgoods/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.goods.id)!''}"/>	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">充值最小*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="minrecharge" id="minrecharge" onchange="isPositiveInteger(this.value);" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.goods.minrecharge)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">充值最大*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="maxrecharge" id="maxrecharge" onchange="isPositiveInteger(this.value);"  datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.goods.maxrecharge)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">兑换金额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="money" id="money" onclick="chenckNum();" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.goods.money)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">选择图片*</label>
+																		<div class="layui-inline col-lg-5">
+																			<div id="uploader-demo">
+																			    <!--用来存放item-->
+																			    <div id="fileList" class="uploader-list"></div>
+																			    <div id="filePicker" class="">选择图片</div>
+																			    <img id="imgtmp" alt="" src="${ctx}/bethomepageimage/img?url=${(returnDatas.data.goods.image)!''}">
+																			    <input type="hidden" value="${(returnDatas.data.goods.image)!''}" name="image">
+																			</div>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">商品名称*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="goodsname" id="goodsname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.goods.goodsname)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">获取方式*</label>
+																		<div class="layui-inline col-lg-5">  
+																		   <select name="type" id="type" >
+																		       <option value="1" 
+																		       <#if returnDatas.data.goods??>
+																					<#if returnDatas.data.goods.type==1> selected</#if>
+																				</#if>> 购买</option>
+																		        <option value="2" <#if returnDatas.data.goods??>
+																					<#if returnDatas.data.goods.type==2> selected</#if>
+																				</#if>>积分兑换</option>
+																		   </select>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">商品介绍*</label>
+																		<div class="layui-inline col-lg-5">  
+																		   <textarea rows="5" cols="30"  name="content" id="content"  autocomplete="off" class="layui-textarea">${(returnDatas.data.goods.content)!''}</textarea>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	 <div class="layui-form-item col-lg-6">
+																		<div class="content_wrap">
+																			<div class="zTreeDemoBackground left">
+																						<label class="layui-form-label">分类：</label>		
+																						<div class="layui-inline col-lg-5">  
+																							<input id="citySel" type="text" readonly value="${(returnDatas.data.categoryname)!''}" style="width:120px;"/>
+																							<input id="citySelid" name="categoryid" type="hidden" readonly value="${(returnDatas.data.goods.categoryid)!''}" style="width:120px;"/>
+																						</div>
+																				 <a id="menuBtn" href="#" onClick="showMenu(); return false;">选择</a>
+																			</div>
+																		</div>
+																		<div id="menuContent" class="menuContent" style="display:none; position: absolute;left:100px;top:20px;">
+																			<ul id="treeDemo" class="ztree" style="margin-top:0; width:160px;height: 270px;"></ul>
+																		</div>
+																	</div> 
+														<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn" onclick="chenckNum();">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	
+</body>
+</html>

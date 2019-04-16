@@ -1,0 +1,556 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+var now = new Date(); //当前日期
+var nowDayOfWeek = now.getDay(); //今天本周的第几天
+var nowDay = now.getDate(); //当前日
+var nowMonth = now.getMonth(); //当前月
+var nowYear = now.getYear(); //当前年
+nowYear += (nowYear < 2000) ? 1900 : 0; //
+var lastMonthDate = new Date(); //上月日期
+lastMonthDate.setDate(1);
+lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+var lastYear = lastMonthDate.getYear();
+var lastMonth = lastMonthDate.getMonth();
+//格式化日期：yyyy-MM-dd
+function formatDate(date) {
+    var myyear = date.getFullYear();
+    var mymonth = date.getMonth() + 1;
+    var myweekday = date.getDate();
+    if (mymonth < 10) {
+        mymonth = "0" + mymonth;
+    }
+    if (myweekday < 10) {
+        myweekday = "0" + myweekday;
+    }
+    return (myyear + "-" + mymonth + "-" + myweekday);
+}
+jQuery(function(){
+	var day1 = new Date();
+	var s2222 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+	$("#fghxzxch").attr("href","${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}&starttime="+s2222+"&endtime="+s2222);//今日
+	day1.setTime(day1.getTime()-24*60*60*1000);
+	var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+	$("#adfgfg").attr("href","${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}&starttime="+s1+"&endtime="+s1);//昨日
+	var firstDay=getLastWeekStartDate();
+	var lastDay=getLastWeekEndDate();
+	$("#sadfff").attr("href","${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}&starttime="+firstDay+"&endtime="+lastDay); 
+	var firstDay1=getMonthStartDate();
+	var lastDay1=getMonthEndDate();
+	$("#adger").attr("href","${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}&starttime="+firstDay1+"&endtime="+lastDay1);
+	var firstDay2=getLastMonthStartDate();
+	var lastDay2=getLastMonthEndDate();
+	$("#asdtret").attr("href","${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}&starttime="+firstDay2+"&endtime="+lastDay2);
+	var firstDay3=getWeekStartDate();
+	var lastDay3=getWeekEndDate();
+	$("#nssb").attr("href","${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}&starttime="+firstDay3+"&endtime="+lastDay3);
+	var href = window.location.href;
+	var result = href.split('?')[href.split('?').length-1];
+	var url_list = $('.xiao-btnlist').find('a');
+	for(var i = 0; i < url_list.length ; i++){
+		if(url_list[i].href == href){
+//				console.log(url_list[i].href);
+			url_list[i].style.backgroundColor = "#009688";
+			url_list[i].style.display = "block";
+			url_list[i].style.color = "#fff";
+		}
+	}	
+	function getWeekEndDate() {
+		var weekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
+		return formatDate(weekEndDate);
+	}
+	
+	function getWeekStartDate() {
+		var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+1);
+		return formatDate(weekStartDate);
+	}
+	function getLastWeekStartDate() {
+	    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 6);
+	    return formatDate(weekStartDate);
+	}
+	function getLastWeekEndDate() {
+	    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek );
+	    return formatDate(weekEndDate);
+	}
+	function getMonthStartDate() {
+	    var monthStartDate = new Date(nowYear, nowMonth, 1);
+	    return formatDate(monthStartDate);
+	}
+	function getMonthEndDate() {
+	    var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
+	    return formatDate(monthEndDate);
+	}
+	function getMonthDays(myMonth) {
+	    var monthStartDate = new Date(nowYear, myMonth, 1);
+	    var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+	    var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+	    return days;
+	}
+	//获得上月开始时间
+	function getLastMonthStartDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthStartDate;
+		if(lastMonth==11){
+			lastMonthStartDate = new Date(LastYear, lastMonth, 1);	
+		}else{
+			lastMonthStartDate = new Date(nowYear, lastMonth, 1);
+		}
+	    
+	    return formatDate(lastMonthStartDate);
+	}
+	//获得上月结束时间
+	function getLastMonthEndDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthEndDate;
+		if(lastMonth==11){
+			lastMonthEndDate = new Date(LastYear, lastMonth, getMonthDays(lastMonth));
+		}else{
+			lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
+		}
+	    return formatDate(lastMonthEndDate);
+	}
+})
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+		             <li class="layui-this">
+		             	<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>代理报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>会员</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/agreport?k=6&agentid=${agentid!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="layui-table search-wrap">
+									  	<div class="xiao-cell xiao-pull-left xiao-record">
+											
+											&nbsp;&nbsp;&nbsp;
+											<div class="xiao-btnlist xiap-pull-left layui-inline">
+													<div class="xiao-btnlist-item">
+													<a id="fghxzxch">今日</a>
+													</div>
+													<div class="xiao-btnlist-item">
+													<a id="adfgfg">昨日</a>
+													</div>
+									 				<div class="xiao-btnlist-item">
+													<a id="nssb">本周</a>
+													</div>
+													<div class="xiao-btnlist-item">
+													<a id="sadfff" >上周</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="adger" >本月</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="asdtret" >上月</a>
+													</div>
+									</div>
+											
+											
+											
+										
+										</div>
+										<div class="layui-input-inline xiao-input-wrap pull-left">
+											<div class="layui-input-inline xiao-input-wrap pull-left">
+												<input id="starttime" name="starttime" onclick="laydate()" placeholder="请输入日期 " value="${startTime!''}" class="laydate-icon ">
+											</div>
+										到
+											<div class="layui-input-inline">
+												<input id="endtime" name="endtime" onclick="laydate()" placeholder="请输入日期 " value="${endTime!''}" class="laydate-icon ">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon"  style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									<table class="layui-table" lay-even >
+											<thead>
+												<tr>
+													<th colspan="16">所属代理账号：${agentaccount!''}&nbsp;&nbsp;&nbsp;所属代理昵称：${agentnickname!''}<font id='' class='recorsView'>共<span>${returnDatas.page.pageCount!''}</span>页,共 <span></span>${returnDatas.page.totalCount!''}条记录</font></th>
+												</tr>
+												<tr>
+												  
+												  		<th>序号</th>
+												  		<!-- <th>所属代理账号（昵称）</th> -->
+														<th style="white-space:nowrap">用户ID（昵称）</th>
+														<th style="white-space:nowrap" id="th_bettingmoney">投注额</th>
+														<th style="white-space:nowrap" id="th_treatedbettingmoney">已结算</th>
+														<th style="white-space:nowrap" id="th_untreatedbettingmoney">未结算</th>
+														<th style="white-space:nowrap" id="th_bettingscore">派彩</th>
+														<th style="white-space:nowrap" id="th_bettingwin">游戏输赢</th>
+														<th style="white-space:nowrap" id="th_bettingtimecommission">投注佣金</th>
+														
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td style="text-align: center; white-space:nowrap">
+														${_data_index+1}
+														</td>
+														<td style="text-align: center; white-space:nowrap">
+														
+														<a class="xiao-color-00e"   style="text-decoration:underline;" href="${ctx}/betmember/look?id2=${((_data.id2))!''}">${(_data.id2)!''}（${(_data.nickname)!''}）</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="tze" type="hidden" value="${(_data.bettingmoney)!0}">
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=2&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.bettingmoney))!0}</u>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="treatedbettingmoney" type="hidden" value="${(_data.treatedbettingmoney)!0}">
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=13&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.treatedbettingmoney))!0}</u>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="untreated" type="hidden" value="${(_data.untreatedbettingmoney)!0}">
+															<#if (_data.untreatedbettingmoney??)>															
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=4&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.untreatedbettingmoney))!0}</u>
+															</a>
+															<#else>
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=4&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.untreatedbettingmoney))!0}</u>
+															</a>
+															</#if>
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="bettingscore" type="hidden" value="${(_data.bettingscore)!0}">
+															<font style="color:blue;">${((_data.bettingscore))!0}</font>
+														</td>
+														<td style="text-align: center;">
+														<input class="bettingwin" type="hidden" value="${(_data.bettingwin)!0}">
+															<#if (_data.bettingwin??)&&(_data.bettingwin<0)>
+															<font style="color:red;">
+															${((_data.bettingwin))!0}
+															</font>
+															<#else>
+															<font style="color:blue;">
+															${((_data.bettingwin))!0}
+															</font>
+															</#if>
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="bettingtimecommission" type="hidden" value="${(_data.bettingtimecommission)!0}">
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=14&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.bettingtimecommission))!0}</u>
+															</a>
+														</td>
+														
+														<!-- <#-- <td style="text-align: center;">
+														<input class="yxsy" type="hidden" value="${(_data.gamewin)!0}">
+															
+															
+															<#if (_data.gamewin??) >
+															<#if _data.gamewin &gt;= 0 >
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=3&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.gamewin))!0}</u>
+															</a>
+															</font>
+															</#if>
+															<#if _data.gamewin &lt; 0 >
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=3&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.gamewin))!0}</u>
+															</a>
+															</#if>
+															<#else>
+															<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=3&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.gamewin))!0}</u>
+															</a>
+															</#if>
+														</td>
+														
+														
+														
+														<td style="text-align: center;">
+														<input class="commission" type="hidden" value="${(_data.commission)!0}">
+														<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betreportform/agreport?id2=${((_data.id2))!''}&k=5&starttime=${startTime!''}&endtime=${endTime!''}">
+															<u>${((_data.commission))!0}</u>
+															</a>
+														
+														</td> --> -->
+															
+													</tr>
+												</#list>
+												<tr style="text-align: center;background-color: #eafcff;">
+												<td>小计</td>
+											<!-- 	<td></td> -->
+												<td></td>
+												<td><a id="tze" ></a></td>
+												<td><a id="treatedbettingmoney" ></a></td>
+												<td><a id="untreated" ></a></td>
+												<td><a id="bettingscore" ></a></td>
+												<td><a id="bettingwin" ></a></td>
+												<td><a id="bettingtimecommission" ></a></td>
+												<!-- <td><a id="yxsy" ></a></td>
+												
+												<td><a id="commission" ></a></td> -->
+												</tr>
+												<#else>
+												
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+<script>
+
+
+
+$("#lastmonth").click(function(){
+	var nowdays = new Date();
+    var year = nowdays.getFullYear();
+    var month = nowdays.getMonth();
+    if(month==0) {
+        month=12;
+        year=year-1;
+    }
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var firstDay = year + "-" + month + "-" + "01";//上个月的第一天
+    var myDate = new Date(year, month, 0);
+    var lastDay = year + "-" + month + "-" + myDate.getDate();//上个月的最后一天
+	$("#starttime").val(firstDay);
+	$("#endtime").val(lastDay);
+	window.location.href="${ctx}/betreportform/winorfaillist?k=1&starttime="+firstDay+"&endtime="+lastDay;
+});
+    
+
+function clearpageindex(){
+	$("#pageIndex").val(1);
+}
+
+function Request(name){
+   new RegExp("(^|&)"+name+"=([^&]*)").exec(window.location.search.substr(1));
+   return RegExp.$2
+}
+
+
+
+var bettingtimecommission = 0;
+$(".bettingtimecommission").each(function(){
+	bettingtimecommission+=parseFloat($(this).val());
+});
+$("#bettingtimecommission").text(Math.round(bettingtimecommission* 100) / 100);
+if(bettingtimecommission>=0){
+	$("#bettingtimecommission").css("color","blue");
+}
+if(bettingtimecommission<0){
+	$("#bettingtimecommission").css("color","red");
+}
+
+var bettingwin = 0;
+$(".bettingwin").each(function(){
+	bettingwin+=parseFloat($(this).val());
+});
+$("#bettingwin").text(Math.round(bettingwin* 100) / 100);
+if(bettingwin>=0){
+	$("#bettingwin").css("color","blue");
+}
+if(bettingwin<0){
+	$("#bettingwin").css("color","red");
+}
+
+var treatedbettingmoney = 0;
+$(".treatedbettingmoney").each(function(){
+	treatedbettingmoney+=parseFloat($(this).val());
+});
+$("#treatedbettingmoney").text(Math.round(treatedbettingmoney* 100) / 100);
+if(treatedbettingmoney>=0){
+	$("#treatedbettingmoney").css("color","blue");
+}
+if(treatedbettingmoney<0){
+	$("#treatedbettingmoney").css("color","red");
+}
+
+var bettingscore = 0;
+$(".bettingscore").each(function(){
+	bettingscore+=parseFloat($(this).val());
+});
+$("#bettingscore").text(Math.round(bettingscore* 100) / 100);
+if(bettingscore>=0){
+	$("#bettingscore").css("color","blue");
+}
+if(bettingscore<0){
+	$("#bettingscore").css("color","red");
+}
+
+var untreated = 0;
+$(".untreated").each(function(){
+	untreated+=parseFloat($(this).val());
+});
+$("#untreated").text(Math.round(untreated* 100) / 100);
+if(untreated>=0){
+	$("#untreated").css("color","blue");
+}
+if(untreated<0){
+	$("#untreated").css("color","red");
+}
+
+var commission = 0;
+$(".commission").each(function(){
+	commission+=parseFloat($(this).val());
+});
+$("#commission").text(Math.round(commission* 100) / 100);
+if(commission>=0){
+	$("#commission").css("color","blue");
+}
+if(commission<0){
+	$("#commission").css("color","red");
+}
+
+var yxsy = 0;
+$(".yxsy").each(function(){
+	yxsy+=parseFloat($(this).val());
+});
+$("#yxsy").text(Math.round(yxsy* 100) / 100);
+if(yxsy>=0){
+	$("#yxsy").css("color","blue");
+}
+if(yxsy<0){
+	$("#yxsy").css("color","red");
+}
+
+var tze = 0;
+$(".tze").each(function(){
+	tze+=parseFloat($(this).val());
+});
+$("#tze").text(Math.round(tze* 100) / 100);
+if(tze>=0){
+	$("#tze").css("color","blue");
+}
+if(tze<0){
+	$("#tze").css("color","red");
+}
+
+
+var untreated1 = 0;
+$(".untreated1").each(function(){
+	untreated1+=parseFloat($(this).val());
+});
+$("#untreated1").text(Math.round(untreated1* 100) / 100);
+if(untreated1>=0){
+	$("#untreated1").css("color","blue");
+}
+if(untreated1<0){
+	$("#untreated1").css("color","red");
+}
+
+var commission1 = 0;
+$(".commission1").each(function(){
+	commission1+=parseFloat($(this).val());
+});
+$("#commission1").text(Math.round(commission1* 100) / 100);
+if(commission1>=0){
+	$("#commission1").css("color","blue");
+}
+if(commission1<0){
+	$("#commission1").css("color","red");
+}
+
+var yxsy1 = 0;
+$(".yxsy1").each(function(){
+	yxsy1+=parseFloat($(this).val());
+});
+$("#yxsy1").text(Math.round(yxsy1* 100) / 100);
+if(yxsy1>=0){
+	$("#yxsy1").css("color","blue");
+}
+if(yxsy1<0){
+	$("#yxsy1").css("color","red");
+}
+
+var tze1 = 0;
+$(".tze1").each(function(){
+	tze1+=parseFloat($(this).val());
+});
+$("#tze1").text(Math.round(tze1* 100) / 100);
+if(tze1>=0){
+	$("#tze1").css("color","blue");
+}
+if(tze1<0){
+	$("#tze1").css("color","red");
+}
+</script>
+</html>
+

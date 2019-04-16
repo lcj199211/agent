@@ -1,0 +1,1644 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		
+		$(".updateoddsandbettinglimit").click(function(){
+		var id =$(this).prev().val();
+		var maxbetting=$(this).parent().prev().children().val();
+		var minbetting=$(this).parent().prev().prev().children().val();
+		var odds=$(this).parent().prev().prev().prev().prev().children().val();
+		//询问框
+		layer.confirm('确认提交？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgameplay/updateoddsandbettinglimit",
+				data:{id:id,maxbetting:maxbetting,minbetting:minbetting,odds:odds},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已提交！',{offset:['','']});
+						setTimeout("window.location.reload();",2000);
+						 
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		}); 
+	})
+	
+	$(".updateoddsandbettinglimit1").click(function(){
+		var id =$(this).prev().val();
+		var maxbetting=$(this).parent().prev().children().val();
+		var minbetting=$(this).parent().prev().prev().children().val();
+		var odds=$(this).parent().prev().prev().prev().prev().children().val();
+		//询问框
+		layer.confirm('确认提交？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgameplay/updateoddsandbettinglimit",
+				data:{id:id,maxbetting:maxbetting,minbetting:minbetting,odds:odds,k:1},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已提交！',{offset:['','']});
+						setTimeout("window.location.reload();",2000);
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		}); 
+	})
+	
+	
+	$(".updateoddsandbettinglimit222").click(function(){
+		var ddddd=$(this).next().val();
+		var dddddd="."+ddddd;
+		var arr122 = new Array(); 
+		$(dddddd).each(function (i){
+			var id=$(this).children(".id").val();
+			var odds=$(this).find(".odds").val();
+			var minbetting=$(this).find(".minbetting").val();
+			var maxbetting=$(this).find(".maxbetting").val();
+			var zzz=id+":"+odds+":"+minbetting+":"+maxbetting;
+			arr122.push(zzz);
+			
+		});
+		
+		//询问框
+		layer.confirm('确认提交？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgameplay/updateoddsandbettinglimit?arr122="+arr122,
+				data:{k:2},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已提交！',{offset:['','']});
+						setTimeout("window.location.reload();",2000);
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		}); 
+	})
+	
+	$(".updateoddsandbettinglimit444").click(function(){
+		var arr122 = new Array(); 
+		$(".lianma").each(function (i){
+			var id=$(this).children(".id").val();
+			var odds=$(this).find(".odds").val();
+			var minbetting=$(this).find(".minbetting").val();
+			var maxbetting=$(this).find(".maxbetting").val();
+			var zzz=id+":"+odds+":"+minbetting+":"+maxbetting;
+			arr122.push(zzz);
+			
+		});
+		
+		//询问框
+		layer.confirm('确认提交？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgameplay/updateoddsandbettinglimit?arr122="+arr122,
+				data:{k:3},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已提交！',{offset:['','']});
+						setTimeout("window.location.reload();",2000);
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		}); 
+	})
+	
+	
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgameplay/delete");
+	}
+	
+	
+</script>
+<style>
+.xiao-ht-table {
+     min-width: auto; 
+    width: auto; 
+}
+</style>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title ">	
+			             <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+			             		<#if gameclassid=7>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>重庆时时彩</cite></a>
+								</span>
+								<#elseif gameclassid=8>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新疆时时彩</cite></a>
+								</span>
+								<#elseif gameclassid=9>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡5D</cite></a>
+								</span>
+								<#elseif gameclassid=34>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>时时彩</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>韩国五朵金花</cite></a>
+								</span>
+								</#if>
+			             </li> 
+						 <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          	
+						          <!-- 查询  开始 -->
+							        <form  id="searchForm" action="${ctx}/betgameplay/list?currentBetting=1" class="pull-left" method="post">
+							          	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							        	<!--  <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}"  /> -->
+									  	<div class="layui-table search-wrap xiao-mb0">
+									  		
+									  		
+											<div class="layui-inline">
+												<div class="xiao-btnlist xiap-pull-left">
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betgameclass/list?gameclassid=${gameclassid!''}">彩票管理</a>
+													</div>
+													<div class="xiao-btnlist-item" style="background:#009688; color:#FFF">
+														赔率/限额
+													</div>
+													<div class="xiao-btnlist-item">
+														<#if gameclassid=7>
+														<a href="${ctx}/betgameplay/list4">
+														<#elseif gameclassid=8>
+														<a href="${ctx}/betgameplay/list1">
+														<#elseif gameclassid=9>
+														<a href="${ctx}/betgameplay/list2">
+														<#elseif gameclassid=34>
+														<a href="${ctx}/betgameplay/list23">
+														</#if>
+														即时注单</a>
+													</div>
+													<!-- <div class="xiao-btnlist-item">
+														<a href="${ctx}/betcollectionaddress/list?id=${gameclassid!''}">采集地址</a>
+													</div> -->
+													
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betperiod/list?gameclassid=${gameclassid!''}">开奖管理</a>
+													</div>
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betgameplay/name1list?gameclassid=${gameclassid!''}">玩法状态</a>
+													</div>
+												</div>
+											
+											
+												<div class="layui-input-inline xiao-input">
+												 <input type="hidden" name="name="gameclassid"" value="${returnDatas.queryBean.gameclassid}">
+													<!-- <select id="gameclass" style=" margin-top:5px; width: 200px;height: 34px;border: 1px solid #e2e2e2;">
+													</select> -->
+													<!--    <input type="text" name="gameclassid" value="${(returnDatas.queryBean.gameclassid)!''}" placeholder="彩票名 " class="layui-input"> -->
+												</div>
+												<div class="layui-inline valid-info"></div>
+											</div>
+										<!-- 	<div class="layui-inline">
+												<button class="layui-btn xiao-mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											</div> -->
+										</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<form action="${ctx}/betgameplay/updateodds" class="pull-left" method="post">
+													<!-- 	<button id="submitodds" style="cursor: pointer;height: 30px;line-height: 30px;padding: 0 10px;font-size: 12px;width: 100px;border: none;background-color: #009688;color: #fff;">提交赔率</button> -->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">第一球
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                             <input type="hidden" value="firstball"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th  >赔率</th>
+														<th>最高赔率</th>
+														<th  >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="定位")&&(_data.name2="第一球")>
+													<tr class="firstball">
+														<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input  style="width:60px" class="odds"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input style="width:60px"  class="minbetting" value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input  style="width:60px" class="maxbetting"  value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">第二球
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="secondball"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th >玩法</th>
+														<th  >赔率</th>
+														<th  >最高赔率</th>
+														<th  >限额最小</th>
+														<th  >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="定位")&&(_data.name2="第二球")>
+													<tr class="secondball">
+														<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">第三球
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="thirdball"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th> 玩法</th>
+														<th  >赔率</th>
+														<th  >最高赔率</th>
+														<th  >限额最小</th>
+														<th  >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="定位")&&(_data.name2="第三球")>
+													<tr class="thirdball">
+														<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">第四球
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="fourthball"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="定位")&&(_data.name2="第四球")>
+													<tr class="fourthball">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">第五球
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="firthball"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="定位")&&(_data.name2="第五球")>
+													<tr class="firthball">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+													<#-- 	<td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+												<!-- <#list 1..36 as t>
+													<tr class=""><td><div style="height: 25px;line-height: 25px; padding: 0 15px;" ></div> </td><td></td><td></td><td></td><td></td><td></td></tr>
+												</#list> -->
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">总和
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="zonghe"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th  >赔率</th>
+														<th  >最高赔率</th>
+														<th  >限额最小</th>
+														<th  >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="总和")>
+													<tr class="zonghe">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">连码
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit444">确定</a>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="连码")>
+										    		<#if (_data.name2="一中多")&&(_data.name3="0")>
+										    		
+													<tr class="lianma">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name2)!''} 
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit1">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+													<#if (_data.name2="二中二")&&(_data.name3="0")>
+													<tr class="lianma">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name2)!''} 
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit1">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+													<#if (_data.name2="三中三")&&(_data.name3="0")>
+													<tr class="lianma">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name2)!''} 
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit1">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+													<#if (_data.name2="四中四")&&(_data.name3="0")>
+													<tr class="lianma">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name2)!''} 
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit1">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+													<#if (_data.name2="五中五")&&(_data.name3="0")>
+													<tr class="lianma">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name2)!''} 
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit1">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">牛牛
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="niuniu"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="牛牛")>
+													<tr class="niuniu">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">梭哈
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="suoha"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="梭哈")>
+													<tr class="suoha">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">前三两面
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="qiansanliangmian"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="前三")&&(_data.name2="前三两面")>
+													<tr class="qiansanliangmian">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">前三36
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="qiansansanliu"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="前三")&&(_data.name2="前三36")>
+													<tr class="qiansansanliu">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">前三28
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="qiansan28"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="前三")&&(_data.name2="前三28")>
+													<tr class="qiansan28">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">前三区间
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="qiansanqujian"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="前三")&&(_data.name2="前三区间")>
+													<tr class="qiansanqujian">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+													<tr class=""><td><div style="height: 25px;line-height: 25px; padding: 0 15px;" ></div> </td><td></td><td></td><td></td><td></td><td></td></tr>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">中三两面
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="zongsanliangmian"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="中三")&&(_data.name2="中三两面")>
+													<tr class="zongsanliangmian">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+													<#-- 	<td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">中三36
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="zongsan36"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="中三")&&(_data.name2="中三36")>
+													<tr class="zongsan36">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+													<#-- 	<td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">中三28
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="zongsan28"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="中三")&&(_data.name2="中三28")>
+													<tr class="zongsan28">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">中三区间
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="zongsanqujian"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="中三")&&(_data.name2="中三区间")>
+													<tr class="zongsanqujian">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">后三两面
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="housanliangmian"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="后三")&&(_data.name2="后三两面")>
+													<tr class="housanliangmian">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+													<#-- 	<td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">后三36
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="housan36"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="后三")&&(_data.name2="后三36")>
+													<tr class="housan36">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">后三28
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="housan28"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="后三")&&(_data.name2="后三28")>
+													<tr class="housan28">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds" style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr ><th colspan="8">后三区间
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="float:right;height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                              <input type="hidden" value="housanqujian"/>
+								                             </@shiro.hasPermission>
+												</th></tr>
+												<tr>
+														<th  >玩法</th>
+														<th >赔率</th>
+														<th >最高赔率</th>
+														<th >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    	<#if (_data.name1="后三")&&(_data.name2="后三区间")>
+													<tr class="housanqujian">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting"  style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<#-- <td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+													</#if>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										
+										
+										
+										
+											
+										</form>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv' class="xiao-inline-block"></div>
+											<!-- <font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th> -->
+											<@h.layPage page=returnDatas.page /> 
+										</#if>
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	<script>
+		 jQuery(document).ready(function(){ 
+    //加载彩票名称
+    /* jQuery.ajax({
+        url : ctx+"/betgameclass/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+ 			if(_obj.gameclassid==${returnDatas.queryBean.gameclassid}){
+			 jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"' selected >"+_obj.gcname+"</option>");
+ 		}else{
+ 			/* jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"'>"+_obj.gcname+"</option>"); */
+ 		/* } 
+            });
+            
+            
+        }
+    }); */
+    
+    $(".updateOdds").blur(function(){
+    	var a=$(this).prev().val();
+    	$(this).attr("name",a);
+    });
+	});
+	
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betgameplay/list?&springraintoken="+springraintoken});
+	 });
+	</script>
+</body>
+</html>
+

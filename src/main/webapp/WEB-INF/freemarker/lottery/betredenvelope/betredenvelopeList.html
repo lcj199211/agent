@@ -1,0 +1,379 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betredenvelope/delete");
+	}
+	function defaultk(){
+		 var kkk='${k!''}';
+		if(kkk==''){
+		 	var bbb=$("#searchForm").attr("action")+'';
+			$("#searchForm").attr("action",bbb+'4');
+		}
+	}
+</script>
+<style type="text/css">
+
+</style>
+
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			            <!--  <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								网站地图导航
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>红包管理</cite></a>
+								</span>
+			             </li>
+						 <li style="float:right;">
+			             	<@shiro.hasPermission name="/betredenvelope/update" >
+			             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betredenvelope/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+			             	</@shiro.hasPermission>
+			             	<@shiro.hasPermission name="/betredenvelope/list/export" >
+					        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+			                <@shiro.hasPermission name="/betredenvelope/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission>
+			             </li> -->
+		       		</ul>
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main" style="width:100%">
+						          <div id="LAY_preview">
+						         <!--  <a href="${ctx}/betredenvelope/list">红包生成</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="${ctx}/betredenvelope/list?k=1">红包列表</a>	<br/><br/>	 -->
+						         随机红包：<!-- 总金额：<input type="text" id="ff-totalscore" style="width:80;"> -->领取人数：<input type="text" id="ff-redenvelopenum" style="width:80;">最小：<input type="text" id="ff-redenvelopeminscore" style="width:80;">最大：<input type="text" id="ff-redenvelopemaxscore" style="width:80;">说明：<input type="text" id="ff-illustrate">红包个数：<input type="text"  style="width:80;" id="ff-redenvilopexxxxxx">生效时间（单位：天，默认1天）：<input type="text"  style="width:80;" id="ff-lifetime1">&nbsp;<button id="ff-genredenvelope">生 成</button> <br/>
+							指定红包：金额：<input type="text" id="ff-totalscore3" style="width:80;">说明 ：<input type="text" id="ff-illustrate3">指定ID：<input type="text" id="ff-memberid2" placeholder="（用小写，隔开）">红包个数：<input type="text"  style="width:80;" id="ff-redenvilopesdfd">&nbsp;生效时间（单位：天，默认1天）：<input type="text"  style="width:80;" id="ff-lifetime2">&nbsp;<button id="ff-genredenvelope3"> 生成</button>  <br/>
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betredenvelope/list?k=${k!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									 <div class="layui-table search-wrap">
+										<div class="layui-inline xiao-input-wrap">
+											从
+											<div class="layui-input-inline">
+												<input  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+											</div>到
+											<div class="layui-input-inline">
+												<input  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon ">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn mb0" type="button" onclick="defaultk();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap clearfix xiao-ht-hiddenScroll">
+										<div class="xiao-btnlist xiap-pull-left">
+											<div class="xiao-btnlist-item">
+												<a  href="${ctx}/betredenvelope/list?k=4&startTime=${(startTime)!''}&endTime=${(endTime)!''}">全部</a>
+											</div>
+											<div class="xiao-btnlist-item">	
+												<a href="${ctx}/betredenvelope/list?k=1&startTime=${(startTime)!''}&endTime=${(endTime)!''}">生效</a>
+											</div>
+											<div class="xiao-btnlist-item">	
+												<a href="${ctx}/betredenvelope/list?k=5&startTime=${(startTime)!''}&endTime=${(endTime)!''}">有效领取</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betredenvelope/list?k=2&startTime=${(startTime)!''}&endTime=${(endTime)!''}">禁用</a>
+											</div>
+											<div class="xiao-btnlist-item">	
+												<a href="${ctx}/betredenvelope/list?k=3&startTime=${(startTime)!''}&endTime=${(endTime)!''}">作废 </a>
+											</div>
+										</div>
+										<div style="height: 32px;line-height: 32px;margin: 5px 10px;" class="xiao-pull-left">
+											被领取总金额：${(totalcountpayscore)!0}
+										</div>
+										<div class="xiao-ht-tableWrap ">
+											<table class="xiao-ht-table" lay-even>
+												<thead>
+													<tr>
+													  <!--first_start_no_export-->
+													
+													  <!--first_end_no_export-->
+													  		<th>ID</th>
+															<th>红包码</th>
+															<th>发包数</th>
+															<th>领取数</th>
+															<th>最少分</th>
+															<th>最大分</th>
+															<th>指定ID</th>
+															<th>说明</th>
+															<th>失效备注</th>
+															<th>生成时间</th>
+															<th>状态</th>
+															  <th>操作</th>
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<td>
+																${(_data.id)!''}
+															</td>
+															<!--end_no_export-->
+															<td >
+																${(_data.redenvelopecode)!''}
+															</td>
+															<td >
+																<input type="hidden" class="t2" value="${(_data.sendnum)!0}">
+																${(_data.sendnum)!0}
+															</td>
+															<td >
+																<input type="hidden" class="t3" value="${(_data.receivenum)!0}">
+																${(_data.receivenum)!0}
+															</td>
+															<td >
+															<input type="hidden" class="t4" value="${(_data.minscore)!0}">
+																${(_data.minscore)!0}
+															</td>
+															<td >
+															<input type="hidden" class="t5" value="${(_data.maxscore)!0}">
+																${(_data.maxscore)!0}
+															</td>
+															<td>
+															${(_data.memberid2)!''}
+															</td>
+															<td >
+																${(_data.caption)!''}
+															</td>
+															<td >
+																${(_data.remark)!''}
+															</td>
+															<td >
+																<!--日期型-->
+															${((_data.createtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+															</td>
+															<td >
+																<#if _data.state=0>
+																<font style="color:gray;">作废</font>
+																</#if>
+																<#if _data.state=1>
+																<font style="color:red;">禁用</font>
+																</#if>
+																<#if _data.state=2>
+																<font style="color:blue;">生效</font>&nbsp;&nbsp;<input type="hidden" value="${(_data.id)!''}" /><a class="forbidden" style="text-decoration:underline;"  href="javacript:void(0);">禁用</a>
+																</#if>
+															</td>
+															<td>
+																<a style="color:blue;text-decoration:underline;"  href="${ctx}/betredenvelope/list?lqjl=1&redenvelopeid=${(_data.id)!''}">领取记录</a>
+															</td>
+														</tr>
+													</#list>
+													<tr class=""  style="background-color:#eafcff;">
+															<td>
+																小计
+															</td>
+															<td >
+															</td>
+															<td >
+																<a style="border:0px;text-align: center;"  id="t2"></a>
+																<!-- ${(_data.sendnum)!0} -->
+															</td>
+															<td >
+																<a style="border:0px;text-align: center;"  id="t3"></a>
+																<!-- ${(_data.receivenum)!0} -->
+															</td>
+															<td ><a style="border:0px;text-align: center;"  id="t4"></a>
+															</td>
+															<td ><a style="border:0px;text-align: center;"  id="t5"></a>
+															</td>
+															<td >
+															</td>
+															<td >
+															</td>
+															<td >
+															</td>
+															<td >
+															</td>
+															<td>
+															</td>
+														</tr>
+												 </#if>
+												</tbody>
+											</table>
+											<#if returnDatas.page??> 
+												<div id='laypageDiv'></div>
+												<@h.layPage page=returnDatas.page /> 
+												<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span>${(returnDatas.page.pageCount)!''}</span>页,共 <span>${(returnDatas.page.totalCount)!''}</span>条记录</font>
+											</#if>
+										</div>
+									</div>
+								</div>
+			</div>
+			<script>
+				$("#ff-genredenvelope").click(function(){
+				var fn = arguments.callee,  
+		        self = this;  
+			    $(self).unbind('click', fn); 
+					/* var a=$("#ff-totalscore").val(); */
+					var a=$("#ff-redenvilopexxxxxx").val(); 
+					
+					var b=$("#ff-redenvelopenum").val();
+					var c=$("#ff-redenvelopeminscore").val();
+					var d=$("#ff-redenvelopemaxscore").val();
+					var e=$("#ff-illustrate").val();
+					var lifetime=$("#ff-lifetime1").val();
+					$.ajax({
+						type:"post",
+						url:"${ctx}/betredenvelope/update",
+						
+						data:{redxxx:a,sendnum:b,minscore:c,maxscore:d,caption:e,type:1,lifetime:lifetime},
+						success:function(result){
+							if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								 $(self).click(fn); 
+							}else if("success"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								location.reload(true);
+							}
+						},
+					})
+					
+				})
+				
+				$("#ff-genredenvelope3").click(function(){
+				var fn = arguments.callee,  
+		        self = this;  
+			    $(self).unbind('click', fn); 
+					var a=$("#ff-totalscore3").val();
+					var e=$("#ff-illustrate3").val();
+					var f=$("#ff-memberid2").val();
+					var kk=$("#ff-redenvilopesdfd").val();
+					var lifetime=$("#ff-lifetime2").val();
+					
+					$.ajax({
+						type:"post",
+						url:"${ctx}/betredenvelope/update",
+						
+						data:{redxxx:kk,totalscore:a,caption:e,memberid2:f,type:2,lifetime:lifetime},
+						success:function(result){
+							if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								 $(self).click(fn); 
+							}else if("success"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								location.reload(true);
+							}
+						},
+					})
+					
+				})
+				
+				
+				$(".forbidden").click(function(){
+					var id=$(this).prev().val();
+					//询问框
+		layer.confirm('确定禁用红包？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+						type:"post",
+						url:"${ctx}/betredenvelope/update",
+						
+						data:{id:id,state:1},
+						success:function(result){
+							if("error"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								
+							}else if("success"==result.status){
+								layer.msg(result.message,{offset:['','']});
+								setTimeout("location.reload(true);",2000);
+								
+							}
+						},
+					})
+		}, function(){
+		  
+		});
+					
+				})
+				
+				
+				var href = window.location.href;
+				var result = href.split('?')[href.split('?').length-1];
+				var url_list = $('.xiao-btnlist').find('a');
+				for(var i = 0; i < url_list.length ; i++){
+					if(url_list[i].href == href){
+			//			console.log(url_list[i].href);
+						url_list[i].style.backgroundColor = "#009688";
+						url_list[i].style.display = "block";
+						url_list[i].style.color = "#fff";
+					}
+				}
+				
+				
+				
+	
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	$("#t2").text(Math.round(t2*100)/100);
+	
+	var t3 = 0.;
+	$(".t3").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t3+= a*1;
+	});
+	$("#t3").text(Math.round(t3*100)/100);
+	
+		var t4 = 0.;
+	$(".t4").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t4+= a*1;
+	});
+	$("#t4").text(Math.round(t4*100)/100);
+	
+	var t5 = 0.;
+	$(".t5").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t5+= a*1;
+	});
+	$("#t5").text(Math.round(t5*100)/100);
+	
+			</script>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

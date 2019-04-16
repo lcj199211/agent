@@ -1,0 +1,230 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/bjdcorder/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		              <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/bjdcorderticket/schemelist?k=1&schemeid=${schemeid!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="12">北单订单列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												 -->
+												  <!--first_end_no_export-->
+														<th width="150"  >提交时间</th>
+														<th  >订单号</th>
+														
+														<th  >会员id</th>
+														<th  >投注内容</th>
+														<th  >投注倍数</th>
+														<th id="th_bettingmoney" >投注金额</th>
+														<th  >投注赢</th>
+														<th id="th_settletime" >结算时间</th>
+														<th  >ip地址</th>
+														 <th>结果</th>
+														 <th>出票 状态</th>
+														  <!-- <th  >状态</th> 1:正常 3:删除 -->
+														 <!-- <th>操作</th>  -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+													<!-- 
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														 -->
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+															${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/bjdcorder/list?k=1&orderid=${(_data.orderid)!''}">${(_data.orderid)!''}</a>
+															<!--  ${(_data.orderid)!''}  -->
+														</td>
+														
+														<td >
+															<!--  ${(_data.memberid2)!0}  -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/betmember/look?&id2=${(_data.memberid2)!0}">${(_data.memberid2)!0}</a>
+														</td>
+														<td >
+															<#if (_data.ordercontent??)&&(_data.ordercontent?size>0)> 
+										    					<#list	_data.ordercontent as _ordercontent>
+										    						<div>${(_ordercontent.hometeam)!'0'} vs ${(_ordercontent.guestteam)!'0'} (投注项为${(_ordercontent.oddsrealname)!'0'})</div>
+										    					</#list>
+											 				</#if>
+														</td>
+														<td >
+															${(_data.betmulriple)!0}
+														</td>
+														<td >
+															${(_data.bettingmoney)!0}
+														</td>
+														<td >
+															${(_data.bettingwin)!''}
+														</td>
+														<td >
+															<!--  日期型  -->
+															${((_data.settletime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															
+															${(_data.orderip)!0}
+														</td>
+														<td >
+															<!--  ${(_data.result)!''} -->
+															<#if _data.result==0>
+																<span>未结算</span>
+															<#elseif _data.result==1>
+																<span style="color:#288a53" >已返奖</span>
+															<#elseif _data.result==2>
+																<span  >已撤销</span>
+															<#elseif _data.result==3>
+																<span style="color:red" >未中奖</span>
+															<#elseif _data.result==4>
+																<span  >非正常</span>
+															</#if>
+														</td>
+														<!--  
+														<td >
+															<#if _data.state==1>
+																<span style="color:#288a53" >正常</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<#else>
+																<span style="color:red" >已撤销</span>&nbsp;&nbsp;&nbsp;&nbsp;
+															</#if>
+														</td>
+														-->
+														<!--  
+														<td>
+															<@shiro.hasPermission name="/soccerleagueorder/update" >
+								                           		 <a href="#" data-action="${ctx}/soccerleagueorder/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/soccerleagueorder/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+														-->
+														<td >
+															<#if _data.issuestate??>
+															<#if _data.issuestate==0>
+																<span>待分配</span>
+															<#elseif _data.issuestate==1>
+																<span  >待传输</span>
+															<#elseif _data.issuestate==2>
+																<span  >待出票</span>
+															<#elseif _data.issuestate==3>
+																<span style="color:green" >出票成功</span>
+															<#elseif _data.issuestate==4>
+																<span style="color:red" >出票失败</span>
+															</#if>
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+//撤销订单
+	$(".cancelbetting").click(function(){
+			var a=$(this).prev().val();
+			//询问框
+			layer.confirm('确定撤销投注？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				$.ajax({
+					type:"get",
+					url:"${ctx}/soccerleagueorder/update?id="+a+"&cancel=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已撤销！',{offset:['','']});
+								
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+				})
+			}, 
+			function(){
+			  
+			});
+
+		})
+
+</script>
+</html>
+

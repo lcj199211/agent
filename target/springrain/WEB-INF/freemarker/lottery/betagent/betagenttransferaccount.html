@@ -1,0 +1,134 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<!-- <script src="${ctx}/js/custom/common/form.js"></script> -->
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+				<li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span style="visibility: visible;">
+							   <a>用户管理<span class="layui-box">&gt;</span></a>
+							   <a><cite>代理系统</cite><span class="layui-box">&gt;</span></a>
+							   <a><cite>代理</cite><span class="layui-box">&gt;</span></a>
+							   <a><cite>转账</cite>
+							</span>
+		            </li>
+					 <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <input type="hidden" id="ff-sx" value="${sx!'0'}">
+						   <a style="font-size:large;" href="${ctx}/betagent/look?k=1&id=${id}&agentid=${agentid}"><u>转账</u></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						   <a style="font-size:large;" href="${ctx}/betagent/look?k=2&id=${id}&agentid=${agentid}"><u>转账记录</u></a><br/></br> 
+						   	<table>
+								<tr>
+									<td style="text-align: right;">
+									金币余额：&nbsp;&nbsp;
+									</td>
+									<td>${(sx?string('#'))!'0'}</td>
+								</tr>			
+						          <tr>
+						          	<td style="text-align: right;">
+						          	 接收ID：&nbsp;&nbsp;
+						          	</td>
+						          	<td>
+						          	<input style="border: 0px;background-color: #f7f7f7;width: 30%" readonly="readonly" type="text" id="ff-transfermanagentid" value="${(returnDatas.data.agentid)!''}"><span id="ff-idjc">金币：${(agentsx?string('#'))}</span>
+						          	</td>
+						          </tr>
+						          <tr>
+						          	<td style="text-align: right;">
+						          	转账分：&nbsp;&nbsp;
+						          	</td>
+						          	<td>
+						          	<input type="text" id="ff-money" placeholder="请输入转账分">
+						          	</td>
+						          </tr>
+							<tr>
+								<td style="text-align: right;">
+								密码：&nbsp;&nbsp;
+								</td>
+								<td>
+								<input type="password" id="ff-pwd"  placeholder="请输入银行密码">
+								</td>
+							</tr>
+							<tr>
+							<td style="text-align: right;">
+							备注：&nbsp;&nbsp;
+							</td>
+							<td>
+							<input type="text" id="ff-remark">
+							</td>
+							</tr>
+							<tr>
+							<td>
+							          <button id="ff-confirm">确认转账 </button>
+							          </td>
+							          </tr>
+						   	</table>
+							<span id="ff-message"></span>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	
+	$("#ff-confirm").click(function(){
+	
+		var fn = arguments.callee,  
+	    self = this;  
+		$(self).unbind('click', fn);
+	
+		var a=$("#ff-transfermanagentid").val();
+		var b=$("#ff-money").val();
+		var c=$("#ff-remark").val();
+		var d=$("#ff-sx").val();
+		var e=$("#ff-pwd").val();
+		
+		var reg_zs = /^-?[1-9]\d*(\.\d+)?$/;
+    	if (!reg_zs.test(b)) {  
+    		layer.msg('请输入正确的金额！',{offset:['','']});
+    		 $(self).click(fn);  
+            return; 
+    	}
+		if(parseInt(b)>parseInt(d)){
+			layer.msg('余额不足,转账失败！',{offset:['','']});
+			 $(self).click(fn);  
+			return;
+		}
+		
+		 $.ajax({
+			type:"post",
+			url:"${ctx}/bettransferagentaccounts/update?u=1",
+			
+			data:{transfermanagentid:a,transferaccountsscore:b,remark:c,pwd:e},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg(result.message,{offset:['','']});
+					 $(self).click(fn);  
+				}else if("success"==result.status){
+					layer.msg("转账成功！",{offset:['','']});
+					setTimeout("history.go(0);",2000);
+					
+				}
+			},
+		})
+	}) 
+	</script>
+	<div class="footer"></div>
+</body>
+</html>
+

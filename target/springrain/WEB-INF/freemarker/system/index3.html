@@ -1,0 +1,193 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+</head>
+<body onload="window.setInterval(shua,1000);startTime() ">
+	    <@h.naviHeader />
+		<@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+		       		</ul>
+				    <div id="LAY_preview" class="xiao-ht-content" lay-filter="docDemoTabBrief">
+				       	<div class="xiao-ht-contentCount">
+					        <div class="xiao-ht-contentLoginCount clearfix font-s20">
+										<div class="xiao-ht-contentWh xiao-pull-left">
+											<span class="list-qpart">您好！</span>${account!''}
+										</div>
+										<div class="xiao-ht-contentLoginIP xiao-pull-left">
+											<span class="list-qpart">上次登录IP：</span>
+											<span>${lastip!''}</span>
+										</div>
+										<div class="xiao-ht-contentLoginTime xiao-pull-left">
+											上次登录时间：<span>${lasttime!''}</span>
+										</div>
+										<div class="xiao-ht-contentServerTime xiao-pull-left">
+											服务器时间：
+											<span id="nowDateTimeSpan" class="xiao-color-00e"></span>
+											<button id="reflesh" class="xiao-btn xiao-btn-default">刷新<font id="hints" >60秒</font></button>
+										</div>
+							</div>
+							<div class="clearfix">
+										<div class="xiao-ht-cashWrap xiao-pull-left">
+											<div class="xiao-ht-cash clearfix">
+												<div class="xiao-ht-cashItem">
+													<span>总充值</span>
+													<span class="xiao-color-00e">${sumRecharge!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>总提现</span>
+													<span class="xiao-color-e00">${-sumWithdrawcash!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>总输赢</span>
+													<span class="xiao-color-00e">${-totalWinOrLoss!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>总福利</span>
+													<span class="xiao-color-00e">${-sumwelfare!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>总结果</span>
+													<span class="xiao-color-00e">${sumresult!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>总注册</span>
+													<span class="xiao-color-00e">${totalEnrollment!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>今日充值</span>
+													<span class="xiao-color-00e">${todayRecharge!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>今日提现</span>
+													<span class="xiao-color-00e">${-todayWithdrawcash!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>今日输赢</span>
+													<span class="xiao-color-00e">${-todayTotalWinOrLoss!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>今日福利</span>
+													<span class="xiao-color-00e">${-todaywelfare!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>今日结果</span>
+													<span class="xiao-color-00e">${todayresult!0}</span>
+												</div>
+												<div class="xiao-ht-cashItem">
+													<span>今日注册</span>
+													<span class="xiao-color-00e">${todayEnrollment!0}</span>
+												</div>
+											</div>
+											<div class="cpht-tips-list">
+												&nbsp;&nbsp;&nbsp;在线人数：<span class="xiao-color-00e">${concurrentUsers!0}</span> &nbsp;&nbsp;&nbsp;用户余额： <span class="xiao-color-e00">${memberRemain!0}</span>
+											</div>
+										</div>
+									</div>
+						</div>
+						<div class="xiao-ht-tableWrap">
+								<table class="layui-table xiao-ht-table" lay-even>
+									<thead>
+										<tr>
+											<th colspan="5">管理日志
+												<font id='recordsView' class='recorsView'></font>
+											</th>
+										</tr>
+										<tr>
+											<th id="th_account">管理员</th>
+											<th id="th_name">所在操作</th>
+											<th id="th_time">时间</th>
+											<th id="th_ip">地址</th>
+											<th id="th_tool">来源</th>
+										</tr>
+									</thead>
+									<tbody>
+										<#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+											<#list returnDatas.data as _data>
+												<tr class="">
+							
+													<td>
+														${(_data.account)!''}（${_data.name!''}）
+													</td>
+													<td>
+														${(_data.details)!''}
+													</td>
+													<td>
+														${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}
+													</td>
+													<td>
+														${(_data.ip)!''}
+													</td>
+													<td>
+														${(_data.tool)!''}
+													</td>
+												</tr>
+											</#list>
+										</#if>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+			</div>
+			<@h.footer />
+			<!--</div>-->
+		<!-- 主体内容结束 -->
+	  	<script>
+			jQuery(function(){
+				$('#reflesh').click(function(){
+					location.reload(true);
+				})
+			})
+			//60秒刷新
+			var t; 
+			t=60; 
+			function shua() 
+			{ 
+				t=t-1; 
+				document.getElementById("hints").innerHTML=t+" 秒"; 
+				if (t==0) 
+				{ 
+					document.location.reload(); 
+				} 
+			} 
+			//服务器时间
+  			function startTime()   
+            {   
+                var today=new Date();//定义日期对象   
+                var yyyy = today.getFullYear();//通过日期对象的getFullYear()方法返回年    
+                var MM = today.getMonth()+1;//通过日期对象的getMonth()方法返回年    
+                var dd = today.getDate();//通过日期对象的getDate()方法返回年     
+                var hh=today.getHours();//通过日期对象的getHours方法返回小时   
+                var mm=today.getMinutes();//通过日期对象的getMinutes方法返回分钟   
+                var ss=today.getSeconds();//通过日期对象的getSeconds方法返回秒   
+                // 如果分钟或小时的值小于10，则在其值前加0，比如如果时间是下午3点20分9秒的话，则显示15：20：09   
+                MM=checkTime(MM);
+                dd=checkTime(dd);
+                mm=checkTime(mm);   
+                ss=checkTime(ss);    
+               /*  var day; //用于保存星期（getDay()方法得到星期编号）
+                if(today.getDay()==0)   day   =   "星期日 " 
+                if(today.getDay()==1)   day   =   "星期一 " 
+                if(today.getDay()==2)   day   =   "星期二 " 
+                if(today.getDay()==3)   day   =   "星期三 " 
+                if(today.getDay()==4)   day   =   "星期四 " 
+                if(today.getDay()==5)   day   =   "星期五 " 
+                if(today.getDay()==6)   day   =   "星期六 "  */
+                document.getElementById('nowDateTimeSpan').innerHTML=yyyy+"-"+MM +"-"+ dd +" " + hh+":"+mm+":"+ss/* +"   " + day */;   
+                setTimeout('startTime()',1000);//每一秒中重新加载startTime()方法 
+            }   
+             
+            function checkTime(i)   
+            {   
+                if (i<10){
+                    i="0" + i;
+                }   
+                  return i;
+            }  
+</script>
+</body>
+</html>
+

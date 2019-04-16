@@ -1,0 +1,256 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgold/delete");
+	}
+
+$(document).ready(function(){	
+	$('.confirm').click(function(){
+		if(confirm("确定充值成功？")){
+			 var a=$(this).parent().parent().children(".center").children().val();
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgold/update?id="+a+"&state=2",
+				data:{},
+				success:function(result){
+					if("success"==result.status){
+						alert("已确认充值成功！")
+						window.location.href="${ctx}/betgold/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+					}else if("error"==result.status){
+						alert(result.message)
+					}
+				},
+			})
+		 }
+	})
+	$('.cancel').click(function(){
+		if(confirm("确定充值失败？")){
+			var a=$(this).parent().parent().children(".center").children().val();
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgold/update?id="+a+"&state=1",
+				data:{},
+				success:function(result){
+					if("success"==result.status){
+						alert("已确认充值失败！")
+						window.location.href="${ctx}/betgold/list?date=1&startTime=${startTime!''}&endTime=${endTime!''}&springraintoken="+springraintoken
+					}else if("error"==result.status){
+						alert(result.message)
+					}
+				},
+				})
+			}
+	})
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})	
+//30秒刷新
+var t; 
+t=30; 
+function shua() 
+{ 
+t=t-1; 
+document.getElementById("hints").innerHTML=t+" 秒"; 
+if (t==0) 
+{ 
+document.location.reload(); 
+} 
+}
+</script>
+
+</head>
+<body onload="window.setInterval(shua,1000); ">
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <!-- <li style="float:right;">
+		             	<@shiro.hasPermission name="/betgold/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betgold/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		                <@shiro.hasPermission name="/betgold/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li> -->
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betgold/list?date=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">充值搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">时间</label>
+									                    <div class="layui-input-inline">
+									                           <!-- <input  name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input"> -->
+																 从<div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>到
+									                    <div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>
+
+									                    </div>
+							                		</div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="12">
+													<#if yesterdayRecharge??>
+													昨日充值：${yesterdayRecharge}&nbsp;&nbsp;&nbsp;今日充值：${todayRecharge}&nbsp;&nbsp;&nbsp;
+													<#else>
+													充值：${totolRecharge!0}&nbsp;&nbsp;&nbsp;
+													</#if>
+													充值笔数：${chargeNumber}&nbsp;&nbsp;&nbsp;用户：${member}人&nbsp;&nbsp;&nbsp;<font id="hints" >30秒</font><button id="reflesh">刷新</button>&nbsp;&nbsp;&nbsp;<a href="${ctx}/betgold/update/pre?ddbt=1">订单补填</a>&nbsp;&nbsp;&nbsp;<a href="${ctx}/betgold/list?bdjl=1">补单记录</a>
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <!--first_end_no_export-->
+												  		<th id="th_id">订单编号</th>
+														<th id="th_memberid" >用户ID</th>
+														<th id="th_submittime" >提交时间</th>
+														<th id="th_rechargetime" >充值时间</th>
+														<th id="th_brs" >充值前分</th>
+														<th id="th_ars" >充值后分</th>
+														<th id="th_source" >来源</th>
+														<th id="th_accountname" >充值账户</th>
+														<th id="th_money" >金额</th>
+														<th id="th_state" >状态</th>
+														 <th style="text-align:center">操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<!--end_no_export-->
+														<td>
+															${(_data.id)!''}
+														</td>
+														<td >
+															<a href="${ctx}/betmember/list?id=${(_data.memberid)!''}">${(_data.memberid2)!''}</a>
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.submittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.rechargetime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.brs)!0}
+														</td>
+														<td >
+															${(_data.ars)!0}
+														</td>
+														<td >
+															${(_data.source)!''}（${(_data.accountname)!''}）
+														</td>
+														<td >
+															${(_data.account)!''}
+														</td>
+														<td >
+															${(_data.money)!0}
+														</td>
+														<td >
+															<#if _data.state==0>
+																<font style="color:red;">未处理</font>
+																<#elseif _data.state==1>
+																未付款
+																<#elseif _data.state==2>
+																<p style="color:green">成功</p>
+																<#else> 
+															</#if>
+														</td>
+														<td style="text-align:center">
+															<@shiro.hasPermission name="/betgold/update" >
+								                           		 <a style="margin:2px" href="#" class="layui-btn layui-btn-normal layui-btn-mini confirm">确定</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgold/update" >
+								                            	<a style="margin:2px" href="#" class="layui-btn layui-btn-danger layui-btn-mini cancel">取消</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

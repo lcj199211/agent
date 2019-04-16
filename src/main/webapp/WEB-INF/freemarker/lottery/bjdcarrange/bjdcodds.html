@@ -1,0 +1,369 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/basketballleagueodds/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+				<!--
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>足球联赛赔率管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/basketballleagueodds/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/basketballleagueodds/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/basketballleagueodds/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/basketballleagueodds/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+		             -->
+		             <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;"  class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/basketballleagueodds/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!--  
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">篮球联赛赔率搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+							                		
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+							          -->
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="54">北单赔率列表</th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  -->
+												 
+												  <!--first_end_no_export-->
+														 <th id="fid" >场次id</th> <!--   (来自500)  --> 
+														<th id="letpoints" >让球</th>
+														<th id="rqwin" >让球主胜</th>
+														<th id="rqflat" >让球平</th>
+														<th id="rqlose" >让球主负</th>
+														<th id="ball0" >0球</th>
+														<th id="ball1" >1球</th>
+														<th id="ball2" >2球</th>
+														<th id="ball3" >3球</th>
+														<th id="ball4" >4球</th>
+														<th id="ball5" >5球</th>
+														<th id="ball6" >6球</th>
+														<th id="ball7" >7+球</th>
+														<th id="topsingle" >上单</th>
+														<th id="topdouble" >上双</th>
+														<th id="downsingle" >下单</th>
+														<th id="downdouble" >下双</th>
+														<th id="win3A" >胜其他</th>
+														<th id="win10" >1:0</th>
+														<th id="win20" >2:0</th>
+														<th id="win21" >2:1</th>
+														<th id="win30" >3:0</th>
+														<th id="win31" >3:1</th>
+														<th id="win32" >3:2</th>
+														<th id="win40" >4:0</th>
+														<th id="win41" >4:1</th>
+														<th id="win42" >4:2</th>
+														<th id="flat1A" >平其他</th>
+														<th id="flat00" >0:0</th>
+														<th id="flat11" >1:1</th>
+														<th id="flat22" >2:2</th>
+														<th id="flat33" >3:3</th>
+														<th id="lose0A" >负其他</th>
+														<th id="lose01" >0:1</th>
+														<th id="lose02" >0:2</th>
+														<th id="lose12" >1:2</th>
+														<th id="lose03" >0:</th>
+														<th id="lose13" >1:3</th>
+														<th id="lose23" >2:3</th>
+														<th id="lose04" >0:4</th>
+														<th id="lose14" >1:4</th>
+														<th id="lose24" >2:4</th>
+														<th id="sp33" >胜-胜</th>
+														<th id="sp31" >胜-平</th>
+														<th id="sp30" >胜-负</th>
+														<th id="sp13" >平-胜</th>
+														<th id="sp11" >平-平</th>
+														<th id="sp10" >平-负</th>
+														<th id="sp03" >负-胜</th>
+														<th id="sp01" >负-平</th>
+														<th id="sp00" >负-负</th>
+														 <th>操作</th>
+														 
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td >
+															${(_data.fid)!''}
+														</td>
+														<td >
+															${(_data.letpoints)!0}
+														</td>
+														<td >
+															${(_data.rqwin)!0}
+														</td>
+														<td >
+															${(_data.rqflat)!0}
+														</td>
+														<td >
+															${(_data.rqlose)!0}
+														</td>
+														<td >
+															${(_data.ball0)!0}
+														</td>
+														<td >
+															${(_data.ball1)!0}
+														</td>
+														<td >
+															${(_data.ball2)!0}
+														</td>
+														<td >
+															${(_data.ball3)!0}
+														</td>
+														<td >
+															${(_data.ball4)!0}
+														</td>
+														<td >
+															${(_data.ball5)!0}
+														</td>
+														<td >
+															${(_data.ball6)!0}
+														</td>
+														<td >
+															${(_data.ball7)!0}
+														</td>
+														<td >
+															${(_data.topsingle)!0}
+														</td>
+														<td >
+															${(_data.topdouble)!0}
+														</td>
+														<td >
+															${(_data.downsingle)!0}
+														</td>
+														<td >
+															${(_data.downdouble)!0}
+														</td>
+														<td >
+															${(_data.win3A)!0}
+														</td>
+														<td >
+															${(_data.win10)!0}
+														</td>
+														<td >
+															${(_data.win20)!0}
+														</td>
+														<td >
+															${(_data.win21)!0}
+														</td>
+														<td >
+															${(_data.win30)!0}
+														</td>
+														<td >
+															${(_data.win31)!0}
+														</td>
+														<td >
+															${(_data.win32)!0}
+														</td>
+														<td >
+															${(_data.win40)!0}
+														</td>
+														<td >
+															${(_data.win41)!0}
+														</td>
+														<td >
+															${(_data.win42)!0}
+														</td>
+														<td >
+															${(_data.flat1A)!0}
+														</td>
+														<td >
+															${(_data.flat00)!0}
+														</td>
+														<td >
+															${(_data.flat11)!0}
+														</td>
+														<td >
+															${(_data.flat22)!0}
+														</td>
+														<td >
+															${(_data.flat33)!0}
+														</td>
+														<td >
+															${(_data.lose0A)!0}
+														</td>
+														<td >
+															${(_data.lose01)!0}
+														</td>
+														<td >
+															${(_data.lose02)!0}
+														</td>
+														<td >
+															${(_data.lose12)!0}
+														</td>
+														<td >
+															${(_data.lose03)!0}
+														</td>
+														<td >
+															${(_data.lose13)!0}
+														</td>
+														<td >
+															${(_data.lose23)!0}
+														</td>
+														<td >
+															${(_data.lose04)!0}
+														</td>
+														<td >
+															${(_data.lose14)!0}
+														</td>
+														<td >
+															${(_data.lose24)!0}
+														</td>
+														<td >
+															${(_data.sp33)!0}
+														</td>
+														<td >
+															${(_data.sp31)!0}
+														</td>
+														<td >
+															${(_data.sp30)!0}
+														</td>
+														<td >
+															${(_data.sp13)!0}
+														</td>
+														<td >
+															${(_data.sp11)!0}
+														</td>
+														<td >
+															${(_data.sp10)!0}
+														</td>
+														<td >
+															${(_data.sp03)!0}
+														</td>
+														<td >
+															${(_data.sp01)!0}
+														</td>
+														<td >
+															${(_data.sp00)!0}
+														</td>
+														<td>
+															<@shiro.hasPermission name="/bjdcodds/update" >
+								                           		 <a href="#" data-action="${ctx}/bjdcodds/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <!--  
+								                            <@shiro.hasPermission name="/basketballleagueodds/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+								                            -->
+														</td>
+														 
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,430 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/soccerlive/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<!--<@shiro.hasPermission name="/soccerlive/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/soccerlive/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>-->
+		             	<!--<@shiro.hasPermission name="/soccerlive/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>-->
+		                <!--<@shiro.hasPermission name="/soccerlive/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>-->
+		             </li>
+	       		</ul>
+
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/soccerlive/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" />
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">足球实况搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-input-inline xiao-input-wrap pull-left">
+									                    <label class="layui-form-label">时间</label>
+														从
+														<div class="layui-input-inline">
+															<input id="startTime" name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入开赛时间 " class="laydate-icon xiao-input">
+														</div>到
+														<div class="layui-input-inline">
+															<input id="endTime" name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入开赛时间" class="laydate-icon xiao-input">
+														</div>
+							                		</div>
+													<div class="layui-inline">
+														<label class="layui-form-label">联赛名</label>
+														<div class="layui-input-inline">
+															<input type="text" name="leaguename" value="${(returnDatas.queryBean.leaguename)!''}" placeholder="请输入联赛名 " class="layui-input">
+														</div>
+													</div>
+													<div class="layui-inline">
+														<label class="layui-form-label">主场</label>
+														<div class="layui-input-inline">
+															<input type="text" name="leftteam" value="${(returnDatas.queryBean.leftteam)!''}" placeholder="请输入主场名 " class="layui-input">
+														</div>
+													</div>
+													<div class="layui-inline">
+														<label class="layui-form-label">客场</label>
+														<div class="layui-input-inline">
+															<input type="text" name="rightteam" value="${(returnDatas.queryBean.rightteam)!''}" placeholder="请输入客场名 " class="layui-input">
+														</div>
+													</div>
+													<div class="layui-inline">
+														<label class="layui-form-label">状态</label>
+														<div class="layui-input-inline">
+															<select name="state" id="state" class="layui-input">
+																<option value="">==请选择==</option>
+																<option value="">==请选择==</option>
+																<option value="1" <#if returnDatas.queryBean.state??><#if returnDatas.queryBean.state = 1>selected="selected"</#if></#if> >已完场</option>
+																<option value="3" <#if returnDatas.queryBean.state??><#if returnDatas.queryBean.state = 3>selected="selected"</#if></#if> >未开场</option>
+																<option value="2" <#if returnDatas.queryBean.state??><#if returnDatas.queryBean.state = 2>selected="selected"</#if></#if> >进行中</option>
+														  </select>
+														</div>
+													</div>
+													<div class="layui-inline">
+														<label class="layui-form-label">fid</label>
+														<div class="layui-input-inline">
+															<input type="text" name="fid" value="${(returnDatas.queryBean.fid)!''}" placeholder="请输入fid " class="layui-input">
+														</div>
+													</div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="15">足球实况列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <!--first_end_no_export-->
+														<th id="th_mid" >mid</th>
+														<th id="th_zid" >zid</th>
+													<th id="th_leaguename" >联赛名</th>
+														<th id="th_starttime" >开场时间</th>
+														<th id="th_leftteam" >主场</th>
+													<!--<th id="th_leftteamid2" >leftteamid2</th> -->
+                                                    <th id="th_rightteam" >客场</th>
+                                                <!--<th id="th_rightteamid2" >rightteamid2</th>
+                                                <th id="th_leftpub1" >leftpub1</th>
+                                                <th id="th_leftpub2" >leftpub2</th>
+                                                <th id="th_leftpub3" >leftpub3</th>
+                                                <th id="th_leftpub4" >leftpub4</th>
+                                                <th id="th_leftpub5" >leftpub5</th>
+                                                <th id="th_leftpub6" >leftpub6</th>
+                                                <th id="th_leftpub7" >leftpub7</th>
+                                                <th id="th_leftpub8" >leftpub8</th>
+                                                <th id="th_leftpub9" >leftpub9</th>
+                                                <th id="th_leftpub10" >leftpub10</th>
+                                                <th id="th_leftpub11" >leftpub11</th>
+                                                <th id="th_leftres1" >leftres1</th>
+                                                <th id="th_leftres2" >leftres2</th>
+                                                <th id="th_leftres3" >leftres3</th>
+                                                <th id="th_leftres4" >leftres4</th>
+                                                <th id="th_leftres5" >leftres5</th>
+                                                <th id="th_leftres6" >leftres6</th>
+                                                <th id="th_leftres7" >leftres7</th>
+                                                <th id="th_rightpub1" >rightpub1</th>
+                                                <th id="th_rightpub2" >rightpub2</th>
+                                                <th id="th_rightpub3" >rightpub3</th>
+                                                <th id="th_rightpub4" >rightpub4</th>
+                                                <th id="th_rightpub5" >rightpub5</th>
+                                                <th id="th_rightpub6" >rightpub6</th>
+                                                <th id="th_rightpub7" >rightpub7</th>
+                                                <th id="th_rightpub8" >rightpub8</th>
+                                                <th id="th_rightpub9" >rightpub9</th>
+                                                <th id="th_rightpub10" >rightpub10</th>
+                                                <th id="th_rightpub11" >rightpub11</th>
+                                                <th id="th_rightres1" >rightres1</th>
+                                                <th id="th_rightres2" >rightres2</th>
+                                                <th id="th_rightres3" >rightres3</th>
+                                                <th id="th_rightres4" >rightres4</th>
+                                                <th id="th_rightres5" >rightres5</th>
+                                                <th id="th_rightres6" >rightres6</th>
+                                                <th id="th_rightres7" >rightres7</th>
+                                                <th id="th_shemeng" >shemeng</th>
+                                                <th id="th_shezheng" >shezheng</th>
+                                                <th id="th_fangui" >fangui</th>
+                                                <th id="th_jiaoqiu" >jiaoqiu</th>
+                                                <th id="th_yuewei" >yuewei</th>
+                                                <th id="th_red" >red</th>
+                                                <th id="th_yellow" >yellow</th>
+                                                <th id="th_jinggong" >jinggong</th>
+                                                <th id="th_weixiejinggong" >weixiejinggong</th>
+                                                <th id="th_renyiqiu" >renyiqiu</th>
+                                                <th id="th_jiuqiu" >jiuqiu</th>
+                                                <th id="th_kongqiulv" >kongqiulv</th>-->
+                                                        <th id="th_state" >状态</th>
+                                                        <th id="th_realscore" >比分</th>
+                                                        <th id="th_halfscore" >半场</th>
+														<th id="th_time" >时间</th>
+														<th id="th_fid" >fid</th>
+
+                                                    <th>操作</th>
+												</tr>
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)>
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<!--end_no_export-->
+														<td >
+															${(_data.mid)!''}
+														</td>
+														<td >
+															${(_data.zid)!''}
+														</td>
+														<td >
+															${(_data.leaguename)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.starttime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.leftteam)!''}
+														</td>
+														<!--<td >
+															${(_data.leftteamid2)!''}
+														</td>-->
+														<td >
+															${(_data.rightteam)!''}
+														</td>
+														<!--<td >
+															${(_data.rightteamid2)!''}
+														</td>
+                                                        <td >
+                                                            ${(_data.leftpub1)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub2)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub3)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub4)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub5)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub6)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub7)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub8)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub9)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub10)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftpub11)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres1)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres2)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres3)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres4)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres5)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres6)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.leftres7)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub1)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub2)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub3)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub4)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub5)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub6)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub7)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub8)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub9)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub10)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightpub11)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres1)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres2)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres3)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres4)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres5)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres6)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.rightres7)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.shemeng)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.shezheng)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.fangui)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.jiaoqiu)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.yuewei)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.red)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.yellow)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.jinggong)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.weixiejinggong)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.renyiqiu)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.jiuqiu)!0}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.kongqiulv)!''}
+                                                        </td>-->
+                                                        <td >
+															<#if _data.state = 1>已完场<#elseif _data.state = 3>未开场<#elseif _data.state=2>进行中</#if>
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.realscore)!''}
+                                                        </td>
+                                                        <td >
+                                                            ${(_data.halfscore)!''}
+                                                        </td>
+														<td >
+															${(_data.time)!''}
+														</td>
+														<td >
+															${(_data.fid)!''}
+														</td>
+                                                        <td>
+                                                            <@shiro.hasPermission name="/soccerlive/update" >
+                                                            <a href="#" data-action="${ctx}/soccerlive/update/pre?id=${_data.id}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+                                                        </@shiro.hasPermission>
+                                                        <@shiro.hasPermission name="/soccerlive/delete" >
+                                                        <!--<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>-->
+                                                    </@shiro.hasPermission>
+                                            </td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??>
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page />
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

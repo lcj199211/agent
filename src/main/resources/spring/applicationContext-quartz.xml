@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:redis="http://www.springframework.org/schema/redis"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/cache 
+        http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/redis
+		http://www.springframework.org/schema/redis/spring-redis.xsd"
+	default-lazy-init="false">
+
+
+	<!-- 工作的bean -->  
+   <bean id="myJob" class="org.springrain.lottery.utils.QuartzJob" />  
+   <bean id="myJob2" class="org.springrain.lottery.utils.QuartzJob2" />  
+    <bean id="myJob4" class="org.springrain.lottery.utils.QuartzJob4" />  
+    <bean id="myJob5" class="org.springrain.lottery.utils.QuartzJob5" /> 
+    <bean id="myJob6" class="org.springrain.lottery.utils.QuartzJob6" />   
+    <bean id="myJob7" class="org.springrain.lottery.utils.QuartzJob7" />
+     
+    <bean id="myJob42" class="org.springrain.lottery.utils.QuartzJob42" /> 
+    <bean id="myJob43" class="org.springrain.lottery.utils.QuartzJob43" /> 
+    <!--  
+    <bean id="myJob101" class="org.springrain.lottery.utils.QuartzJob101" />   
+    -->  
+    <bean id="myJob102" class="org.springrain.lottery.utils.QuartzJob102" />   
+    <bean id="myJobgame" class="org.springrain.lottery.utils.QuartzJobGame" />   
+    
+    <!-- 易宝代付 -->
+    <bean id="yeePayJob" class="org.springrain.lottery.utils.QuartzJobToPayforYeePay" />
+
+    <!-- 充值报表 -->
+    <bean id="todayRankJob" class="org.springrain.lottery.utils.QuartzJobToTodayRankJob" />
+    <bean id="daylyRankJob" class="org.springrain.lottery.utils.QuartzJobToDaylyRankJob" />
+
+
+    <!--  job的配置开始   -->
+   <bean id="myJobDetail"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+   </bean>
+   
+   <bean id="myJobDetail2"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob2" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+   </bean>  
+   <bean id="myJobDetail4"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob4" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean>  
+   <bean id="myJobDetail5"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob5" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+   </bean>  
+   <bean id="myJobDetail6"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob6" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean> 
+   
+   <bean id="myJobDetail7"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob7" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean> 
+   
+   <bean id="myJobDetail42"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob42" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean> 
+   <bean id="myJobDetail43"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob43" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean> 
+   <!--  
+   <bean id="myJobDetail101"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob101" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean> 
+   -->
+   <bean id="myJobDetail102"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJob102" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+        <property name="concurrent">
+        <value>false</value>
+       </property>
+   </bean> 
+   <bean id="myJobDetailgame"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="myJobgame" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+   </bean> 
+    
+   <bean id="myJobDetailYeePay"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="yeePayJob" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>work</value>  
+       </property>  
+   </bean>
+
+    <bean id="myJobDetailTodayRankJob"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="todayRankJob" />
+        </property>
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+    </bean>
+    <bean id="myJobDetailDaylyRankJob"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="daylyRankJob" />
+        </property>
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+    </bean>
+   <!-- job的配置结束   -->
+  
+  
+<!--    调度的配置开始  --> 
+   <bean id="crontestJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail" />  
+       </property>  
+       <property name="cronExpression">  
+          <value>0 0/12 * * * ?</value>
+       </property>  
+   </bean>  
+   
+   <bean id="crontestJobTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail2" />  
+       </property>  
+       <property name="cronExpression">  
+       <value>0 1 0 * * ?</value>
+       <!-- <value>0 32 9 * * ?</value>  -->
+       </property>  
+   </bean>
+   
+   <bean id="crontestJobTrigger4" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail4" />
+       </property>
+       <property name="cronExpression">
+       <value>0 0 0/1 * * ?</value>
+       <!-- <value>0 32 9 * * ?</value>  -->
+       </property>  
+   </bean>
+    <bean id="crontestJobTrigger5" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail5" />  
+       </property>  
+       <property name="cronExpression">  
+       <value>0 0 0 * * ?</value>
+       <!-- <value>0 32 9 * * ?</value>  -->
+       </property>  
+   </bean>
+   
+   <bean id="crontestJobTrigger6" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail6" />
+       </property>
+       <property name="cronExpression">
+       <value>0 5 0 * * ?</value>
+       <!-- <value>0 32 9 * * ?</value>  -->
+       </property>  
+   </bean>
+   
+   <bean id="crontestJobTrigger7" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail7" />
+       </property>
+       <property name="cronExpression">
+       <value>0 0 0/1 * * ?</value>
+       </property>  
+   </bean>
+   
+   <bean id="crontestJobTrigger42" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail42" />
+       </property>
+       <property name="cronExpression">
+       <value>0 0/2 * * * ?</value>
+       </property>  
+   </bean>
+   <bean id="crontestJobTrigger43" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail43" />
+       </property>
+       <property name="cronExpression">
+       <value>0 0/2 * * * ?</value>
+       </property>  
+   </bean>
+   <!-- 
+   <bean id="crontestJobTrigger101" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail101" />
+       </property>
+       <property name="cronExpression">
+       <value>0 0 18 * * ?</value>
+       
+       </property>  
+   </bean>
+    -->
+   <bean id="crontestJobTrigger102" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail102" />
+       </property>
+       <property name="cronExpression">
+       <value>0 15 15 * * ?</value>
+       <!-- <value>0 32 9 * * ?</value>  -->
+       </property>  
+   </bean>
+   <bean id="crontestJobTriggergame" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetailgame" />
+       </property>
+       <property name="cronExpression">
+       <value>0 51 10 * * ?</value>
+       </property>  
+   </bean>
+   
+   
+   <bean id="crontestJobTriggerYeePay" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetailYeePay" />
+       </property>
+       <property name="cronExpression">
+       <value>0 0/1 * * * ?</value>
+       </property>  
+   </bean>
+
+
+    <!-- 30分钟 -->
+    <bean id="crontestJobTriggerTodayRankJob" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="myJobDetailTodayRankJob" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/30 * * * ?</value>
+        </property>
+    </bean>
+
+    <!-- 凌晨1点 -->
+    <bean id="crontestJobTriggerDaylyRankJob" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="myJobDetailDaylyRankJob" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 1 * * ?</value>
+        </property>
+    </bean>
+
+
+
+
+   <!-- 调度的配置结束   -->
+  
+  
+ <!--   启动触发器的配置开始  --> 
+   <bean name="startQuertz" lazy-init="false" autowire="no"  
+       class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+       <property name="jobFactory">
+            <bean class="org.springrain.lottery.utils.MyJobFactory" />
+        </property>
+       <property name="triggers">  
+           <list>  
+               <ref bean="crontestJobTriggerYeePay" />
+
+               <ref bean="crontestJobTriggerTodayRankJob" />
+               <ref bean="crontestJobTriggerDaylyRankJob" />
+
+               <!-- <ref bean="crontestJobTrigger" />  
+               <ref bean="crontestJobTrigger2" />  
+                <ref bean="crontestJobTrigger4" /> 
+                <ref bean="crontestJobTrigger5" /> 
+                <ref bean="crontestJobTrigger6" />
+                <ref bean="crontestJobTrigger7" />
+                
+                <ref bean="crontestJobTrigger42" />
+                <ref bean="crontestJobTrigger43" /> -->
+                
+                
+             <!--  <ref bean="crontestJobTriggergame" /> -->
+                
+                 <!--
+                <ref bean="crontestJobTrigger101" />  
+                  
+                <ref bean="crontestJobTrigger102" />  
+           		-->
+                
+           </list>  
+       </property>  
+   </bean>
+   <!-- 启动触发器的配置结束 -->  
+	
+</beans>

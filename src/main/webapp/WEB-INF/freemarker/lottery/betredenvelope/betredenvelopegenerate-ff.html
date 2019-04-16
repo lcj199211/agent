@@ -1,0 +1,44 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          
+	<a href="${ctx}/betredenvelope/list">红包生成</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="${ctx}/betredenvelope/list?k=1">红包列表</a>	<br/><br/>				          
+						          
+随机红包：红包数：<input type="text" name="ff-redenvelopenum">总金额：<input type="text" name="ff-totalscore">说明：<input type="text" name="ff-illustrate"> <button id=ff-genredenvelope">生 成</button> <br/>
+固定红包：红包数：<input type="text" name="ff-redenvelopenum2"> 金额：<input type="text" name="ff-totalscore2">说明：  <input type="text" name="ff-illustrate2"> <button id=ff-genredenvelope2"> 生成</button> <br/>
+指定红包：红包金额：<input type="text" name="ff-totalscore3">说明 ：<input type="text" name="ff-illustrate3">指定ID：<input type="text" name="ff-memberid2" placeholder="（用小写，隔开）"><button id=ff-genredenvelope3"> 生成</button>  <br/>
+						          
+						          
+						          
+						          
+						          
+						          
+						          
+						          
+						          
+									<!--start_export-->
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

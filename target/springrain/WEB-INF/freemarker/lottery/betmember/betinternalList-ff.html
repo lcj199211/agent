@@ -1,0 +1,252 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <!-- <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>BetMember管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betmember/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmember/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<!-- <@shiro.hasPermission name="/betmember/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button> -->
+		                <!-- <@shiro.hasPermission name="/betmember/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission> -->
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <div>
+							          	添加ID：<input type="text"  id="tjid" name="id2" /> <button id="jc">检测</button>   <span id="idjc"></span>  <br/>
+							          			增加虚拟分：<input type="text" name="gamescore" id="tjgamescore"><br/>
+							          			昵称：<input type="text" name="nickname" id="tjnickname"><br/>
+												备注：<input type="text" name="remark" id="tjremark"/><br/>
+												<button id="add1">添加 </button><button id="delete1">删除</button>
+							          	
+							          </div>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="15">
+													内部用户
+													<!-- <a href="${ctx}/betmember/list">用户列表</a>&nbsp;&nbsp;&nbsp; -->
+													<!-- <a href="${ctx}/betmember/list?today=1">今日注册</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?online=1">在线用户</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?order=winorfail&sort=desc">用户输赢</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?isinternal=1&order=winorfail&sort=desc">内部账户</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?limitusername=1">限制用户名</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?status=0">冻结用户</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?vip=1&order=exp&sort=desc">VIP用户</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betmember/list?risk=1&order=winorfail&sort=desc">风险用户</a>&nbsp;&nbsp;&nbsp;
+													<font id="hints" >120秒</font><button id="reflesh">刷新</button> -->
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  
+												  <!--first_end_no_export-->
+												  		<th id="th_id" >用户ID</th>
+														<th id="th_account" >账号</th>
+														<th id="th_nickname" >昵称</th>
+														<th>当前分</th>
+														<th>银行分</th>
+														<th>投注分</th>
+														<th>添加时间</th>
+														<th>备注</th>
+														<th>操作</th>
+														
+														<!-- <th style="text-align:center">操作</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														
+														<!--end_no_export-->
+														<td >
+															<a  style="text-decoration:underline;" href="${ctx}/betmember/look?id2=${(_data.id2)!''}&id=${(_data.id)!''}">${(_data.id2)!''}</a>
+														</td>
+														<td >
+															${(_data.account)!''}
+														</td>
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td>
+															${(_data.gamescore)!0}
+														</td>
+														<td>
+															${(_data.bankscore)!0}
+														</td>
+														<td>
+															${(_data.totalBettingMoney)!0}
+														</td>
+														<td>
+															${(_data.internaladdtime)!''}
+														</td>
+														<td>
+															${(_data.internalremark)!''}
+														</td>
+														<td>
+															${(_data.internaloperator)!''}
+														</td>
+														<!-- <td style="text-align:center">
+															<@shiro.hasPermission name="/betmember/update" >
+								                           		 <a href="#" data-action="${ctx}/betmember/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betmember/delete" >
+								                            	<a style="margin:2px" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+											
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+	</div>
+	<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmember/delete");
+	}
+	
+	$(".allUser").change(
+		function(){
+			var a=$(this).attr("id");
+			$("#find").attr("name",a);
+		}
+	)
+	jQuery(function(){
+		var a=$("input[name='1']:checked").attr("id");
+			$("#find").attr("name",a);
+	})	
+	
+	
+	$("#jc").click(function(){
+		var a=$("#tjid").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/look/json",
+			
+			data:{id2:a},
+			success:function(result){
+				if("error"==result.status){
+					$("#idjc").html("<font color='red'>无此用户</font>");
+					
+				}else if("success"==result.status){
+					$("#idjc").text("账号："+result.data.account+"昵称："+result.data.nickname+",游戏分："+result.data.gamescore+",银行分："+result.data.bankscore);
+				}
+			},
+		})
+	})
+	
+	$("#add1").click(function(){
+		var a=$("#tjid").val();
+		var b=$("#tjremark").val();
+		var c=$("#tjgamescore").val();
+		var d=$("#tjnickname").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?addinternal=1",
+			
+			data:{id2:a,internalremark:b,gamescore:c,nickname:d},
+			success:function(result){
+				if("error"==result.status){
+					$("#idjc").html("<font color='red'>无此用户</font>");
+					alert("添加失败，无此用户");					
+				}else if("success"==result.status){
+					alert("添加成功");
+					window.location.reload(); 
+				}
+			},
+		})
+	})
+	
+	$("#delete1").click(function(){
+		var b=$("input[name='check_li']:checked");
+		var c=new Array();
+		for(var i=0;i<b.length;i++){
+            c[i]=b[i].value;
+    	}
+    	var d=c.join(",");
+    	$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?delinternal=1",
+			
+			data:{d:d},
+			success:function(result){
+				if("error"==result.status){
+					alert("修改失败");
+				}else if("success"==result.status){
+					alert("修改成功");
+					window.location.reload(); 
+				}
+			},
+		})
+	})
+</script>
+<div class="footer"></div>
+</body>
+</html>
+

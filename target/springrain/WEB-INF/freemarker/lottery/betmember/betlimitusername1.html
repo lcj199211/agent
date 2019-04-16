@@ -1,0 +1,240 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script>
+jQuery(function(){
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})
+//120秒刷新
+var t; 
+t=120; 
+function shua() 
+{ 
+t=t-1; 
+document.getElementById("hints").innerHTML=t+" 秒"; 
+if (t==0) 
+{ 
+document.location.reload(); 
+} 
+} 
+
+//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+	function clearformurl(){
+		$('#searchForm').attr("action","${ctx}/betmember/list");
+	}
+</script>
+</head>
+<body onload="window.setInterval(shua,1000); ">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			             <!-- <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								网站地图导航
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>BetMember管理</cite></a>
+								</span>
+			             </li> -->
+						 <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             	<!-- <@shiro.hasPermission name="/betmember/list/export" >
+					        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button> -->
+			                <!-- <@shiro.hasPermission name="/betmember/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission> -->
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form id="searchForm" onkeydown="if(event.keyCode==13)return false;"  action="${ctx}/betmember/list?limitusername=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="search-wrap">
+							          				<div class="layui-inline betmember_find xiao-input-wrap">
+									               		查询:<input id="find" class="xiao-input" type="text"  
+									               		<#if returnDatas.queryBean.id2??>
+									               		value="${(returnDatas.queryBean.id2)!''}"
+									               		</#if>
+									               		<#if returnDatas.queryBean.account??>
+									               		value="${(returnDatas.queryBean.account)!''}"
+									               		</#if>
+									               		<#if returnDatas.queryBean.mobile??>
+									               		value="${(returnDatas.queryBean.mobile)!''}"
+									               		</#if>
+									               		<#if returnDatas.queryBean.realname??>
+									               		value="${(returnDatas.queryBean.realname)!''}"
+									               		</#if>
+									               		<#if returnDatas.queryBean.loginip??>
+									               		value="${(returnDatas.queryBean.loginip)!''}"
+									               		</#if>
+									               		<#if returnDatas.queryBean.signip??>
+									               		value="${(returnDatas.queryBean.signip)!''}"
+									               		</#if>
+									               		>
+									               		<input id="id2" class="allUser" type="radio" name="1"
+									               		 checked
+									               		 />ID
+									               		<input id="account" class="allUser" type="radio" name="1"
+									               		<#if returnDatas.queryBean.account??>
+									               		 checked
+									               		</#if>
+									               		 />用户名
+									               		<input id="mobile" class="allUser" type="radio" name="1" 
+									               		<#if returnDatas.queryBean.mobile??>
+									               		 checked
+									               		</#if>
+									               		/>手机号码
+									               		<input id="realname" class="allUser" type="radio" name="1" 
+									               		<#if returnDatas.queryBean.realname??>
+									               		 checked
+									               		</#if>
+									               		/>真实姓名
+									               		<input id="loginip" class="allUser" type="radio" name="1"
+									               		<#if returnDatas.queryBean.loginip??>
+									               		 checked
+									               		</#if>
+									               		 />登录IP
+									               		<input id="signip" class="allUser" type="radio" name="1"
+									               		<#if returnDatas.queryBean.signip??>
+									               		 checked
+									               		</#if>
+									               		/>注册IP
+									                </div>
+							          			  	<div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();clearformurl();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+									                <div class="xiao-pull-right xiao-line40">
+														<button id="reflesh" class="xiao-btn xiao-btn-success"><span id="hints">120秒</span>刷新</button>
+													</div>
+													<div class="xiao-btnlist xiap-pull-left">
+														<div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list">用户列表</a>
+														</div>
+														<div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?today=1">今日注册</a>
+														</div>
+														<div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?online=1">在线用户</a>
+														</div>
+														<#if agentparentid?? && agentparentid=='A101'>
+														<div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?order=winorfail&sort=desc">用户输赢</a>
+														</div>
+														</#if>
+														<!-- <div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?isinternal=1&order=winorfail&sort=desc">内部账户</a>
+														</div> -->
+														<#if agentparentid?? && agentparentid=='A101'>
+														<div class="xiao-btnlist-item">
+															<a class="xiao-bg-default font-weight" href="${ctx}/betmember/list?limitusername=1">限制用户名</a>
+														</div>
+														</#if>
+														<div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?status=0">冻结用户</a>
+														</div>
+														<!-- <div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?vip=1&order=exp&sort=desc">VIP用户</a>
+														</div>
+														<div class="xiao-btnlist-item">
+															<a href="${ctx}/betmember/list?risk=1&order=winorfail&sort=desc">风险用户</a>
+														</div> -->
+													</div>
+							          </div> 
+									  <!-- 查询  结束 -->
+									  
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												 		 <th>
+												  			ID
+												  		</th>
+												  <!--first_end_no_export-->
+														<th  >昵称</th>
+														<th>操作</th>
+												</tr> 
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+											 <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="" align="center">
+														<td>
+														${(_data.id)!''}
+														</td>
+														<!--end_no_export-->
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td>
+															禁止
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<@h.layPage page=returnDatas.page /> 
+										<font id='recordsView' class='recorsView xiao-pull-right'>共<span>${returnDatas.page.pageCount!''}</span>页,共 <span>${returnDatas.page.totalCount!''}</span>条记录</font></th>
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+	<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmember/delete");
+	}
+	
+	$(".allUser").change(
+		function(){
+			var a=$(this).attr("id");
+			$("#find").attr("name",a);
+		}
+	)
+	jQuery(function(){
+		var a=$("input[name='1']:checked").attr("id");
+			$("#find").attr("name",a);
+	})	
+</script>
+</body>
+</html>
+

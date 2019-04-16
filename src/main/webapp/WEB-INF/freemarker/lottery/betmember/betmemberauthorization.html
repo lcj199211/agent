@@ -1,0 +1,426 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script>
+jQuery(function(){ 
+	$("input:checkbox[name='gameauthorization']").click(function(){
+		var id="${(returnDatas.data.id)!''}";
+		var id2="${(returnDatas.data.id2)!''}";
+		var a=$(this).val();
+		var b=$(this).is(":checked");
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?updateauthorization=1&c=1",
+			
+			data:{a:a,b:b,id:id,id2:id2},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg('修改失败！',{offset:['',''],time:500});
+				}else if("success"==result.status){
+					layer.msg('修改成功！',{offset:['',''],time:500});
+				}
+			},
+		})
+	})
+	
+	$("input:checkbox[name='agentauthorization']").click(function(){
+		var id="${(returnDatas.data.id)!''}";
+		var id2="${(returnDatas.data.id2)!''}";
+		var a=$(this).val();
+		var b=$(this).is(":checked");
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?updateauthorization=1&c=2",
+			
+			data:{a:a,b:b,id:id,id2:id2},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg('修改失败！',{offset:['','']});
+				}else if("success"==result.status){
+					layer.msg('修改成功！',{offset:['','']});
+				}
+			},
+		})
+	})
+	
+	$("input:checkbox[name='financeauthorization']").click(function(){
+		var id="${(returnDatas.data.id)!''}";
+		var id2="${(returnDatas.data.id2)!''}";
+		var a=$(this).val();
+		var b=$(this).is(":checked");
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/update?updateauthorization=1&c=3",
+			
+			data:{a:a,b:b,id:id,id2:id2},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg('修改失败！',{offset:['','']});
+				}else if("success"==result.status){
+					layer.msg('修改成功！',{offset:['','']});
+				}
+			},
+		})
+	})
+})
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+		           <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+								   <a><cite>用户管理</cite><span class="layui-box">&gt;</span></a>
+								   <a><cite>权限管理</cite></a>
+								</span>
+			            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>修改/权限/增加&nbsp;&nbsp; &nbsp;用户ID：${(returnDatas.data.id2)!''}，用户名：${(returnDatas.data.account)!''}，真实姓名：${(returnDatas.data.realname)!''}</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<table class="layui-table">
+													  <tr>
+													    <td>昵称：</td>
+													    <td>${(returnDatas.data.nickname)!''}</td>
+													  </tr>
+													  <tr>
+													    <td>登录密码：</td>
+													    <td>******</td>
+													  </tr>
+													  <tr>
+													    <td>银行密码：</td>
+													    <td>******</td>
+													  </tr>
+													  <tr>
+													    <td>QQ：</td>
+													    <td>${(returnDatas.data.qq)!''}</td>
+													  </tr>
+													  <tr>
+													    <td>手机号码：</td>
+													    <td>${(returnDatas.data.mobile)!''}</td>
+													  </tr>
+													  <tr>
+													    <td>状态：</td>
+													    <td>
+													    <#if returnDatas.data.status==1>
+													    	开启
+													    	<#elseif returnDatas.data.status==0>
+													    	冻结
+													    </#if>
+													    </td>
+													  </tr>
+													  <tr>
+													    <td>VIP等级：</td>
+													     <td>${(returnDatas.data.level)!''}</td>
+													  </tr>
+													  <tr>
+													    <td>收款账户：</td>
+													     <td>
+													      <#if (betMemberbankcardList??)&&(betMemberbankcardList?size>0)> 
+										    					<#list	betMemberbankcardList as _data>
+													    			${_data.banktype!''}:${_data.account!''},${_data.bankofdeposit!''}<br/>
+													    		</#list>
+														</#if>													    		
+													     </td>
+													  </tr>
+													  <tr>
+													    <td>游戏管理</td>
+													     <td style="line-height:30px;">
+													    重庆时时彩：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:总和"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:总和")=-1 >checked</#if>
+													     </#if>
+													     >总和
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:梭哈"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:梭哈")=-1 >checked</#if>
+													     </#if>
+													     >梭哈
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:牛牛"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:牛牛")=-1 >checked</#if>
+													     </#if>
+													     >牛牛
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:连码"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:连码")=-1 >checked</#if>
+													     </#if>
+													     >连码
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:前三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:前三")=-1 >checked</#if>
+													     </#if>
+													     >前三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:中三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:中三")=-1 >checked</#if>
+													     </#if>
+													     >中三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:后三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:后三")=-1 >checked</#if>
+													     </#if>
+													     >后三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:连码"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:连码")=-1 >checked</#if>
+													     </#if>
+													     >连码
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="7:定位"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("7:定位")=-1 >checked</#if>
+													     </#if>
+													     >定位
+													     <br/>
+													     新疆时时彩：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:总和"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:总和")=-1 >checked</#if>
+													     </#if>
+													     >总和
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:梭哈"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:梭哈")=-1 >checked</#if>
+													     </#if>
+													     >梭哈
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:牛牛"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:牛牛")=-1 >checked</#if>
+													     </#if>
+													     >牛牛
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:连码"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:连码")=-1 >checked</#if>
+													     </#if>
+													     >连码
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:前三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:前三")=-1 >checked</#if>
+													     </#if>
+													     >前三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:中三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:中三")=-1 >checked</#if>
+													     </#if>
+													     >中三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:后三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:后三")=-1 >checked</#if>
+													     </#if>
+													     >后三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:连码"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:连码")=-1 >checked</#if>
+													     </#if>
+													     >连码
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="8:定位"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("8:定位")=-1 >checked</#if>
+													     </#if>
+													     >定位
+													     <br/>
+													       新加坡5D：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:总和"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:总和")=-1 >checked</#if>
+													     </#if>
+													     >总和
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:梭哈"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:梭哈")=-1 >checked</#if>
+													     </#if>
+													     >梭哈
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:牛牛"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:牛牛")=-1 >checked</#if>
+													     </#if>
+													     >牛牛
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:连码"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:连码")=-1 >checked</#if>
+													     </#if>
+													     >连码
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:前三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:前三")=-1 >checked</#if>
+													     </#if>
+													     >前三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:中三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:中三")=-1 >checked</#if>
+													     </#if>
+													     >中三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:后三"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:后三")=-1 >checked</#if>
+													     </#if>
+													     >后三
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:连码"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:连码")=-1 >checked</#if>
+													     </#if>
+													     >连码
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="9:定位"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("9:定位")=-1 >checked</#if>
+													     </#if>
+													     >定位
+													     <br/>
+													      北京11：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="10:北京11"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("10:北京11")=-1 >checked</#if>
+													     </#if>
+													     >北京11
+													     <br/>
+													     北京16：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="11:北京16"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("11:北京16")=-1 >checked</#if>
+													     </#if>
+													     >北京16
+													     <br/>
+													       北京28：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="5:北京28"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("5:北京28")=-1 >checked</#if>
+													     </#if>
+													     >北京28
+													     <br/>
+													      北京36：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="12:北京36"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("12:北京36")=-1 >checked</#if>
+													     </#if>
+													     >北京36
+													     <br/>
+													        加拿大11：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="16:加拿大11"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("16:加拿大11")=-1 >checked</#if>
+													     </#if>
+													     > 加拿大11
+													     <br/>
+													          加拿大16：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="17:加拿大16"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("17:加拿大16")=-1 >checked</#if>
+													     </#if>
+													     > 加拿大16
+													     <br/>
+													          加拿大28：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="6:加拿大28"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("16:加拿大28")=-1 >checked</#if>
+													     </#if>
+													     > 加拿大28
+													     <br/>
+													          加拿大36：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="18:加拿大36"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("18:加拿大36")=-1 >checked</#if>
+													     </#if>
+													     > 加拿大36
+													     <br/>
+													       蛋蛋28：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="19:蛋蛋28"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("19:蛋蛋28")=-1 >checked</#if>
+													     </#if>
+													     > 蛋蛋28
+													     <br/>
+													       蛋蛋36：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="20:蛋蛋36"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("20:蛋蛋36")=-1 >checked</#if>
+													     </#if>
+													     > 蛋蛋36
+													     <br/>
+													    新加坡11：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="21:新加坡11"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("21:新加坡11")=-1 >checked</#if>
+													     </#if>
+													     > 新加坡11
+													     <br/>
+													     新加坡16：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="22:新加坡16"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("22:新加坡16")=-1 >checked</#if>
+													     </#if>
+													     > 新加坡16
+													     <br/>
+													     新加坡28：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="23:新加坡28"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("23:新加坡28")=-1 >checked</#if>
+													     </#if>
+													     > 新加坡28
+													     <br/>
+													    新加坡36：
+													     <input type="checkbox" id="cqssc1" name="gameauthorization" value="24:新加坡36"
+													     <#if returnDatas.data.gameauthorization??>
+													     <#if returnDatas.data.gameauthorization?index_of("24:新加坡36")=-1 >checked</#if>
+													     </#if>
+													     > 新加坡36
+													     <br/>
+													     </td>
+													  </tr>
+													  <tr>
+													    <td>代理系统</td>
+													     <td>
+													     <input type="checkbox" name="agentauthorization" value="代理"
+													     <#if returnDatas.data.agentauthorization??>
+													     <#if returnDatas.data.agentauthorization?index_of("代理")=-1 >checked</#if>
+													     </#if>
+													     >代理
+													     </td>
+													  </tr>
+													  <tr>
+													    <td>财务</td>
+													     <td>
+													     <input type="checkbox" name="financeauthorization" value="转账"
+													     <#if returnDatas.data.financeauthorization??>
+													     <#if returnDatas.data.financeauthorization?index_of("转账")=-1 >checked</#if>
+													     </#if>
+													     >转账
+													     <input type="checkbox" name="financeauthorization" value="点卡充值"
+													     <#if returnDatas.data.financeauthorization??>
+													     <#if returnDatas.data.financeauthorization?index_of("点卡充值")=-1 >checked</#if>
+													     </#if>
+													     >点卡充值
+													     <input type="checkbox" name="financeauthorization" value="兑换"
+													     <#if returnDatas.data.financeauthorization??>
+													     <#if returnDatas.data.financeauthorization?index_of("兑换")=-1 >checked</#if>
+													     </#if>
+													     >兑换
+													     </td>
+													  </tr>
+													  
+													</table>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+</html>

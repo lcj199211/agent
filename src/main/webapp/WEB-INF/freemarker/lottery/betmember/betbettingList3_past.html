@@ -1,0 +1,160 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		
+		
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betbetting/delete");
+	}
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title ">
+			             <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>用户管理</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>每日输赢</cite></a>
+								</span>
+			             </li>
+			             
+			          <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betmember/look?k=3&id=${id!''}&daybettingdate=${daybettingdate!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+											<p class="xiao-ht-tableTitle xiao-inline-block">
+												投注列表
+											</p>
+											<table class="xiao-ht-table" lay-even>
+												<thead>
+													
+													<tr>
+													  <!--first_start_no_export-->
+													  <!--first_end_no_export-->
+															  <th id="th_bettingtime" >时间</th>
+														   <th id="th_gameclass">所在游戏</th>
+														   <th id="th_gameplay" >投注内容</th>
+														    <th id="th_gameplay" >赢取分</th>
+														    <th id="th_gameplay" >状态</th>
+														   <th id="th_gameplay" >登录地址</th>
+														   <th id="th_gameplay" >登录</th>
+															   
+															   
+															<!-- <th id="th_memberid" >用户ID</th>
+															<th id="th_gameplayid" >玩法ID</th>
+															<th id="th_qibie" >期数</th>
+															<th id="th_bettingnum" >投注数量</th>
+															<th id="th_bettingmoney" >投注金额</th>
+															<th id="th_bettingscore" >投注输赢</th> -->
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<!--end_no_export-->
+															<td >
+															<!--日期型-->
+														${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.gcname)!''}
+														</td>
+														<td >
+															${(_data.name1)!''}&nbsp;${(_data.detail)!''}-<span style="color:red;">${(_data.bettingmoney)!''}</span>
+														</td>
+														
+														<td >
+															${(_data.bettingscore?string("#"))!''}
+														</td>
+														<td >
+															<#if _data.state??>
+															 <#if _data.state=1>
+															 	<span style="color:green;">已结算</span>
+															 	<#elseif _data.state=0>
+															 	<span style="color:red;">未结算</span>
+															 	<#elseif _data.state=2>
+															 	撤销
+															 </#if>
+															</#if>
+														</td>
+														<td >
+															${(_data.loginip)!''}
+														</td>
+														<td >
+															${(_data.logintool)!''}
+														</td>
+														
+															
+															<!-- <td >
+																${(_data.memberid)!''}
+															</td>
+															<td >
+																${(_data.gameplayid)!0}
+															</td>
+															<td >
+																${(_data.qibie)!''}
+															</td>
+															<td >
+																${(_data.bettingnum)!0}
+															</td>
+															<td >
+																${(_data.bettingmoney)!0}
+															</td>
+															<td >
+																${(_data.bettingscore)!0}
+															</td> -->
+														</tr>
+													</#list>
+												 </#if>
+												</tbody>
+											</table>
+											<#if returnDatas.page??> 
+												<div id='laypageDiv'></div>
+												<@h.layPage page=returnDatas.page /> 
+												<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span>${(returnDatas.page.pageCount)!''}</span>页,共 <span>${(returnDatas.page.totalCount)!''}</span>条记录</font>
+											</#if>
+										</div>	
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+</body>
+</html>
+

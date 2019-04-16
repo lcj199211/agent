@@ -1,0 +1,79 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betmember/list?springraintoken="+springraintoken});
+	 });
+</script>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			            <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								   <a><cite>用户管理</cite></a>
+								</span>
+			            </li>
+			             <li style="float:right;">
+				 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+				
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          				<header class="larry-personal-tit">
+													<span>添加用户</span>
+												</header>
+												<div class="xiao-ht-tableWrap xiao-ht-hiddenScroll">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betmember/update">
+													<div class="xiao-ht-inputFormWrap ">
+														<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+														<input type="hidden" id="id2" name="id2" value="${(returnDatas.data.id2)!''}"/>	
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">用户名*</span>
+															<input type="text" name="account" id="account" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.account)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">登陆密码*</span>
+															<input type="text" name="password" id="password" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.password)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">真实姓名*</span>
+															<input type="text" name="realname" id="realname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.realname)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">昵称</span>
+															<input type="text" name="nickname" id="nickname"  autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.nickname)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="xiao-ht-inputFormItem xiao-ht-formBtn clearfix">
+															<a id="smtbtn" class="xiao-btn xiao-btn-default">保存</a>
+															<a class="xiao-btn" id="rstbtn" >重置</a>
+														</div>	
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+</html>

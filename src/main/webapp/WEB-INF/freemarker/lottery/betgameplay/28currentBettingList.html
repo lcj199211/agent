@@ -1,0 +1,173 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgameplay/delete");
+	}
+</script>
+<style>
+.xiao-ht-table {
+     min-width: auto; 
+    width: auto; 
+}
+</style>
+<!-- <STYLE TYPE="text/CSS">   
+.xiao-ht-table {
+    min-width: 236px;
+    width: 30%;
+    display:inline-block;
+} 
+</STYLE> -->
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			            <!--  <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								网站地图导航
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>玩法_原始（新）管理</cite></a>
+								</span>
+			             </li> -->
+						 <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							        <form  id="searchForm" action="${ctx}/betgameplay/list" class="pull-left" method="post">
+							          	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							        	<!--  <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}"  /> -->
+									  	<div class="layui-table search-wrap xiao-mb0">
+									  		
+											<div class="xiao-btnlist xiap-pull-left">
+												<div class="xiao-btnlist-item">
+													<a href="${ctx}/betgameclass/list?gameclassid=${gameclassid!''}">彩票管理</a>
+												</div>
+												<div class="xiao-btnlist-item">
+													<a href="${ctx}/betgameplay/list?currentBetting=1&gameclassid=${gameclassid!''}">赔率/限额</a>
+												</div>
+												<div class="xiao-btnlist-item" style="background:#009688; color:#FFF">
+													即时注单
+												</div>
+												<!-- <div class="xiao-btnlist-item">
+													<a href="${ctx}/betcollectionaddress/list?id=${gameclassid!''}">采集地址</a>
+												</div> -->
+												
+												<div class="xiao-btnlist-item">
+													<a href="${ctx}/betperiod/list?gameclassid=${gameclassid!''}">开奖管理</a>
+												</div>
+												<div class="xiao-btnlist-item">
+													<a href="${ctx}/betgameplay/name1list?gameclassid=${gameclassid!''}">玩法状态</a>
+												</div>
+											</div>	
+									  		
+											<div class="layui-inline">
+												<div class="layui-input-inline xiao-input">
+												<input type="hidden" name="name="gameclassid"" value="${returnDatas.queryBean.gameclassid}">	
+													<!-- <select id="gameclass" style="width: 200px;height: 32px;border: 1px solid #e2e2e2;" >
+													</select> -->
+													<!--    <input type="text" name="gameclassid" value="${(returnDatas.queryBean.gameclassid)!''}" placeholder="彩票名 " class="layui-input"> -->
+												</div>
+												<div class="layui-inline valid-info"></div>
+											</div>
+											<!-- <div class="layui-inline">
+												<button class="layui-btn xiao-mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											</div> -->
+										</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									
+									<div class="xiao-ht-tableWrap">
+									
+										<table  class="xiao-ht-table" lay-even style="display:inline">
+										
+											<thead>
+												<tr>
+													<th >玩法</th>
+													<th  >注单</th>
+													<!-- <th  >风险</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    
+										    	<#list	returnDatas.data as _data>
+													<tr class="">
+														<td >${(_data.name3)!''}
+														</td>
+														<td >
+														<#if _data.gameplaybetting!=0>
+														<a class="xiao-color-00e "  style="text-decoration:underline;" href="${ctx}/betbetting/list?gameplayid=${(_data.id)!''}&state=0">
+														${_data.gameplaybetting!''}
+														</a>
+														<#else>
+														${_data.gameplaybetting!''}
+														</#if>
+														</td>
+														<!-- <td >
+														${_data.bettingrisk!''}
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+																				
+										
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	<script>
+		jQuery(document).ready(function(){
+    //加载彩票名称
+    /* jQuery.ajax({
+        url : ctx+"/betgameclass/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+ 			if(_obj.gameclassid==${returnDatas.queryBean.gameclassid}){
+			 jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"' selected >"+_obj.gcname+"</option>");
+ 		}else{
+ 			/* jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"'>"+_obj.gcname+"</option>"); */
+ 		}
+            });
+            
+            
+        }
+    }); */
+ });    
+	</script>
+</body>
+</html>
+

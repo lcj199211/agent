@@ -1,0 +1,163 @@
+<#ftl output_format="HTML" auto_esc=true> <@h.commonHead title="代理管理系统"
+keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript" src="${ctx}/js/ztree/js/ztreeUtils.js"></script>
+<script type="text/javascript" src="${ctx}/js/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/select2/js/i18n/zh-CN.js"></script>
+<script type="text/javascript" src="${ctx}/js/custom/common/select2remote.js"></script>
+<script type="text/javascript" src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/select2/css/select2.min.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/css/custom/common/myztree.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+
+</head>
+<body>
+
+
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+		<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title">
+				<li class="layui-this"><i class="layui-icon">&#xe630;</i> <span
+					class="layui-breadcrumb" style="visibility: visible;"> 
+					<a>首页<span class="layui-box">&gt;</span></a>
+					<a><cite>合作商家</cite><span class="layui-box">&gt;</span></a>
+					 <a><cite>信息修改</cite></a> </span></li>
+				<li style="float:right;">
+					<button type="button" onclick="history.go(-1)"
+						class="layui-btn layui-btn-small" style="margin-top:8px;">
+						<i class="layui-icon layui-icon-specil">&#xe603;</i>返回
+					</button></li>
+			</ul>
+ 
+			<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+				<div class="layui-tab-item layui-show">
+				  <div class="layui-main">
+						<div id="LAY_preview" class="layui-my-form">
+							<header class="larry-personal-tit">
+								<span>信息修改</span>
+							</header>
+							<div class="larry-personal-body clearfix changepwd">
+									<form id="validForm" name="updateForm" class="layui-form <!--  -->" method="post" >
+									<div class="layui-form-item col-lg-6">
+										<#if agent??> 
+										<input type="hidden" name="parentid"
+												id="parentid" autocomplete="off" class="layui-input"
+												value="${(agent.parentid)!''}">
+										<label class="layui-form-label" style="width:150px">代理商id</label>
+										<div class="layui-inline col-lg-5">
+											<input style="border:0;" 
+											 readonly="readonly" type="text" name="agentid"
+												id="agentid" autocomplete="off" class="layui-input"
+												value="${(agent.agentid)!''}">
+										</div>
+										<div class="layui-inline valid-info"></div>
+									</div>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">昵称*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="nickname" id="nickname" datatype="*"
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${(agent.nickname)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">银行密码*</label>
+								<div class="layui-inline col-lg-5">
+									<input readonly="readonly" type="password" name="bankpassword" id="bankpassword"
+										autocomplete="off" class="layui-input"
+										value="${(agent.bankpassword)!''}">
+								</div>
+								<input type="button" id="btnbankpwd" value="清密"  style="margin-top:5px;margin-left: -15px;height: 25px;width: 35px;">
+								<div class="layui-inline valid-info"></div>
+							</div>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">联系电话*</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="mobile" id="mobile" datatype="*"
+										nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"
+										class="layui-input" value="${(agent.mobile)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">qq</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="qq" id="qq" autocomplete="off"
+									onkeyup="value=value.replace(/[^\d]/g,'')" class="layui-input" value="${(agent.qq)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							
+							<div class="layui-form-item col-lg-6">
+								<label class="layui-form-label" style="width:150px">微信</label>
+								<div class="layui-inline col-lg-5">
+									<input type="text" name="weixin" id="weixin" 
+										class="layui-input" value="${(agent.weixin)!''}">
+								</div>
+								<div class="layui-inline valid-info"></div>
+							</div>
+							</#if>
+							
+						<div class="layui-form-item change-submit">
+							<label class="layui-form-label"></label>
+							<div class="layui-inline">
+								<button type="button" style="width: 100px; margin-left: 50px" class="layui-btn" id="smtbtn">保存</button>
+							</div>
+						</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<!-- 主体内容结束 -->
+	<@h.footer />
+	</div>
+	<script>
+	$("#btnbankpwd").click(function(){
+		$("#bankpassword").val("123456");
+		$("#bankpassword").attr("type","text");
+	});
+	
+	function getQueryString(name) { 
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+		var r = window.location.search.substr(1).match(reg); 
+		if (r != null) return unescape(r[2]);
+		return null; 
+	}
+	var a = getQueryString('a');
+	if(a==1){
+		$("#validForm").attr("action","${ctx}/businesspartner/update?a=1&agentid=${agent.agentid}");
+	}else{
+		$("#validForm").attr("action","${ctx}/businesspartner/update?agentid=${agent.agentid}");
+	}
+	jQuery(function() {
+		/*
+		init_valid(_before,_after)
+		@_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		@_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		springrain.initValid(null, function() {
+			 if($("#parentid").val()==""){
+				window.location.href = "${ctx}/businesspartner/list"
+			}else{ 
+				window.location.href = "${ctx}/businesspartner/list?agentid=${(agent.parentid)}"
+			}
+		});
+	});
+</script>
+
+<div class="footer"></div>
+</body>
+</html>

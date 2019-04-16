@@ -1,0 +1,142 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>中央银行管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加中央银行</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betcentralbank/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">系统*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.system)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">管理员转账*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.admintransfer)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">在线充值*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.onlinerecharge)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">点卡充值*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.cardrecharge)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">冻结分数*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.frozenscore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">用户总分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.memberscore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">中央银行*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.centralbank)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">救济领取*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.reliefcollection)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">签到领取*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.signincollection)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">下线奖励*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.subordinatereward)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">周返利*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.weekrebate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">日输赢返利*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.daywinorlossrebate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">首充返利*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.thefirstchargerebate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">红包奖励*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.redpacketbonus)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

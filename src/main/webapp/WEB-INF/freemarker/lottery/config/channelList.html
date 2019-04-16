@@ -1,0 +1,268 @@
+ <#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/agent/config/delete");
+	}
+</script>
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/agent/config/list?springraintoken="+springraintoken});
+	 });
+	 $(document).ready(function(){
+		$('#c_smtbtn').click(function(){
+		 var issuemodel=$('#c_issuemodel').val();
+		 var money=$('#c_money').val();
+		 var channelid=$('#c_channelid').val();
+			//询问框
+			layer.confirm('确定充值？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				$.ajax({
+					type:"get",
+					url:"${ctx}/agent/config/issuecharge",
+					data:{"issuemodel":issuemodel,"money":money,"channelid":channelid},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('申请充值成功！',{offset:['','']});
+							setTimeout("myrefresh()",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+				})
+			}, function(){
+			  
+			});
+		});
+		$("#issuemodel").bind("change",function(){
+			var model = $(this).val();
+			if(model == '2'){
+				<#if !(returnDatas.data??)||(returnDatas.data?size<1)>
+				layer.confirm('您还未添加出票渠道，是否现在添加？', {
+				  offset:['',''],
+				  btn: ['确定','取消'] //按钮
+				}, function(){
+					window.location.href="${ctx}/agent/config/addchannel/pre?springraintoken="+springraintoken;
+				}, function(){
+				    $("#issuemodel").val(0);
+				});
+				</#if>
+			}
+		});
+	})
+	function myrefresh(){
+		window.location.href="${ctx}/agent/config/list?springraintoken="+springraintoken;
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+	       		</ul>
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+								  <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>出票模式设置</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" method="post" action="${ctx}/agent/config/update">
+														<input type="hidden" id="command" name="command" value="1"/>
+														<div class="layui-form-item  col-lg-6">
+													    <label class="layui-form-label">模式</label>
+														    <div class="layui-input-inline col-lg-2">
+														      <select name="issuemodel" id="issuemodel" lay-verify="required">
+														        <option value="1" <#if (issuemodel)??><#if (((issuemodel)!'') == 1)>selected="selected"</#if></#if> >----系统出票----</option>
+																<option value="0" <#if (issuemodel)??><#if (((issuemodel)!'') == 0)>selected="selected"</#if></#if> >----手动出票----</option>
+																<option id="issuemodel_spe" value="2" <#if (issuemodel)??><#if (((issuemodel)!'') == 2)>selected="selected"</#if></#if> >----店内出票----</option>
+														      </select>
+														    </div>
+												  		</div>
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">确认</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+								  <div id="LAY_preview" class="layui-my-form">
+						          		<div>
+						          		<span>当前模式：
+						          			<span >
+												<#if (issuemodel)??>
+													<#if (issuemodel=1)>
+														<font style="color:grey;">系统出票</font>
+													<#elseif (issuemodel=0)>
+														<font style="color:grey;">手动出票</font>
+													<#elseif (issuemodel=2)>
+														<font style="color:grey;">店内出票</font>
+													</#if>
+												</#if>
+											</span>
+						          		</span>
+						          		&nbsp;&nbsp;&nbsp;
+					          			<span >
+											<#if (issuemodel)??>
+												<#if (issuemodel=1)>
+													当前余额：<font style="color:grey;">${(issuebalance)!0}</font>
+													<@shiro.hasPermission name="/agent/config/update" >
+														<input type="hidden" id="c_issuemodel" name="issuemodel" value="${(issuemodel)!''}"/>
+														金额：<input type="number" id="c_money" name="money"/>
+														<input type="button" class="layui-btn" id="c_smtbtn" value="充值"/>
+													</@shiro.hasPermission>
+												<#elseif (issuemodel=2)>
+													当前余额：<font style="color:grey;">${(issuebalance2)!0}</font>
+													<@shiro.hasPermission name="/agent/config/update" >
+														<input type="hidden" id="c_issuemodel" name="issuemodel" value="${(issuemodel)!''}"/>
+														金额：<input type="number" id="c_money" name="money"/> 渠道：
+													      <select name="channelid" id="c_channelid">
+													      	<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+														    	<#list	returnDatas.data as _data>
+														    	<option value="${(_data.id)!''}">${(_data.name)!''}</option>
+																</#list>
+															 </#if>
+													      </select>
+														<input type="button" class="layui-btn" id="c_smtbtn" value="充值"/>
+						                            </@shiro.hasPermission>
+												</#if>
+											</#if>
+										</span>
+						          		</div>
+								  </div>
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betlotterychannelaccess/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="">
+										    <col width="">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">出票渠道列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												 
+												  <!--first_end_no_export-->
+														<th  >渠道名称</th>
+														<th  >接口地址</th>
+														<th >商户号</th>
+														<th >余额</th>
+														<th >返点</th>
+														<th  >状态</th>
+														 <th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														
+														<!--end_no_export-->
+														<td >
+															${(_data.name)!''}
+														</td>
+														<td >
+															${(_data.url)!''}
+														</td>
+														<td >
+															${(_data.merchant)!''}
+														</td>
+														<td >
+															${(_data.money)!''}
+														</td>
+														<td >
+															${(_data.rebate*100)!''}%
+														</td>
+														<td >
+															<#if (_data.state)??>
+																<#if (_data.state=1)>
+																	<font style="color:green;">启用</font>
+																	<#elseif (_data.state=0)>
+																	<font style="color:red;">禁用</font>
+																</#if>
+															</#if>
+														</td>
+														
+														<td>
+															<@shiro.hasPermission name="/agent/config/update" >
+								                           		 <a href="#" data-action="${ctx}/agent/config/addchannel/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/bjdcteam/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

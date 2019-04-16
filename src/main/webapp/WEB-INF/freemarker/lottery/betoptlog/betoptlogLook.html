@@ -1,0 +1,86 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>查看操作日志</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="#">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">管理ID</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${(returnDatas.data.userid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">管理员账户</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${(returnDatas.data.account)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">昵称</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${(returnDatas.data.name)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">操作详情</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${(returnDatas.data.details)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">时间</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${((returnDatas.data.time)?string('yyyy-MM-dd HH:mm:ss'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">登录地址</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ip)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">工具</label>
+																		<div style="margin-top: 10px;" class="layui-inline col-lg-5">  
+																			${(returnDatas.data.tool)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

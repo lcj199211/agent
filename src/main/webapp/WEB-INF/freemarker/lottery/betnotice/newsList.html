@@ -1,0 +1,184 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betnotice/delete");
+	}
+	function dels(_id){
+		springrain.mydeletemore(_id,"${ctx}/betnotice/delete/more");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+					 	<@shiro.hasPermission name="/betnotice/news/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betnotice/news/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betnotice/list" method="post" hidden>
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">公告 新闻搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+											<col width="400">
+											<col width="50">
+										    <col width="120">
+											<col width="40">
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9"><input id="checkAll"  type="checkbox">&nbsp;&nbsp;&nbsp;全选&nbsp;&nbsp;&nbsp;
+													<@shiro.hasPermission name="/betnotice/delete" ><a href="javascript:dels('${(_data.id)!''}')">删除</a>&nbsp;&nbsp;&nbsp;</@shiro.hasPermission>
+													<@shiro.hasPermission name="/betnotice/news/update" ><a href="${ctx}/betnotice/news/update">下架</a>&nbsp;&nbsp;&nbsp;</@shiro.hasPermission>
+													<@shiro.hasPermission name="/betnotice/news/update" ><a href="${ctx}/betnotice/news/update/pre">增加</a></@shiro.hasPermission>
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <!--first_end_no_export-->
+														<th id="title" >标题</th>
+														<th id="content" >内容</th>
+														<th id="state" >状态</th>
+														<th id="th_time" >发布时间</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<!--end_no_export-->
+														<td style="color:blue;">
+															${(_data.title)!''}
+														</td>
+														<td style="color:blue;">
+															${(_data.content)!''}
+														</td>
+														<td style="color:blue;">
+															<#if _data.state??>
+																<#if _data.state==1>
+																发布中
+																<#elseif _data.state==0>
+																下架
+																</#if>
+															<#else>
+															${(_data.state)!0}
+															</#if>
+														</td>
+														<td style="color:blue;">
+															<!--日期型-->
+														${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betnotice/news/update" >
+								                           		 <a href="#" data-action="${ctx}/betnotice/news/update/pre?id=${_data.id}&mark=news" class="layui-btn layui-btn-normal layui-btn-mini">修改</a>
+								                            </@shiro.hasPermission>
+															<@shiro.hasPermission name="/betnotice/news/update" >
+								                           		 <a href="#" data-action="${ctx}/betnotice/news/update?id=${_data.id}&state=1" class="layui-btn layui-btn-normal layui-btn-mini">上架</a>
+								                            </@shiro.hasPermission>
+															<@shiro.hasPermission name="/betnotice/news/update" >
+								                           		 <a href="#" data-action="${ctx}/betnotice/news/update?id=${_data.id}&state=0" class="layui-btn layui-btn-normal layui-btn-mini">下架</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

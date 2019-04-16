@@ -1,0 +1,81 @@
+@charset "UTF-8";
+/**=========================================独立样式引入================================*/
+/* 细节调整样式定义 */
+.xiao-pt2 {
+  padding-top: 2px; }
+
+/* 自定义样式 */
+.xiao-springrain-row {
+  line-height: 34px;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 0 15px;
+  margin-bottom: 10px; }
+
+.xiao-springrain-item {
+  margin: 0 15px 0 0; }
+
+.xiao-springrain-operationList {
+  background: #fff;
+  line-height: 30px;
+  margin-bottom: 10px;
+  padding: 0 20px; }
+
+.xiao-springrain-operationList a {
+  margin-right: 15px; }
+
+.xiao-springrain-userNews {
+  border: 1px solid #2a2d35; }
+
+.xiao-springrain-userNews td {
+  border-color: #2a2d35 !important; }
+
+.xiao-springrain-userNews td:nth-child(2n-1) {
+  background-color: #393D49;
+  /*background-color: rgba(52,73,94,.94);*/
+  /*background-color: #2A3F54;*/
+  color: #fff;
+  font-weight: initial; }
+
+/* 原样式重写 */
+.page-title {
+  height: 54px; }
+
+.page-title .title_left {
+  width: 30%; }
+
+.page-title .title_right {
+  width: 70%; }
+
+.title_left .form-group {
+  margin-bottom: 0; }
+
+table.jambo_table thead {
+  background: #393D49;
+  color: #ECF0F1; }
+
+/* 字体颜色设置 */
+.xiao-color-e00 {
+  color: #e00;
+  font-size: 20px; }
+
+.xiao-color-00e {
+  color: #00e;
+  font-size: 20px; }
+
+.xiao-color-0e0 {
+  color: #0e0;
+  font-size: 20px; }
+
+.xiao-color-f80 {
+  color: #f80;
+  font-size: 20px; }
+
+/* 自适应调整 */
+@media only screen and (max-width: 1170px) {
+  .page-title .title_left {
+    width: 100%; }
+  .page-title .title_right {
+    width: 100%; } }
+
+/** =========================独立样式结束 ========================**/

@@ -1,0 +1,123 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加站内消息</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form style="padding:70px 30px" id="validForm"   method="post" action="${ctx}/betmessage/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>
+																<input id="num" type="hidden" name="state" value=""/>
+																	<table style="border-collapse: collapse;width:600px;">
+																		<tbody>
+																			<tr>
+																				<td style="border:1px solid #000;text-align: center;">对象</td>
+																				<td style="border:1px solid #000;text-align: center;">
+																					<input id="allUser" type="radio" name="receiver" onchange="receivers(this)" value="all"/>所有用户
+																					<input id="vipUser" type="radio" name="receiver" onchange="receivers(this)" value="vip"/>VIP会员
+																					<input id="zdUser" type="radio" name="receiver" onchange="receivers(this)" value="zd"/>指定用户（收件人ID）
+																					<select  name='zd' style="display:none;width:157px;border-color:#fff;border-color: #000;height: 24px;border-top:none;border-bottom:none" id="list"></select>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="border:1px solid #000;text-align: center;">主题</td>
+																				<td style="border:1px solid #000;text-align: center;">
+																					<input type="text" name="title" id="title" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input">
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="border:1px solid #000;text-align: center;">正文</td>
+																				<td style="border:1px solid #000;text-align: center;margin-bottom:0">
+																					<textarea  style="outline:none;border:none;"  name="context" id="context" class="layui-textarea" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input"></textarea>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="border:1px solid #000;text-align: center;" colspan="2">
+																					<button style="outline:none;border:none;"  type="button" class="layui-btn" id="smtbtn">确认发送</button>
+																				</td>
+																			</tr>
+																		</tbody>
+																	</table>	
+																	
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betmessage/list?springraintoken="+springraintoken});
+	 });
+	 $(function(){
+		$("#zdUser").click(function(){
+		$("#list").show();
+		    $.post("${ctx}/betmessage/update/json",function(data){
+		    		var html=""
+			        for(var i=0;i<data.length;i++){
+			        	var id = data[i].id;
+			        	var account = data[i].account;
+			        	html+= "<option value='"+id+"'>账户名:"+account+"</option>";
+			        }
+			       $("#list").html(html)
+		    })
+		});
+		$("#allUser").click(function(){
+			$("#list").hide();
+		})
+		$("#vipUser").click(function(){
+			$("#list").hide();
+		})
+	});  
+	var num=document.getElementById("num");
+	var receiver4=document.getElementsByName("receiver");
+	function receivers(ele){
+		switch(ele.id){
+			case "allUser":num.value=2;break;
+			case "vipUser":num.value=2;break;
+			case "zdUser":num.value=0;break;
+		}
+	}
+	$(function(){
+		$("button").click(function(){
+		    $.post("${ctx}/betmessage/update/json",function(data){
+			        for(var i=0;i<data.length;i++){
+			        	var id = data[i].id;
+			        	var account = data[i].account;
+			        	var option = $("<option value='"+id+"'>账户名:"+account+"</option>");
+			        	$("#list").append(option);
+			        }
+		    })
+		});
+	});  
+	
+</script>
+</body>
+</html>

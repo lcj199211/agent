@@ -1,0 +1,251 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>RenjiuScheme管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加RenjiuScheme</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/renjiuscheme/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">方案id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.schemeid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">会员id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.memberid2)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注金额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingmoney)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注赢（税后金额）*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingwin)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">倍数*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.betmulriple)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">状态1:正常 3:删除*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.state)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">结果0:未结算 1:已返奖 2:已撤销 3:未中奖4非正常*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.result)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">结算时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.settletime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">出票渠道id*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.channelid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">出票状态（0待分配；1待传输；2待出票；3出票成功；4出票失败）*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.issuestate)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">票号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sysid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">出票时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.printtime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">失败原因*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.failreason)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">分配时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.distributetime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">对账状态（0：未对账；1：对账正常；2对账异常）*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.balanceaccount)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">单票对账异常描述*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.msg)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">税前金额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.posttaxprize)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">出票投注重试次数*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingretrytime)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">agentid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.agentid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">agentparentid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.agentparentid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">agentparentids*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.agentparentids)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1.系统出票 3.手动出票 null系统不出票*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.systemissue)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">期号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.periodnum)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.bettingtime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注ip*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingip)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注工具*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingtool)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投注码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.bettingcode)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">单式(400101)复式(400102)*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.type)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">加奖*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.plusawards)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

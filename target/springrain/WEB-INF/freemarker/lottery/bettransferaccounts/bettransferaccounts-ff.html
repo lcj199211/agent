@@ -1,0 +1,76 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						   <a href="${ctx}/bettransferaccounts/list">转账</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="${ctx}/bettransferaccounts/list?k=1">转账记录</a><br/><br/>      
+						          接收ID：<input type="text" id="ff-memberid2"> <button id="ff-jc">检测</button><span id="idjc"></span>   <br/>
+							转账分：<input type="text" id="ff-money"><br/>
+							备注：<input type="text" id="ff-remark"><br/>
+							          <button id="ff-confirm">确认转账 </button>   <br/>
+							
+						          
+
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	$("#ff-jc").click(function(){
+		var a=$("#ff-memberid2").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/look/json",
+			
+			data:{id2:a},
+			success:function(result){
+				if("error"==result.status){
+					$("#idjc").html("<font color='red'>无此用户</font>");
+					
+				}else if("success"==result.status){
+					$("#idjc").text(result.data.nickname);
+				}
+			},
+		})
+	})
+	
+	$("#ff-confirm").click(function(){
+		var a=$("#ff-memberid2").val();
+		var b=$("#ff-money").val();
+		var c=$("#ff-remark").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/bettransferaccounts/update?u=1",
+			
+			data:{memberid2:a,transferaccountsscore:b,remark:c},
+			success:function(result){
+				if("error"==result.status){
+					alert(result.message);
+					
+				}else if("success"==result.status){
+					alert("转账成功！");
+				}
+			},
+		})
+	})
+	</script>
+</body>
+</html>
+

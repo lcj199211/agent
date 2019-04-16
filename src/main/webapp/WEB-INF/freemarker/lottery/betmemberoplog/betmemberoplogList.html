@@ -1,0 +1,160 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmemberoplog/delete");
+	}
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			             <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								<!--网站地图导航-->
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>用户操作日志管理</cite></a>
+								</span>
+			             </li>
+						 <li style="float:right;">
+			             	<!-- <@shiro.hasPermission name="/betmemberoplog/update" >
+			             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmemberoplog/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+			             	</@shiro.hasPermission>
+			             	<@shiro.hasPermission name="/betmemberoplog/list/export" >
+					        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+			                <@shiro.hasPermission name="/betmemberoplog/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission> -->
+			                <li style="float:right;">
+				      		  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		           			  </li>
+			             </li>
+		       		</ul>
+				
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betmemberoplog/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="search-wrap">
+									  		<div class="layui-inline betmember_find xiao-input-wrap">
+							          				<div class="layui-inline">
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="xiao-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <div class="layui-input-inline xiao-input-option xiao-input">
+									                        <select name="active" id="active">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+									        </div>
+							          </div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even>
+												<thead>
+													<tr>
+													  <!--first_start_no_export-->
+													  <th class="center">
+																<input id="checkAll"  type="checkbox">
+													  </th>
+													  <th>操作</th>
+													  <!--first_end_no_export-->
+															<th id="th_memberid2" >用户ID2</th>
+															<th id="th_operationdetails" >操作详情</th>
+															<th id="th_currentlocation" >当前所在位置</th>
+															<th id="th_loginip" >登录地址</th>
+															<th id="th_logintool" >登陆</th>
+															<th id="th_time" >时间</th>
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<td class="center">
+																	<input name="check_li" value="${_data.id}"  type="checkbox">
+															</td>
+															<td>
+																<@shiro.hasPermission name="/betmemberoplog/update" >
+									                           		 <a href="#" data-action="${ctx}/system/role/update/pre?id=" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+									                            </@shiro.hasPermission>
+									                            <@shiro.hasPermission name="/betmemberoplog/delete" >
+									                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+									                            </@shiro.hasPermission>
+															</td>
+															<!--end_no_export-->
+															<td >
+																${(_data.memberid2)!0}
+															</td>
+															<td >
+																${(_data.operationdetails)!''}
+															</td>
+															<td >
+																${(_data.currentlocation)!''}
+															</td>
+															<td >
+																${(_data.loginip)!''}
+															</td>
+															<td >
+																${(_data.logintool)!''}
+															</td>
+															<td >
+																<!--日期型-->
+															${((_data.time)?string('yyyy-MM-dd'))!''}
+															</td>
+														</tr>
+													</#list>
+												 </#if>
+												</tbody>
+											</table>
+											<#if returnDatas.page??> 
+												<div id='laypageDiv'></div>
+												<@h.layPage page=returnDatas.page /> 
+											</#if>
+										</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

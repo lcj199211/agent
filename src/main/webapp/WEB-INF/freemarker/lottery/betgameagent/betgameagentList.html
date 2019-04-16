@@ -1,0 +1,157 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">代理游戏列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+														<th >游戏名</th>
+														<th >游戏标题</th>
+														<th >图标</th>
+														<th >说明</th>
+														<th >游戏状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="" style="text-align: center;">
+														
+														<!--end_no_export-->
+														<td >
+															${(_data.gamename)!''}
+														</td>
+														<td >
+															${(_data.title)!''}
+														</td>
+														<td >
+															${(_data.img)!''}
+														</td>
+														<td >
+															${(_data.remark)!''}
+														</td>
+														<td >
+														<#if _data.state==1>
+																<span style="color:#288a53" >开启</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.company)!''}">
+																<input type="hidden" value="${(_data.gamename)!''}">
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand"  class="close"><u>关闭</u></span>
+																<#else>
+																<span style="color:red" >关闭</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.company)!''}">
+																<input type="hidden" value="${(_data.gamename)!''}">
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="open"><u>开启</u></span>
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+	//开启
+	$(".open").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		var gamename=$(this).prev().prev().val();
+		var company=$(this).prev().prev().prev().val();
+		layer.confirm('确认设置为开启？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+			    layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/betgameagent/update",
+					data:{id:i,state:s,gamename:gamename,company:company},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("设置成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+//关闭
+	$(".close").click(function(){
+		var s=3;
+		var i=$(this).prev().val();
+		var gamename=$(this).prev().prev().val();
+		var company=$(this).prev().prev().prev().val();
+		layer.confirm('确认设置为关闭？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){ 
+				layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/betgameagent/update",
+					data:{id:i,state:s,gamename:gamename,company:company},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("设置成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	
+	})
+</script>
+</html>
+

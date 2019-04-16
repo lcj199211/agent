@@ -1,0 +1,269 @@
+ <#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+</head>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		           <!--   <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>开奖管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	<button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+							          <form  id="searchForm" action="${ctx}/betperiod/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">开奖搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+																	    <label style="margin-top: 5px;" class="layui-form-label">游戏名</label>
+																		    <div class="layui-input-inline">
+																		      
+																		      <select id="gameclass" style="width: 200px;height: 38px;border: 1px solid #e2e2e2;" name="gameclassid">
+									                    		</select>
+																		    </div>
+																	     <div class="layui-inline valid-info"></div>
+														</div>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">期数</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="qibie" placeholder="请输入期别 " class="layui-input" value="${returnDatas.queryBean.qibie!''}" >
+									                    </div>
+							                		</div>
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">时间</label>
+									                    <div class="layui-input-inline">
+									                           <!-- <input  name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input"> -->
+																 从<div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>到
+									                    <div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>
+
+									                </div>
+							                				<!-- <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+									                    		<#list	returnDatas.data as _data>
+									                    				<#if _data_index==0>
+									                    					<input type="hidden" name="gameclassid" value="${_data.gameclassid}"></input>
+																		</#if>
+									                    		</#list>
+									                    	</#if> -->
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									</form>
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+											<thead>
+												<tr>
+													<th colspan="9"><a href="${ctx}/betgameclass/list?gameclassid=${gameclassid!''}">游戏列表</a>&nbsp;&nbsp;&nbsp;<a href="${ctx}/betcollectionaddress/list?id=${gameclassid!''}">采集地址</a>&nbsp;&nbsp;&nbsp;<a href="${ctx}/betgameplay/list?gameclassid=${gameclassid!''}">赔率设置</a>&nbsp;&nbsp;&nbsp;开奖管理
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betperiod/list?gameclassid=${returnDatas.queryBean.gameclassid!''}&yesterday=1">昨日</a>&nbsp;&nbsp;
+													<a href="${ctx}/betperiod/list?gameclassid=${returnDatas.queryBean.gameclassid!''}&startTime=${.now?date}&endTime=${.now?date}">今日</a>
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												
+														<th id="th_qibie" >期数</th>
+														<th id="th_time" >开奖时间</th>
+														<th id="th_hs" >开奖结果</th>
+														<th id="th_bettingamount" >投注金额</th>
+														<th id="th_result" >结果</th>
+														  <th style="text-align:center">操作</th>
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														
+														<td class="qishu">
+															${(_data.qibie)!0}
+														</td>
+														<th style="display:none">${(_data.id)!0}</th>
+														<td class="dates">
+														${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td class="numbers">
+															${(_data.hs)!''}
+														</td>
+														<td >
+															${(_data.bettingamount)!0}
+														</td>
+														<td >
+															${(_data.result)!0}
+														</td>
+														<td style="text-align:center">
+															<!-- <@shiro.hasPermission name="/betperiod/update" >
+								                           		 <a style="margin:2px 0" href="#" data-action="${ctx}/betperiod/update/pre?id=${_data.id}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission> -->
+								                            <@shiro.hasPermission name="/betperiod/delete" >
+								                            	<a style="margin:2px 0" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+								                              <@shiro.hasPermission name="/betperiod/update" >
+								                           		 <a data-id="${(_data.id)!''}" style="margin:2px 0" href="#" class="layui-btn layui-btn-normal layui-btn-mini ff-lottery">手动开奖</a>
+								                            </@shiro.hasPermission>
+														</td>
+														<input type="hidden" value="${(_data.qibie)!0}">
+														<input type="hidden" value="${(_data.id)}">
+														
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<@h.footer />
+	</div>
+	<script>
+	$(document).ready(function(){
+		$(".ff-lottery").click(function(){
+    		var periods=$(this).parent().next().val();
+    		var id=$(this).parent().next().next().val();	
+    		layer.open({
+      		type: 2,
+      		shadeClose: true,
+      		shade: false,
+      		title: ' ',
+      		area: ['500px', '300px'],
+
+      		content: '${ctx}/betperiod/list?shoudongkaijiang=1&gameclassid='+${returnDatas.queryBean.gameclassid}+'&qibie='+periods+'&id='+id,
+      		 end: function(){
+    window.parent.location.reload(); //刷新父页面
+  }
+      		
+			});
+		})
+	})
+	
+/* $(document).ready(function(){
+		$(".lottery").click(function(){
+			var periods=$(this).parent().next().text();
+			var dates=$(this).parent().siblings('.dates').text();
+			var input=prompt("期数:"+periods+"开奖号码录用:");
+			var newInput=input.split('');//数组形式
+			newInput=newInput.toString();
+			$(this).parent().siblings('.numbers').html(newInput);
+			var id=$(this).attr('data-id');
+			$.ajax({
+			type:"post",
+			url:"${ctx}/betperiod/update",
+			data:{id:id,hs:newInput},
+			success:function(data){
+				//if(data.code===1){
+					//alert('修改成功！')
+				//}
+				console.log(data);
+				alert("期数:"+periods+"开奖时间:"+dates+"开奖号码:"+newInput);
+			},
+			error:function(result){
+				console.log(result)
+			}
+			})
+			
+		})
+		
+	}) */
+
+jQuery(document).ready(function(){
+    //加载游戏名称
+    jQuery.ajax({
+        url : ctx+"/betgameclass/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+ 			if(_obj.gameclassid==${returnDatas.queryBean.gameclassid}){
+			 jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"' selected >"+_obj.gcname+"</option>");
+ 		}else{
+ 			jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"'>"+_obj.gcname+"</option>");
+ 		}
+            });
+            
+            
+        }
+    });
+	});
+	
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betperiod/delete");
+	}
+	
+	
+	
+	
+	
+
+	
+	
+
+	</script>
+</body>
+</html>
+

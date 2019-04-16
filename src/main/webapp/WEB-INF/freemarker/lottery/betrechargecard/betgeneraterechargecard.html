@@ -1,0 +1,112 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betrechargecard/list" method="post">
+							         <!--  <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" /> -->
+									</form>
+									<div class="xiao-form-control  xiao-input-wrap  col-lg-10">
+										<div class="xiao-btnlist">
+											<div class="xiao-btnlist-item">
+												<a style="display: block; background-color: #009688;color: #fff;" href="${ctx}/betrechargecard/list?z=2">生成点卡</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/betrechargecard/list?z=1">点卡列表</a>
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<span class="xiao-form-text col-lg-5">点卡生成：</span>
+											<div class="xiao-form-input col-lg-5">
+												<input class="xiao-input"  id="ff-num" name="ff-num" type="text"/>
+												<span>张</span>
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<span class="xiao-form-text col-lg-5">充值卡面值：</span>
+											<div class="xiao-form-input col-lg-5">
+												<input class="xiao-input" id="ff-money" name="ff-money" type="text"/>元
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<span class="xiao-form-text col-lg-5">充值卡号：</span>
+											<div class="xiao-form-input col-lg-5">
+												<input   type="radio" name="ff-khws" value="8" checked/>
+												<span class="xiao-txt">8位</span>
+												<input type="radio" name="ff-khws" value="10"/>
+												<span class="xiao-txt">10位</span>
+												<input type="radio" name="ff-khlx" value="sz" checked/>
+												<span class="xiao-txt">纯数字</span>
+												<input type="radio" name="ff-khlx" value="sz" />
+												<span class="xiao-txt">英文数字混合</span>
+												
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<span class="xiao-form-text col-lg-5">充值卡密码：</span>
+											<div class="xiao-form-input col-lg-5">
+												<input type="radio" name="ff-mmws" value="8" checked/>
+												<span class="xiao-txt">8位</span>
+												<input type="radio" name="ff-mmws" value="10"/>
+												<span class="xiao-txt">10位</span>
+												<input type="radio" name="ff-mmlx" value="sz" checked/>
+												<span class="xiao-txt">纯数字</span>
+												<input type="radio" name="ff-mmlx" value="szyw"/>
+												<span class="xiao-txt">英文数字混合</span>
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<span class="xiao-form-text col-lg-5">有效期：</span>
+											<div class="xiao-form-input col-lg-5">
+												<input class="xiao-input" type="text" id="ff-validity" name="ff-validity" /> 天
+											</div>
+										</div>
+										<div class="xiao-form-cell text-center col-lg-10">
+											<button id="ff-confirm" class="xiao-btn xiao-btn-blue">确认</button>
+										</div>
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+<script>
+
+$("#ff-confirm").click(function(){
+	var a=$("#ff-num").val();
+	var b=$("#ff-money").val();
+	var c=$("input[name='ff-khws']:checked").val();
+	var d=$("input[name='ff-khlx']:checked").val();
+	var e=$("input[name='ff-mmws']:checked").val();
+	var f=$("input[name='ff-mmlx']:checked").val();
+	var g=$("#ff-validity").val();
+	$.ajax({
+		type:"post",
+		url:"${ctx}/betrechargecard/update?k=2",
+		
+		data:{num:a,money1:b,khws:c,khlx:d,mmws:e,mmlx:f,validity:g},
+		success:function(result){
+			if("error"==result.status){
+				alert(result.message);
+				
+			}else if("success"==result.status){
+				alert(result.message);
+				
+			}
+		},
+	})
+})
+</script>
+</body>
+</html>
+

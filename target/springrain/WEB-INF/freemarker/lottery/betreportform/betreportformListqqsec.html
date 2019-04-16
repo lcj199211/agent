@@ -1,0 +1,1274 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief" >
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             </li>
+		             
+					 <li style="float:right;">
+					 <@shiro.hasPermission name="/betreportform/createreportform" >
+		             		<button type="button" class="layui-btn layui-btn-small" style="margin-top:8px;" id="createreportform"><i class="layui-icon">&#xe61f;</i>生成昨日报表</button>
+		             	</@shiro.hasPermission>
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/seclist?k=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <input type="hidden" name="p" id="p" value="${(p)!'0'}">
+									  <input type="hidden" name="show" id="show" value="${(show)!'0'}">
+									  <div class="layui-table search-wrap">
+									  	<div class="xiao-cell xiao-pull-left xiao-record">
+										
+											
+											<div class="xiao-btnlist xiap-pull-left layui-inline">
+									 				<div class="xiao-btnlist-item">
+													<a  href="${ctx}/betreportform/seclist?springraintoken=${springraintoken!''}"><span id="thismonth">本周</span></a>
+													<!-- <a style="text-decoration:underline;"  href="#"><span id="thismonth">本周</span></a> -->
+													</div>
+													
+													
+													
+													
+													
+													
+													<div class="xiao-btnlist-item">
+													<a id="sadfff" >上周</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="adger" >本月</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="asdtret" >上月</a>
+													</div>
+												</div>
+									</div>
+											
+												
+											
+											
+											
+											<!-- <span id="thismonth">本月</span></a>&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;" href="#"><span  id="lastmonth">上月</span></a> -->
+											
+										</div>
+										<div class="layui-input-inline xiao-input-wrap pull-left">
+											<div class="layui-input-inline xiao-input-wrap pull-left">
+												<input id="starttime" name="starttime" onclick="laydate()" placeholder="请输入日期 " value="${startDate!''}" class="laydate-icon ">
+											</div>
+										到
+											<div class="layui-input-inline">
+												<input id="endtime" name="endtime" onclick="laydate()" placeholder="请输入日期 " value="${endDate!''}" class="laydate-icon ">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even >
+											<thead>
+												<tr>
+													<th colspan="14"><!-- 发放福利：${((welfare))!0}&nbsp;&nbsp;&nbsp;游戏输赢：${((gamewin))!0} --><font id='' class='recorsView'>
+											共<span>${returnDatas.page.pageCount!''}</span>页,共 <span><#if addtotalcount??>${(returnDatas.page.totalCount+1)!''}<#else>${returnDatas.page.totalCount!''}</#if></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												<!--   <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th> -->
+												 
+												  <!--first_end_no_export-->
+														<th nowrap="nowrap">日期</th>
+														
+														<th nowrap="nowrap">注册</th>
+														 <th nowrap="nowrap">转账</th> 
+														<th nowrap="nowrap">充值</th>
+														<th nowrap="nowrap">提现</th>
+														<th nowrap="nowrap">投注额</th>
+														<th nowrap="nowrap">未结算</th>
+														<th nowrap="nowrap">已结算</th>
+														<!-- <th nowrap="nowrap">派彩</th>
+														<th nowrap="nowrap">输赢</th> -->
+														<th nowrap="nowrap">投注佣金</th>
+														 <th nowrap="nowrap">代理提现</th> 
+														<!-- <th>佣金</th> -->
+														
+														<!-- <th>卡收</th>
+														<th>签到</th>
+														<th>救济</th>
+														<th>亏损</th>
+														<th>首冲</th>
+														<th>排行</th> -->
+														<!-- <th>红包</th>
+														<th>投注退佣</th> -->
+														<!-- <th>下级返利</th> -->
+														<!-- <th>总福利</th> -->
+														<!-- <th>游戏输赢(按结算时间)</th> -->
+														<!-- <th>昨日留存</th>
+														<th>今日留存</th> -->
+														<th nowrap="nowrap">不出票库存</th>
+														<th nowrap="nowrap">游戏分库存</th>
+														<th nowrap="nowrap">银行分库存</th>
+														<!-- <th>风控值</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										 
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr>
+														<!--end_no_export-->
+														<td style="text-align: center; white-space:nowrap">
+															<!--日期型-->
+														${((_data.date)?string('MM-dd'))!''}
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="zc" type="hidden" value="${(_data.registernum)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=3&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<font style="color: blue;">
+																${((_data.registernum))!0}
+																</font>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="noissuexxxxxxxx" type="hidden" value="${(_data.noissuetransferscore)!0}">
+														<input class="xxxxxxxx" type="hidden" value="${((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0}">
+														<a style="text-decoration:underline;color: blue;" href="${ctx}/betreportform/seclist?k=25&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+														<#if _data.noissuetransferscore??>
+															<#if (_data.noissuetransferscore) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuetransferscore)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuetransferscore) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuetransferscore)!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color:blue;">0</font>
+															</#if>
+														</a>
+														/
+															<a style="text-decoration:underline;color: blue;" href="${ctx}/betreportform/seclist?k=25&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.transferaccount??>
+															<#if (((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color:blue;">0</font>
+															</#if>
+															</a>
+														</td> 
+														<td style="text-align: center;">
+														<input type="hidden" class="noissuecz" value="${(_data.noissuebetgold)!0}">
+														<input type="hidden" class="cz" value="${((_data.recharge!0)-(_data.noissuebetgold!0))!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=4&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<#if (_data.noissuebetgold)?? >
+																<#if (_data.noissuebetgold) &gt;= 0 >
+																<font style="color: blue;">
+																${(_data.noissuebetgold)!0}
+																</font>
+																</#if>
+																<#if (_data.noissuebetgold) &lt; 0 >
+																<font style="color: red;">
+																${(_data.noissuebetgold)!0}
+																</font>
+																</#if>
+																<#else>
+																<font style="color:blue;">0</font>
+																</#if>
+															</a>
+														/
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=4&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															
+															<#if (((_data.recharge!0)-(_data.noissuebetgold!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.recharge!0)-(_data.noissuebetgold!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.recharge!0)-(_data.noissuebetgold!0))!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.recharge!0)-(_data.noissuebetgold!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="noissuetx" type="hidden" value="${_data.noissuebetwithdrawcash!0}">
+														<input class="tx" type="hidden" value="${((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0}">
+														<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=5&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+														<#if (_data.noissuebetwithdrawcash)?? >
+															<#if (_data.noissuebetwithdrawcash) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuebetwithdrawcash)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuebetwithdrawcash) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuebetwithdrawcash)!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color:blue;">0</font>
+															</#if>
+														</a>
+														/
+														
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=5&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="noissuetze" type="hidden" value="${(_data.noissuebettingtimetotalbettingmoney)!0}">
+														<input class="tze" type="hidden" value="${((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0}">
+														<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=9&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+														<#if (_data.noissuebettingtimetotalbettingmoney!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuebettingtimetotalbettingmoney)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuebettingtimetotalbettingmoney!1) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuebettingtimetotalbettingmoney)!0}
+															</font>
+															</#if>
+														</a>
+														/
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=9&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0}
+															</font>
+															</#if>
+															<#if (((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0}
+															</font>
+															</#if>
+														</td>
+														
+														
+														<td style="text-align: center;">
+														<input class="noissueuntreated" type="hidden" value="${(_data.noissuebettingtimeunsettlebettingmoney)!0}">
+														<input class="untreated" type="hidden" value="${((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0}">
+														<a style="text-decoration:underline;"     href="${ctx}/betreportform/seclist?k=29&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">			
+															<#if (_data.noissuebettingtimeunsettlebettingmoney!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuebettingtimeunsettlebettingmoney)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuebettingtimeunsettlebettingmoney!1) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuebettingtimeunsettlebettingmoney)!0}
+															</font>
+															</#if>
+														</a>
+														/
+																<a style="text-decoration:underline;"     href="${ctx}/betreportform/seclist?k=29&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">												
+															
+															<#if (((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="noissueyjstze" type="hidden" value="${(_data.noissuebettingtimebettingmoney)!0}">
+														<input class="yjstze" type="hidden" value="${((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0}">
+														<a style="text-decoration:underline;"     href="${ctx}/betreportform/seclist?k=30&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+														<#if (_data.noissuebettingtimebettingmoney!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuebettingtimebettingmoney)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuebettingtimebettingmoney!1) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuebettingtimebettingmoney)!0}
+															</font>
+															</#if>
+														</a>
+														/
+															<a style="text-decoration:underline;"     href="${ctx}/betreportform/seclist?k=30&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<#-- <td style="text-align: center;">
+														<input class="noissuepc" type="hidden" value="${_data.noissuebettingtimebettingscore!0}">
+														<input class="pc" type="hidden" value="${((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0}">
+														<#if (_data.noissuebettingtimebettingscore!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuebettingtimebettingscore)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuebettingtimebettingscore!1) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuebettingtimebettingscore)!0}
+															</font>
+															</#if>
+														/
+															<#if (((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0}
+															</font>
+															</#if>
+														</td> --> 
+														
+														<#-- <td style="text-align: center;">
+														<input class="noissuebettingtimeyxsy" type="hidden" value="${_data.noissuebettingtimebettingwin!0}">
+														<input class="bettingtimeyxsy" type="hidden" value="${(((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0}">
+														<#if (_data.noissuebettingtimebettingwin!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.noissuebettingtimebettingwin)!0}
+															</font>
+															</#if>
+															<#if (_data.noissuebettingtimebettingwin!1) &lt; 0 >
+															<font style="color: red;">
+															${(_data.noissuebettingtimebettingwin)!0}
+															</font>
+															</#if>
+														/
+															<#if ((((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0}
+															</font>
+															</#if>
+															<#if ((((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${(((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0}
+															</font>
+															</#if>
+														</td> -->
+														
+														<td style="text-align: center;">
+														<input class="noissuebettingtimecommission" type="hidden" value="${((_data.noissuebettingtimecommission))!0}">
+														<input class="bettingtimecommission" type="hidden" value="${((_data.bettingtimecommission!0)-(_data.noissuebettingtimecommission!0))!0}">
+														<font style="color:blue;">
+														${((_data.noissuebettingtimecommission))!0}
+														</font>
+														/
+														
+															<font style="color:blue;">
+																${((_data.bettingtimecommission!0)-(_data.noissuebettingtimecommission!0))!0}
+															</font>
+														</td>
+														
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"     href="${ctx}/betreportform/seclist?k=31&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (_data.agentwithdrawcash!0) &gt;= 0 >
+																<font style="color: blue;">
+																${((_data.agentwithdrawcash))!0}
+																</font>
+															</#if>
+															<#if (_data.agentwithdrawcash!1) &lt; 0 >
+																<font style="color: red;">
+																${((_data.agentwithdrawcash))!0}
+																</font>
+															</#if>
+															</a>
+														</td>
+														<!-- <td style="text-align: center;">
+															<font style="color: blue;">
+															${((_data.tzty))!0}
+															</font>
+														
+														</td> -->
+														
+														
+														<#-- <td style="text-align: center;">
+														<input type="hidden" class="czks" value="${(_data.cardrecycle)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=17&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.cardrecycle &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.cardrecycle))!0}
+															</font>
+															</#if>
+															<#if _data.cardrecycle &lt; 0 >
+															<font style="color: red;">
+															${((_data.cardrecycle))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="qd" value="${(_data.signin)!0}" type="hidden">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=15&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.signin &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.signin))!0}
+															</font>
+															</#if>
+															<#if _data.signin &lt; 0 >
+															<font style="color: red;">
+															${((_data.signin))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="jj" type="hidden" value="${(_data.relief)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=13&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.relief &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.relief))!0}
+															</font>
+															</#if>
+															<#if _data.relief &lt; 0 >
+															<font style="color: red;">
+															${((_data.relief))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="ks" type="hidden" value="${(_data.daywinorfailrebate)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=12&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.daywinorfailrebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.daywinorfailrebate))!0}
+															</font>
+															</#if>
+															<#if _data.daywinorfailrebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.daywinorfailrebate))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="sc" type="hidden" value="${(_data.firstrecharge)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=16&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.firstrecharge &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.firstrecharge))!0}
+															</font>
+															</#if>
+															<#if _data.firstrecharge &lt; 0 >
+															<font style="color: red;">
+															${((_data.firstrecharge))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="ph" type="hidden" value="${(_data.rank)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=14&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.rank &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.rank))!0}
+															</font>
+															</#if>
+															<#if _data.rank &lt; 0 >
+															<font style="color: red;">
+															${((_data.rank))!0}
+															</font>
+														</td> -->
+														<#-- <td style="text-align: center;">
+														<input class="hb" type="hidden" value="${(_data.redpackage)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=7&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.redpackage &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.redpackage))!0}
+															</font>
+															</#if>
+															<#if _data.redpackage &lt; 0 >
+															<font style="color: red;">
+															${((_data.redpackage))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="ty" type="hidden" value="${(_data.ty)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=19&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.ty &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.ty))!0}
+															</font>
+															</#if>
+															<#if _data.ty &lt; 0 >
+															<font style="color: red;">
+															${((_data.ty))!0}
+															</font>
+															</#if>
+															</a>
+														</td> -->
+														<#--
+														<td style="text-align: center;">
+														<input class="xjfl" type="hidden" value="${(_data.subordinaterebate)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=8&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.subordinaterebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.subordinaterebate))!0}
+															</font>
+															</#if>
+															<#if _data.subordinaterebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.subordinaterebate))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														-->
+														<#-- <td style="text-align: center;">
+														<input class="zfl" type="hidden" value="${(_data.allwelfare)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=20&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.allwelfare &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.allwelfare))!0}
+															</font>
+															</#if>
+															<#if _data.allwelfare &lt; 0 >
+															<font style="color: red;">
+															${((_data.allwelfare))!0}
+															</font>
+															</#if>
+															</a>												
+														</td> -->
+														<!-- <td style="text-align: center;">
+														<input class="yxsy" type="hidden" value="${(_data.winorloss)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportform/seclist?k=26&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.winorloss &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.winorloss))!0}
+															</font>
+															</#if>
+															<#if _data.winorloss &lt; 0 >
+															<font style="color: red;">
+															${((_data.winorloss))!0}
+															</font>
+															</#if>
+															</a>
+														</td> -->
+														<!-- <td style="text-align: center;">
+															<#if _data.result &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.result))!0}
+															</font>
+															</#if>
+															<#if _data.result &lt; 0 >
+															<font style="color: red;">
+															${((_data.result))!0}
+															</font>
+															</#if>
+														</td>
+														<td style="text-align: center;">
+															<#if _data.dayscore &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.dayscore))!0}
+															</font>
+															</#if>
+															<#if _data.dayscore &lt; 0 >
+															<font style="color: red;">
+															${((_data.dayscore))!0}
+															</font>
+															</#if>
+														</td> -->
+														
+														<td style="text-align: center;color:blue;">
+															
+															${((_data.noissuescore))!0}
+															
+														</td>
+														<td style="text-align: center;color:blue;">
+															${((_data.gamescore))!0}
+														</td>
+														<td style="text-align: center;color:blue;">
+															${((_data.bankscore))!0}
+														</td>
+														<!-- <td style="text-align: center;">
+														<input type="hidden" value="${(_data.dayscore)!0}">
+														<input type="hidden" value="${(_data.score)!0}">
+															<a class="fkz"></a>
+														</td> -->
+													</tr>
+												</#list>
+												<tr style="text-align: center;background-color: #eafcff;">
+												<td>小计</td>
+												
+												<td>
+												<a id="zc" ></a>
+												</td>
+												<td>
+												<a id="xxxxxxxx" ></a>
+												</td>
+												<td>
+												<a id="cz" ></a>
+												</td>
+												<td>
+												<a id="tx" ></a>
+												</td>
+												<td>
+												<a id="tze" ></a>
+												</td>
+												<td><a id="untreated" ></a></td>
+												<td><a id="yjstze"></a></td>
+												<!-- <td><a id="pc"></a></td>
+												<td><a id="bettingtimeyxsy"></a></td> -->
+												<td><a id="bettingtimecommission"></a></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												
+												<!-- 
+												<td><input id="czks" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="qd" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="jj" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="ks" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="sc" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="ph" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												-->
+												<!-- <td><input id="hb" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td>
+												<td><input id="ty" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												<!-- <td><input id="xjfl" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												<!-- <td><input id="zfl" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+											<!-- 	<td><input id="yxsy" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												<!-- <td></td>
+												<td></td> -->
+												<!-- <td></td> -->
+											<!-- 	<td><input id="fkz" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+									
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<!-- <font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font>-->
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+<script>
+
+$("#createreportform").click(function(){
+
+	
+	 
+		//询问框
+		layer.confirm('确定生成昨日报表？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betreportform/createreportform",
+				data:{},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已生成昨日报表！',{offset:['','']});
+						setTimeout("location.reload(true);",2000);
+						
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		});
+	
+
+})
+
+
+var now = new Date(); //当前日期
+var nowDayOfWeek = now.getDay(); //今天本周的第几天
+var nowDay = now.getDate(); //当前日
+var nowMonth = now.getMonth(); //当前月
+var nowYear = now.getYear(); //当前年
+nowYear += (nowYear < 2000) ? 1900 : 0; //
+var lastMonthDate = new Date(); //上月日期
+lastMonthDate.setDate(1);
+lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+var lastYear = lastMonthDate.getYear();
+var lastMonth = lastMonthDate.getMonth();
+//格式化日期：yyyy-MM-dd
+function formatDate(date) {
+    var myyear = date.getFullYear();
+    var mymonth = date.getMonth() + 1;
+    var myweekday = date.getDate();
+    if (mymonth < 10) {
+        mymonth = "0" + mymonth;
+    }
+    if (myweekday < 10) {
+        myweekday = "0" + myweekday;
+    }
+    return (myyear + "-" + mymonth + "-" + myweekday);
+}
+jQuery(function(){
+	function getLastWeekStartDate() {
+	    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 6);
+	    return formatDate(weekStartDate);
+	}
+	function getLastWeekEndDate() {
+	    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek );
+	    return formatDate(weekEndDate);
+	}
+	function getMonthStartDate() {
+	    var monthStartDate = new Date(nowYear, nowMonth, 1);
+	    return formatDate(monthStartDate);
+	}
+	function getMonthEndDate() {
+	    var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
+	    return formatDate(monthEndDate);
+	}
+	function getMonthDays(myMonth) {
+	    var monthStartDate = new Date(nowYear, myMonth, 1);
+	    var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+	    var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+	    return days;
+	}
+	//获得上月开始时间
+	function getLastMonthStartDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthStartDate;
+		if(lastMonth==11){
+			lastMonthStartDate = new Date(LastYear, lastMonth, 1);	
+		}else{
+			lastMonthStartDate = new Date(nowYear, lastMonth, 1);
+		}
+	    
+	    return formatDate(lastMonthStartDate);
+	}
+	//获得上月结束时间
+	function getLastMonthEndDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthEndDate;
+		if(lastMonth==11){
+			lastMonthEndDate = new Date(LastYear, lastMonth, getMonthDays(lastMonth));
+		}else{
+			lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
+		}
+	    return formatDate(lastMonthEndDate);
+	}
+
+	var firstDay=getLastWeekStartDate();
+	var lastDay=getLastWeekEndDate();
+	$("#sadfff").attr("href","${ctx}/betreportform/seclist?k=1&starttime="+firstDay+"&endtime="+lastDay); 
+	var firstDay1=getMonthStartDate();
+	var lastDay1=getMonthEndDate();
+	$("#adger").attr("href","${ctx}/betreportform/seclist?k=1&starttime="+firstDay1+"&endtime="+lastDay1);
+	var firstDay2=getLastMonthStartDate();
+	var lastDay2=getLastMonthEndDate();
+	$("#asdtret").attr("href","${ctx}/betreportform/seclist?k=1&starttime="+firstDay2+"&endtime="+lastDay2);
+
+
+
+
+	
+	
+	var href = window.location.href;
+	var result = href.split('?')[href.split('?').length-1];
+	var url_list = $('.xiao-btnlist').find('a');
+	for(var i = 0; i < url_list.length ; i++){
+		if(url_list[i].href == href){
+//				console.log(url_list[i].href);
+			url_list[i].style.backgroundColor = "#009688";
+			url_list[i].style.display = "block";
+			url_list[i].style.color = "#fff";
+		}
+	}
+});
+    
+	
+function clearpageindex(){
+	$("#pageIndex").val(1);
+	/* $("#show").val(2); */
+}
+
+/* if($("#p").val()==0){
+	$("#searchForm").attr("action","${ctx}/betreportform/seclist?k=1");
+}else if($("#p").val()==1){
+	$("#searchForm").attr("action","${ctx}/betreportform/seclist");
+}else{
+	$("#searchForm").attr("action","${ctx}/betreportform/seclist?k=18");
+} */
+function Request(name){
+   new RegExp("(^|&)"+name+"=([^&]*)").exec(window.location.search.substr(1));
+   return RegExp.$2
+}
+
+/* if($("#show").val()==-1){
+	$("#lastmonth").attr("style","color:blue;");
+	$("#p").val(0);
+}
+if($("#show").val()==0){
+	$("#thismonth").attr("style","color:blue;");
+	$("#p").val(0);
+} */
+
+var zc = 0;
+$(".zc").each(function(){
+	zc+=parseFloat($(this).val());
+});
+$("#zc").text(Math.round(zc*100)/100);
+if(zc>=0){
+	$("#zc").css("color","blue");
+}
+if(zc<0){
+	$("#zc").css("color","red");
+}
+
+
+var noissuexxxxxxxx = 0;
+
+$(".noissuexxxxxxxx").each(function(){
+	noissuexxxxxxxx+=parseFloat($(this).val());
+});
+if(noissuexxxxxxxx>=0){
+	$("#xxxxxxxx").html("<font style='color:blue;'>"+Math.round(noissuexxxxxxxx*100)/100+"</font> / ");
+}
+if(noissuexxxxxxxx<0){
+	$("#xxxxxxxx").html("<font style='color:red;'>"+Math.round(noissuexxxxxxxx*100)/100+"</font> / ");
+} 
+
+var xxxxxxxx = 0;
+$(".xxxxxxxx").each(function(){
+	xxxxxxxx+=parseFloat($(this).val());
+});
+if(xxxxxxxx>=0){
+	$("#xxxxxxxx").html($("#xxxxxxxx").html()+"<font style='color:blue;'>"+Math.round(xxxxxxxx*100)/100+"</font>");
+}
+if(xxxxxxxx<0){
+	$("#xxxxxxxx").html($("#xxxxxxxx").html()+"<font style='color:red;'>"+Math.round(xxxxxxxx*100)/100+"</font>");
+} 
+
+var noissuecz = 0;
+
+$(".noissuecz").each(function(){
+	noissuecz+=parseFloat($(this).val());
+});
+if(noissuecz>=0){
+	$("#cz").html("<font style='color:blue;'>"+Math.round(noissuecz*100)/100+"</font> / ");
+}
+if(noissuecz<0){
+	$("#cz").html("<font style='color:red;'>"+Math.round(noissuecz*100)/100+"</font> / ");
+} 
+
+var cz = 0;
+$(".cz").each(function(){
+	cz+=parseFloat($(this).val());
+});
+if(cz>=0){
+	$("#cz").html($("#cz").html()+"<font style='color:blue;'>"+Math.round(cz*100)/100+"</font>");
+}
+if(cz<0){
+	$("#cz").html($("#cz").html()+"<font style='color:red;'>"+Math.round(cz*100)/100+"</font>");
+} 
+
+
+var noissuetx = 0;
+
+$(".noissuetx").each(function(){
+	noissuetx+=parseFloat($(this).val());
+});
+if(noissuetx>=0){
+	$("#tx").html("<font style='color:blue;'>"+Math.round(noissuetx*100)/100+"</font> / ");
+}
+if(noissuetx<0){
+	$("#tx").html("<font style='color:red;'>"+Math.round(noissuetx*100)/100+"</font> / ");
+} 
+
+var tx = 0;
+$(".tx").each(function(){
+	tx+=parseFloat($(this).val());
+});
+if(tx>=0){
+	$("#tx").html($("#tx").html()+"<font style='color:blue;'>"+Math.round(tx*100)/100+"</font>");
+}
+if(tx<0){
+	$("#tx").html($("#tx").html()+"<font style='color:red;'>"+Math.round(tx*100)/100+"</font>");
+} 
+
+var noissuetze = 0;
+
+$(".noissuetze").each(function(){
+	noissuetze+=parseFloat($(this).val());
+});
+if(noissuetze>=0){
+	$("#tze").html("<font style='color:blue;'>"+Math.round(noissuetze*100)/100+"</font> / ");
+}
+if(noissuetze<0){
+	$("#tze").html("<font style='color:red;'>"+Math.round(noissuetze*100)/100+"</font> / ");
+} 
+
+var tze = 0;
+$(".tze").each(function(){
+	tze+=parseFloat($(this).val());
+});
+if(tze>=0){
+	$("#tze").html($("#tze").html()+"<font style='color:blue;'>"+Math.round(tze*100)/100+"</font>");
+}
+if(tze<0){
+	$("#tze").html($("#tze").html()+"<font style='color:red;'>"+Math.round(tze*100)/100+"</font>");
+}
+
+
+
+
+var noissueuntreated = 0;
+
+$(".noissueuntreated").each(function(){
+	noissueuntreated+=parseFloat($(this).val());
+});
+if(noissueuntreated>=0){
+	$("#untreated").html("<font style='color:blue;'>"+Math.round(noissueuntreated*100)/100+"</font> / ");
+}
+if(noissueuntreated<0){
+	$("#untreated").html("<font style='color:red;'>"+Math.round(noissueuntreated*100)/100+"</font> / ");
+} 
+
+var untreated = 0;
+$(".untreated").each(function(){
+	untreated+=parseFloat($(this).val());
+});
+if(untreated>=0){
+	$("#untreated").html($("#untreated").html()+"<font style='color:blue;'>"+Math.round(untreated*100)/100+"</font>");
+}
+if(untreated<0){
+	$("#untreated").html($("#untreated").html()+"<font style='color:red;'>"+Math.round(untreated*100)/100+"</font>");
+}
+
+var noissueyjstze = 0;
+
+$(".noissueyjstze").each(function(){
+	noissueyjstze+=parseFloat($(this).val());
+});
+if(noissueyjstze>=0){
+	$("#yjstze").html("<font style='color:blue;'>"+Math.round(noissueyjstze*100)/100+"</font> / ");
+}
+if(noissueyjstze<0){
+	$("#yjstze").html("<font style='color:red;'>"+Math.round(noissueyjstze*100)/100+"</font> / ");
+} 
+
+var yjstze = 0;
+$(".yjstze").each(function(){
+	yjstze+=parseFloat($(this).val());
+});
+if(yjstze>=0){
+	$("#yjstze").html($("#yjstze").html()+"<font style='color:blue;'>"+Math.round(yjstze*100)/100+"</font>");
+}
+if(yjstze<0){
+	$("#yjstze").html($("#yjstze").html()+"<font style='color:red;'>"+Math.round(yjstze*100)/100+"</font>");
+}
+
+
+var noissuepc = 0;
+
+$(".noissuepc").each(function(){
+	noissuepc+=parseFloat($(this).val());
+});
+if(noissuepc>=0){
+	$("#pc").html("<font style='color:blue;'>"+Math.round(noissuepc*100)/100+"</font> / ");
+}
+if(noissuepc<0){
+	$("#pc").html("<font style='color:red;'>"+Math.round(noissuepc*100)/100+"</font> / ");
+} 
+
+var pc = 0;
+$(".pc").each(function(){
+	pc+=parseFloat($(this).val());
+});
+if(pc>=0){
+	$("#pc").html($("#pc").html()+"<font style='color:blue;'>"+Math.round(pc*100)/100+"</font>");
+}
+if(yjstze<0){
+	$("#pc").html($("#pc").html()+"<font style='color:red;'>"+Math.round(pc*100)/100+"</font>");
+}
+
+
+var noissuebettingtimeyxsy = 0;
+
+$(".noissuebettingtimeyxsy").each(function(){
+	noissuebettingtimeyxsy+=parseFloat($(this).val());
+});
+if(noissuebettingtimeyxsy>=0){
+	$("#bettingtimeyxsy").html("<font style='color:blue;'>"+Math.round(noissuebettingtimeyxsy*100)/100+"</font> / ");
+}
+if(noissuebettingtimeyxsy<0){
+	$("#bettingtimeyxsy").html("<font style='color:red;'>"+Math.round(noissuebettingtimeyxsys*100)/100+"</font> / ");
+} 
+
+var bettingtimeyxsy = 0;
+$(".bettingtimeyxsy").each(function(){
+	bettingtimeyxsy+=parseFloat($(this).val());
+});
+if(bettingtimeyxsy>=0){
+	$("#bettingtimeyxsy").html($("#bettingtimeyxsy").html()+"<font style='color:blue;'>"+Math.round(bettingtimeyxsy*100)/100+"</font>");
+}
+if(bettingtimeyxsy<0){
+	$("#bettingtimeyxsy").html($("#bettingtimeyxsy").html()+"<font style='color:red;'>"+Math.round(bettingtimeyxsy*100)/100+"</font>");
+}
+
+
+var noissuebettingtimecommission = 0;
+
+$(".noissuebettingtimecommission").each(function(){
+	noissuebettingtimecommission+=parseFloat($(this).val());
+});
+if(noissuebettingtimecommission>=0){
+	$("#bettingtimecommission").html("<font style='color:blue;'>"+Math.round(noissuebettingtimecommission*100)/100+"</font> / ");
+}
+if(noissuebettingtimeyxsy<0){
+	$("#bettingtimecommission").html("<font style='color:red;'>"+Math.round(noissuebettingtimecommission*100)/100+"</font> / ");
+} 
+
+var bettingtimecommission = 0;
+$(".bettingtimecommission").each(function(){
+	bettingtimecommission+=parseFloat($(this).val());
+});
+if(bettingtimecommission>=0){
+	$("#bettingtimecommission").html($("#bettingtimecommission").html()+"<font style='color:blue;'>"+Math.round(bettingtimecommission*100)/100+"</font>");
+}
+if(bettingtimecommission<0){
+	$("#bettingtimecommission").html($("#bettingtimecommission").html()+"<font style='color:red;'>"+Math.round(bettingtimecommission*100)/100+"</font>");
+}
+
+
+
+
+var zfl = 0;
+$(".zfl").each(function(){
+	zfl+=parseFloat($(this).val());
+});
+zfl = parseFloat(zfl);
+$("#zfl").val(Math.round(zfl*100)/100);
+if(zfl>=0){
+	$("#zfl").css("color","blue");
+}
+if(zfl<0){
+	$("#zfl").css("color","red");
+}
+
+
+var czks = 0;
+$(".czks").each(function(){
+	ks+=parseFloat($(this).val());
+});
+czks = parseFloat(czks);
+$("#czks").val(Math.round(czks*100)/100);
+if(ks>=0){
+	$("#czks").css("color","blue");
+}
+if(ks<0){
+	$("#czks").css("color","red");
+}
+
+var qd = 0;
+$(".qd").each(function(){
+	qd+=parseFloat($(this).val());
+});
+qd = parseFloat(qd);
+$("#qd").val(Math.round(qd*100)/100);
+if(qd>=0){
+	$("#qd").css("color","blue");
+}
+if(qd<0){
+	$("#qd").css("color","red");
+}
+
+var jj = 0;
+$(".jj").each(function(){
+	jj+=parseFloat($(this).val());
+});
+jj = parseFloat(jj);
+$("#jj").val(Math.round(jj*100)/100);
+if(jj>=0){
+	$("#jj").css("color","blue");
+}
+if(jj<0){
+	$("#jj").css("color","red");
+}
+
+var ks = 0;
+$(".ks").each(function(){
+	ks+=parseFloat($(this).val());
+});
+ks = parseFloat(ks);
+$("#ks").val(Math.round(ks*100)/100);
+if(ks>=0){
+	$("#ks").css("color","blue");
+}
+if(ks<0){
+	$("#ks").css("color","red");
+}
+
+var sc = 0;
+$(".sc").each(function(){
+	sc+=parseFloat($(this).val());
+});
+sc = parseFloat(sc);
+$("#sc").val(Math.round(sc*100)/100);
+if(sc>=0){
+	$("#sc").css("color","blue");
+}
+if(sc<0){
+	$("#sc").css("color","red");
+}
+
+var ph = 0;
+$(".ph").each(function(){
+	ph+=parseFloat($(this).val());
+});
+ph = parseFloat(ph);
+$("#ph").val(Math.round(ph*100)/100);
+if(ph>=0){
+	$("#ph").css("color","blue");
+}
+if(ph<0){
+	$("#ph").css("color","red");
+}
+
+var hb = 0;
+$(".hb").each(function(){
+	hb+= parseFloat($(this).val());
+});
+hb = parseFloat(hb);
+$("#hb").val(Math.round(hb*100)/100);
+if(hb>=0){
+	$("#hb").css("color","blue");
+}
+if(hb<0){
+	$("#hb").css("color","red");
+}
+
+var ty = 0;
+$(".ty").each(function(){
+	ty+= parseFloat($(this).val());
+});
+ty = parseFloat(ty);
+$("#ty").val(Math.round(ty*100)/100);
+if(ty>=0){
+	$("#ty").css("color","blue");
+}
+if(ty<0){
+	$("#ty").css("color","red");
+}
+
+var xjfl = 0;
+$(".xjfl").each(function(){
+	xjfl+=parseFloat($(this).val());
+});
+xjfl = parseFloat(xjfl);
+$("#xjfl").val(Math.round(xjfl*100)/100);
+if(xjfl>=0){
+	$("#xjfl").css("color","blue");
+}
+if(xjfl<0){
+	$("#xjfl").css("color","red");
+}
+
+var yxsy = 0;
+$(".yxsy").each(function(){
+	yxsy+=parseFloat($(this).val());
+});
+yxsy = parseFloat(yxsy);
+$("#yxsy").val(Math.round(yxsy*100)/100);
+if(yxsy>=0){
+	$("#yxsy").css("color","blue");
+}
+if(yxsy<0){
+	$("#yxsy").css("color","red");
+}
+
+
+
+
+
+
+
+
+
+
+
+/* $(".fkz").each(function(){
+	var sadfasfd=parseFloat(parseFloat($(this).prev().prev().val()) - parseFloat($(this).prev().val()));
+	$(this).text(Math.round(sadfasfd*100)/100);
+	if(parseFloat($(this).prev().prev().val()) - parseFloat($(this).prev().val())>=0){
+		$(this).css("color","blue");
+	}else{
+		$(this).css("color","red");
+	}
+});
+
+var fkz = 0;
+$(".fkz").each(function(){
+	fkz+=parseFloat($(this).text());
+});
+fkz = parseFloat(fkz);
+$("#fkz").val(Math.round(fkz*100)/100);
+if(fkz>=0){
+	$("#fkz").css("color","blue");
+}else{
+	$("#fkz").css("color","red");
+} */
+</script>
+</html>
+

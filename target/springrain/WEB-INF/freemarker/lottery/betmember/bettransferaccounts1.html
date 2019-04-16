@@ -1,0 +1,156 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+					<li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+								   <a><cite>用户管理</cite><span class="layui-box">&gt;</span></a>
+								   <a><cite>转账</cite></a>
+								</span>
+			            </li>
+					 <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+								      <div class="xiao-btnlist xiap-pull-left">
+										<div class="xiao-btnlist-item" style="background:#009688;">    
+								  			 <a style="color:#fff;" href="${ctx}/betmember/list?k=9&id2=${id2!''}">转账</a>
+								   		</div>
+								   		<div class="xiao-btnlist-item">  
+								   			<a href="${ctx}/betmember/list?k=10&id2=${id2!''}">转账记录</a>
+								   		</div>
+								   	 </div>
+						   <br/>      
+						   <br/>    
+						   <table>
+						   <tr>
+						   <td>金币余额：</td>
+						   <input type="hidden" id="ff-score" value="${score!0}">
+						   <td>${score!0}</td>
+						   </tr>
+						   <tr>
+						   <td>接收ID：</td>
+						   <td> <input style="border:0;background:transparent;width:100px"  readonly type="text" id="ff-memberid2" value="${id2!''}">  <button id="ff-jc">检测</button><span id="ff-idjc"></span></td>
+						   </tr>
+						   <tr>
+						   <td>转账类型：</td>
+						   <td><select name="type" id="ff-type">
+						                            <option value ="2">游戏分</option>
+													<option value ="1">银行分</option>
+													<option value ="3">冻结分</option>
+													
+												</select></td>
+						   </tr>
+						   <tr>
+						   <td>转账分：</td>
+						   <td><input type="text" id="ff-money"></td>
+						   </tr>
+						   <tr>
+						   <td>银行密码:</td>
+						   <td><input type="password" id="pwd" name="pwd"></td>
+						   </tr>
+						   <tr>
+						   <td>备注：</td>
+						   <td><input type="text" id="ff-remark"></td>
+						   </tr>
+						   <tr style="height: 20px"></tr>
+						   <tr style="text-align: center;">
+						   <td><button id="ff-confirm">确认转账</button></td>
+						   </tr>
+						   </table>
+							<span id="ff-message"></span>
+						          
+
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+		
+	<script>
+	$("#ff-jc").click(function(){
+		var a=$("#ff-memberid2").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/look/json?currentbetting=1",
+			
+			data:{id2:a},
+			success:function(result){
+				if("error"==result.status){
+					$("#ff-idjc").html("<font color='red'>无此用户</font>");
+					
+				}else if("success"==result.status){
+					$("#ff-idjc").text("昵称："+result.data.nickname+"，真实姓名："+result.data.realname+"，总分："+parseInt(result.data.score)+"，银行分："+parseInt(result.data.bankscore)+"，游戏分："+parseInt(result.data.gamescore)+"，冻结分："+parseInt(result.data.freezingscore)+"，投注中："+parseInt(result.data.currentBettingMoney));
+				}
+			},
+		})
+	})
+	
+	$("#ff-confirm").click(function(){
+	
+		var fn = arguments.callee,  
+	    self = this;  
+		$(self).unbind('click', fn);
+		
+		var a=$("#ff-memberid2").val();
+		var b=$("#ff-money").val();
+		var c=$("#ff-remark").val();
+		var d=$("#ff-type").val();
+		var e=$("#pwd").val();
+		var f=$("#ff-score").val();
+		var reg_zs = /^-?[1-9]\d*(\.\d+)?$/;
+    	if (!reg_zs.test(b)) { 
+    		layer.msg('请输入正确的金额！',{offset:['','']});
+    		 $(self).click(fn);  
+            return; 
+    	}
+    	/*if(parseInt(b)<0){
+			layer.msg('转账金额不能小于零！',{offset:['','']});
+			 $(self).click(fn);  
+			return;
+		}*/
+    	//alert("f="+f+" parseInt(b)="+parseInt(b)+" parseInt(f)="+parseInt(f));
+		if(parseInt(b)>parseInt(f)){
+			layer.msg('余额不足,转账失败！',{offset:['','']});
+			 $(self).click(fn);  
+			return;
+		}
+		//alert('a='+a);
+		//alert('b='+b);
+		$.ajax({
+			type:"post",
+			url:"${ctx}/bettransferaccounts/update",
+			
+			data:{memberid2:a,transferaccountsscore:b,remark:c,type:d,pwd:e,u:1},
+			success:function(result){
+				if("error"==result.status){
+					layer.msg(result.message,{offset:['','']});
+					 $(self).click(fn);  
+				}else if("success"==result.status){
+ 					
+					layer.msg('转账成功！',{offset:['','']});
+					setTimeout("location.reload()",2000);
+				}
+			},
+		})
+	})
+	</script>
+</body>
+</html>
+

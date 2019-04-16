@@ -1,0 +1,82 @@
+<#ftl output_format="HTML" auto_esc=true> <@h.commonHead title="后台管理系统" keywords="开源,永久免费"
+description="springrain开源系统管理后台"/>
+</head>
+<body>
+		<@h.naviHeader /> <@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+		              	<li style="float:right;">
+			             	<@shiro.hasPermission name="${ctx}/system/fwlog/export" >
+					        	<button type="button" class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <@shiro.hasPermission name="${ctx}/system/fwlog/delete" >
+			               		 <button type="button" class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission>
+		             	</li>
+		       		 </ul>
+		       		   	<div id="LAY_preview"  class="xiao-ht-content">
+								<form class="layui-form layui-form-pane" method="post" action="${ctx}/system/auditlog/list" name="searchForm" id="searchForm">
+									<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+									<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" /> 
+									<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									<div class="search-wrap xiao-input-wrap">
+										<div class="layui-inline">
+											<div class="layui-input-inline">
+												<input type="text" name="userCode" id="search_title" placeholder="用户" value="${(returnDatas.queryBean.userCode)!''}" class="xiao-input">
+												<div class="layui-inline">
+													<button class="layui-btn" id="searchBtn" onclick="springrain.commonSubmit('searchForm');">查询</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									</form>
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even>
+									  		<thead>
+											  	<tr>
+													<!--first_start_no_export-->
+													<!--first_end_no_export-->
+													<th id="th_userCode">操作帐号</th>
+													<th id="th_userName">操作类型</th>
+													<th id="th_strDate">操作类</th>
+													<th id="th_menuName">操作时间</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<!--first_end_export-->
+											<!--start_export-->
+											<tbody>
+													<#if (returnDatas.data??)&&(returnDatas.data?size>0)> <#list
+													returnDatas.data as _data>
+													<!--start_no_export-->
+														<tr class="">
+															<!--end_no_export-->
+															<td>${(_data.operatorName)!''}</td>
+															<td>${(_data.operationType)!''}</td>
+															<td>
+																<!--日期型--> ${(_data.operationClass)!''}
+															</td>
+						
+															<td>${((_data.operationTime)?string('yyyy-MM-dd HH:mm:ss'))!""}</td>
+															<td>
+															 <a style="padding: 0 30px;height: 25px;line-height: 25px;" href="#" data-action="${ctx}/system/auditlog/look?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">查看</a>
+															</td>
+														</tr>
+													</#list> </#if>
+											</tbody>
+									</table>
+									<div id="laypageDiv" class="xiao-inline-block">
+									<@h.layPage cont="laypageDiv" formId="searchForm" page=returnDatas.page/>
+									<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span></span>页 ,共<span></span>条记录</font>
+									</div>
+							</div>
+					</div>
+				</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

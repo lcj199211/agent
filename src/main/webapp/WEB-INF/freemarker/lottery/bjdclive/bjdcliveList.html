@@ -1,0 +1,450 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/bjdclive/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>北单实况管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/bjdclive/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/bjdclive/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/bjdclive/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/bjdclive/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/bjdclive/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">北单实况搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">北单实况列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <th>操作</th>
+												  <!--first_end_no_export-->
+														<th id="th_periodnum" >periodnum</th>
+														<th id="th_num" >num</th>
+														<th id="th_fid" >fid</th>
+														<th id="th_matchname" >matchname</th>
+														<th id="th_matchid2" >matchid2</th>
+														<th id="th_state" >状态1:已完成 2:进行中 3:未开始 4:改期</th>
+														<th id="th_time" >比赛进行的时间</th>
+														<th id="th_starttime" >starttime</th>
+														<th id="th_hometeam" >hometeam</th>
+														<th id="th_hometeamid2" >hometeamid2</th>
+														<th id="th_guestteam" >guestteam</th>
+														<th id="th_guestteamid2" >guestteamid2</th>
+														<th id="th_leftpub1" >leftpub1</th>
+														<th id="th_leftpub2" >leftpub2</th>
+														<th id="th_leftpub3" >leftpub3</th>
+														<th id="th_leftpub4" >leftpub4</th>
+														<th id="th_leftpub5" >leftpub5</th>
+														<th id="th_leftpub6" >leftpub6</th>
+														<th id="th_leftpub7" >leftpub7</th>
+														<th id="th_leftpub8" >leftpub8</th>
+														<th id="th_leftpub9" >leftpub9</th>
+														<th id="th_leftpub10" >leftpub10</th>
+														<th id="th_leftpub11" >leftpub11</th>
+														<th id="th_leftres1" >leftres1</th>
+														<th id="th_leftres2" >leftres2</th>
+														<th id="th_leftres3" >leftres3</th>
+														<th id="th_leftres4" >leftres4</th>
+														<th id="th_leftres5" >leftres5</th>
+														<th id="th_leftres6" >leftres6</th>
+														<th id="th_leftres7" >leftres7</th>
+														<th id="th_rightpub1" >rightpub1</th>
+														<th id="th_rightpub2" >rightpub2</th>
+														<th id="th_rightpub3" >rightpub3</th>
+														<th id="th_rightpub4" >rightpub4</th>
+														<th id="th_rightpub5" >rightpub5</th>
+														<th id="th_rightpub6" >rightpub6</th>
+														<th id="th_rightpub7" >rightpub7</th>
+														<th id="th_rightpub8" >rightpub8</th>
+														<th id="th_rightpub9" >rightpub9</th>
+														<th id="th_rightpub10" >rightpub10</th>
+														<th id="th_rightpub11" >rightpub11</th>
+														<th id="th_rightres1" >rightres1</th>
+														<th id="th_rightres2" >rightres2</th>
+														<th id="th_rightres3" >rightres3</th>
+														<th id="th_rightres4" >rightres4</th>
+														<th id="th_rightres5" >rightres5</th>
+														<th id="th_rightres6" >rightres6</th>
+														<th id="th_rightres7" >rightres7</th>
+														<th id="th_shemeng" >shemeng</th>
+														<th id="th_shezheng" >shezheng</th>
+														<th id="th_fangui" >fangui</th>
+														<th id="th_jiaoqiu" >jiaoqiu</th>
+														<th id="th_yuewei" >yuewei</th>
+														<th id="th_red" >red</th>
+														<th id="th_yellow" >yellow</th>
+														<th id="th_jinggong" >jinggong</th>
+														<th id="th_weixiejinggong" >weixiejinggong</th>
+														<th id="th_renyiqiu" >renyiqiu</th>
+														<th id="th_jiuqiu" >jiuqiu</th>
+														<th id="th_kongqiulv" >kongqiulv</th>
+														<th id="th_realscore" >即时比分</th>
+														<th id="th_halfscore" >0:0</th>
+														<th id="th_leftres8" >leftres8</th>
+														<th id="th_leftres9" >leftres9</th>
+														<th id="th_leftres10" >leftres10</th>
+														<th id="th_leftres11" >leftres11</th>
+														<th id="th_leftres12" >leftres12</th>
+														<th id="th_rightres8" >rightres8</th>
+														<th id="th_rightres9" >rightres9</th>
+														<th id="th_rightres10" >rightres10</th>
+														<th id="th_rightres11" >rightres11</th>
+														<th id="th_rightres12" >rightres12</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<td>
+															<@shiro.hasPermission name="/bjdclive/update" >
+								                           		 <a href="#" data-action="${ctx}/system/role/update/pre?id=" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/bjdclive/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+														<!--end_no_export-->
+														<td >
+															${(_data.periodnum)!''}
+														</td>
+														<td >
+															${(_data.num)!''}
+														</td>
+														<td >
+															${(_data.fid)!''}
+														</td>
+														<td >
+															${(_data.matchname)!''}
+														</td>
+														<td >
+															${(_data.matchid2)!''}
+														</td>
+														<td >
+															${(_data.state)!0}
+														</td>
+														<td >
+															${(_data.time)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.starttime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.hometeam)!''}
+														</td>
+														<td >
+															${(_data.hometeamid2)!''}
+														</td>
+														<td >
+															${(_data.guestteam)!''}
+														</td>
+														<td >
+															${(_data.guestteamid2)!''}
+														</td>
+														<td >
+															${(_data.leftpub1)!''}
+														</td>
+														<td >
+															${(_data.leftpub2)!''}
+														</td>
+														<td >
+															${(_data.leftpub3)!''}
+														</td>
+														<td >
+															${(_data.leftpub4)!''}
+														</td>
+														<td >
+															${(_data.leftpub5)!''}
+														</td>
+														<td >
+															${(_data.leftpub6)!''}
+														</td>
+														<td >
+															${(_data.leftpub7)!''}
+														</td>
+														<td >
+															${(_data.leftpub8)!''}
+														</td>
+														<td >
+															${(_data.leftpub9)!''}
+														</td>
+														<td >
+															${(_data.leftpub10)!''}
+														</td>
+														<td >
+															${(_data.leftpub11)!''}
+														</td>
+														<td >
+															${(_data.leftres1)!''}
+														</td>
+														<td >
+															${(_data.leftres2)!''}
+														</td>
+														<td >
+															${(_data.leftres3)!''}
+														</td>
+														<td >
+															${(_data.leftres4)!''}
+														</td>
+														<td >
+															${(_data.leftres5)!''}
+														</td>
+														<td >
+															${(_data.leftres6)!''}
+														</td>
+														<td >
+															${(_data.leftres7)!''}
+														</td>
+														<td >
+															${(_data.rightpub1)!''}
+														</td>
+														<td >
+															${(_data.rightpub2)!''}
+														</td>
+														<td >
+															${(_data.rightpub3)!''}
+														</td>
+														<td >
+															${(_data.rightpub4)!''}
+														</td>
+														<td >
+															${(_data.rightpub5)!''}
+														</td>
+														<td >
+															${(_data.rightpub6)!''}
+														</td>
+														<td >
+															${(_data.rightpub7)!''}
+														</td>
+														<td >
+															${(_data.rightpub8)!''}
+														</td>
+														<td >
+															${(_data.rightpub9)!''}
+														</td>
+														<td >
+															${(_data.rightpub10)!''}
+														</td>
+														<td >
+															${(_data.rightpub11)!''}
+														</td>
+														<td >
+															${(_data.rightres1)!''}
+														</td>
+														<td >
+															${(_data.rightres2)!''}
+														</td>
+														<td >
+															${(_data.rightres3)!''}
+														</td>
+														<td >
+															${(_data.rightres4)!''}
+														</td>
+														<td >
+															${(_data.rightres5)!''}
+														</td>
+														<td >
+															${(_data.rightres6)!''}
+														</td>
+														<td >
+															${(_data.rightres7)!''}
+														</td>
+														<td >
+															${(_data.shemeng)!''}
+														</td>
+														<td >
+															${(_data.shezheng)!''}
+														</td>
+														<td >
+															${(_data.fangui)!''}
+														</td>
+														<td >
+															${(_data.jiaoqiu)!''}
+														</td>
+														<td >
+															${(_data.yuewei)!''}
+														</td>
+														<td >
+															${(_data.red)!''}
+														</td>
+														<td >
+															${(_data.yellow)!''}
+														</td>
+														<td >
+															${(_data.jinggong)!''}
+														</td>
+														<td >
+															${(_data.weixiejinggong)!''}
+														</td>
+														<td >
+															${(_data.renyiqiu)!''}
+														</td>
+														<td >
+															${(_data.jiuqiu)!''}
+														</td>
+														<td >
+															${(_data.kongqiulv)!''}
+														</td>
+														<td >
+															${(_data.realscore)!''}
+														</td>
+														<td >
+															${(_data.halfscore)!''}
+														</td>
+														<td >
+															${(_data.leftres8)!''}
+														</td>
+														<td >
+															${(_data.leftres9)!''}
+														</td>
+														<td >
+															${(_data.leftres10)!''}
+														</td>
+														<td >
+															${(_data.leftres11)!''}
+														</td>
+														<td >
+															${(_data.leftres12)!''}
+														</td>
+														<td >
+															${(_data.rightres8)!''}
+														</td>
+														<td >
+															${(_data.rightres9)!''}
+														</td>
+														<td >
+															${(_data.rightres10)!''}
+														</td>
+														<td >
+															${(_data.rightres11)!''}
+														</td>
+														<td >
+															${(_data.rightres12)!''}
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

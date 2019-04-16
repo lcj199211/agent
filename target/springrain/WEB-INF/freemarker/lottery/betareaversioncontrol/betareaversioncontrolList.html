@@ -1,0 +1,232 @@
+<#ftl output_format="HTML" auto_esc=true> <@h.commonHead title="后台管理系统"
+keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function() {
+		_state = "${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		 */
+		jQuery("#checkAll").bind('click', function() {
+			var _is_check = jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i, _o) {
+				jQuery(_o).get(0).checked = _is_check;
+			});
+		});
+	});
+	function del(_id) {
+		springrain.mydelete(_id, "${ctx}/betareaversioncontrol/delete");
+	}
+	function dels(_id){
+		springrain.mydeletemore(_id,"${ctx}/betareaversioncontrol/delete/more");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+		<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title site-demo-title">
+				<li class="layui-this"><i class="layui-icon">&#xe630;</i> <!--网站地图导航-->
+					<span class="layui-breadcrumb" style="visibility: visible;">
+						<a href="${ctx}">首页<span class="layui-box">&gt;</span></a> <a><cite>地域栏目版本管理</cite></a>
+				</span></li>
+				<li style="float: right;"><@shiro.hasPermission
+					name="/betareaversioncontrol/update" >
+					<button type="button" class="layui-btn layui-btn-small"
+						data-action="${ctx}/betareaversioncontrol/update/pre">
+						<i class="layui-icon layui-icon-specil">&#xe61f;</i>新增
+					</button> </@shiro.hasPermission>
+					<@shiro.hasPermission name="/betareaversioncontrol/delete" >
+					<button type="button" onclick="dels('${(_data.id)!''}')"
+						class="layui-btn layui-btn-danger layui-btn-small">
+						<i class="layui-icon">&#xe640;</i>批量删除
+					</button> </@shiro.hasPermission>
+				</li>
+			</ul>
+
+			<div class="layui-body layui-tab-content site-demo-body">
+				<div class="layui-tab-item layui-show">
+					<div class="layui-main">
+						<div id="LAY_preview">
+							<!-- 查询  开始 -->
+							<form class="layui-form layui-form-pane" id="searchForm"
+								action="${ctx}/betareaversioncontrol/list" method="post">
+								<input type="hidden" name="pageIndex" id="pageIndex"
+									value="${(returnDatas.page.pageIndex)!'1'}" /> <input
+									type="hidden" name="sort" id="page_sort"
+									value="${(returnDatas.page.sort)!'desc'}" /> <input
+									type="hidden" name="order" id="page_order"
+									value="${(returnDatas.page.order)!'id'}" />
+								<table class="layui-table search-wrap">
+									<colgroup>
+										<col width="">
+										<col width="150">
+									</colgroup>
+									<tbody>
+										<tr>
+											<th colspan="2">地域栏目版本搜索</th>
+										</tr>
+										<tr>
+											<td>
+												<div class="layui-inline">
+													<label class="layui-form-label">栏目版本</label>
+													<div class="layui-input-inline">
+								                           <select name="versioncontrol" id="versioncontrol" class="layui-input">
+									                          <option value="">==请选择==</option>
+									                          <option value="">==请选择==</option>
+															  <option <#if returnDatas.queryBean.versioncontrol??><#if returnDatas.queryBean.versioncontrol == "A">selected="selected"</#if></#if> value="A">资讯版（A版）</option>
+															  <option <#if returnDatas.queryBean.versioncontrol??><#if returnDatas.queryBean.versioncontrol == "B">selected="selected"</#if></#if> value="B">彩票版（B版）</option>
+															</select>   
+									                    </div>
+												</div>
+												<div class="layui-inline">
+													<label class="layui-form-label">地区名称</label>
+													<div class="layui-input-inline">
+														<input type="text" name="areanames"
+															value="${(returnDatas.queryBean.areanames)!''}"
+															placeholder="请输入地区名称 " class="layui-input">
+													</div>
+												</div>
+												<div class="layui-inline">
+													<label class="layui-form-label">状态</label>
+													<div class="layui-input-inline">
+														<select name="status" id="status" class="layui-input">
+								                          <option value="">==请选择==</option>
+								                          <option value="">==请选择==</option>
+														  <option <#if returnDatas.queryBean.status??><#if returnDatas.queryBean.status == 1>selected="selected"</#if></#if> value="1">开启</option>
+														  <option <#if returnDatas.queryBean.status??><#if returnDatas.queryBean.status == 0>selected="selected"</#if></#if> value="0">关闭</option>
+														</select>     
+													</div>
+												</div>
+												<div class="layui-inline">
+													<label class="layui-form-label">方向</label>
+													<div class="layui-input-inline">
+								                        <select name="direction" id="direction" class="layui-input">
+								                          <option value="">==请选择==</option>
+								                          <option value="">==请选择==</option>
+														  <option <#if returnDatas.queryBean.direction??><#if returnDatas.queryBean.direction == 1>selected="selected"</#if></#if> value="1">只能访问</option>
+														  <option <#if returnDatas.queryBean.direction??><#if returnDatas.queryBean.direction == 2>selected="selected"</#if></#if> value="2">禁止访问</option>
+														</select>   
+								                    </div>
+												</div>
+											</td>
+											<td>
+												<div class="layui-inline">
+													<button class="layui-btn" type="button"
+														onclick="springrain.commonSubmit('searchForm');">
+														<i class="layui-icon" style="top: 4px; right: 5px;">&#xe615;</i>搜索
+													</button>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<!-- 查询  结束 -->
+							</form>
+							<!--start_export-->
+							<table class="layui-table" lay-even>
+								<colgroup>
+									<col width="40">
+									<col width="120">
+									<col>
+								</colgroup>
+								<!--end_no_export-->
+								<!--first_start_export-->
+								<thead>
+									<tr>
+										<th colspan="9">地域栏目版本列表<font id='recordsView'
+											class='recorsView'>共<span></span>页,共 <span></span>条记录
+										</font></th>
+									</tr>
+									<tr>
+										<!--first_start_no_export-->
+										<th class="center"><input id="checkAll" type="checkbox">
+										</th>
+										<!--first_end_no_export-->
+										<th id="th_versioncontrol">栏目版本</th>
+										<!-- <th id="th_areaids" >行政地区ids，11</th> -->
+										<th id="th_areanames">地区名称</th>
+										<th id="th_createdate">创建时间</th>
+										<th id="th_modifydate">修改时间</th>
+										<!-- <th id="th_company" >代理公司名称</th> -->
+										<th id="th_status">状态</th>
+										<th id="th_direction">方向</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<!--first_end_export-->
+								<!--start_export-->
+								<tbody>
+									<#if (returnDatas.data??)&&(returnDatas.data?size>0)> <#list
+									returnDatas.data as _data>
+									<!--start_no_export-->
+									<tr class="">
+										<td class="center"><input name="check_li"
+											value="${_data.id}" type="checkbox"></td>
+										<!--end_no_export-->
+										<td><#if _data.versioncontrol??> 
+												<#if _data.versioncontrol=="A"> 
+													资讯版（A版） 
+												<#elseif _data.versioncontrol=="B"> 
+													彩票版（B版）
+												<#else>
+													${(_data.versioncontrol)!''} 
+												</#if>
+											</#if></td>
+										<!-- <td>${(_data.areaids)!''}</td> -->
+										<td>${(_data.areanames)!''}</td>
+										<td>
+											<!--日期型--> ${((_data.createdate)?string('yyyy-MM-dd HH:mm:ss'))!''}
+										</td>
+										<td>
+											<!--日期型--> ${((_data.modifydate)?string('yyyy-MM-dd HH:mm:ss'))!''}
+										</td>
+										<!-- <td >
+											${(_data.company)!''}
+										</td> -->
+										<td><#if _data.status??> 
+												<#if _data.status==1> 开启 
+												<#elseif _data.status==0>关闭 
+												</#if>
+											<#else>${(_data.status)!0} 
+											</#if></td>
+										<td><#if _data.direction??> 
+												<#if _data.direction==1> 只能访问
+												<#elseif _data.direction==2> 禁止访问
+												</#if>
+											<#else>${(_data.direction)!0} 
+											</#if></td>
+										<td><@shiro.hasPermission
+											name="/betareaversioncontrol/update" > <a href="#"
+											data-action="${ctx}/betareaversioncontrol/update/pre?id=${(_data.id)!''}"
+											class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+											</@shiro.hasPermission> <@shiro.hasPermission
+											name="/betareaversioncontrol/delete" > <a
+											href="javascript:del('${(_data.id)!''}')"
+											class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+											</@shiro.hasPermission>
+										</td>
+									</tr>
+									</#list> </#if>
+								</tbody>
+							</table>
+							<#if returnDatas.page??>
+							<div id='laypageDiv'></div>
+							<@h.layPage page=returnDatas.page /> </#if>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

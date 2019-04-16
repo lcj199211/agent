@@ -1,0 +1,257 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betagentproxie/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+	
+	
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+	//时间详细
+	
+	$(".timedetail").mouseover(function(){
+		var a=$(this).attr('name');
+   		layer.tips(a, this);
+    });
+	
+	//30秒刷新
+	var t; 
+	t=30; 
+	//function shua() {
+	//		t=t-1; 
+			
+	//			if (t==0) 
+	//		{ 
+	//		document.location.reload(); 
+	//	} 
+	//}
+	var timer;
+	var count=function(){
+		timer=setInterval(function(){
+			t--;
+			document.getElementById("hints").innerHTML=t+" 秒"; 
+			if(t<=0){
+				document.location.reload();
+				clearInterval(timer);
+			}
+		},1000)
+	};
+	window.onload=count();
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+			 <ul class="layui-tab-title site-demo-title">
+					<li style="float:right;">
+					 	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagentproxie/list1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+									                <div class="layui-inline xiao-pull-left ">
+										            <div class="layui-input-inline xiao-input-wrap pull-left">
+																	提现时间： 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>到	
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+									          		<div class="layui-inline">
+											            <button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											        </div>
+											        <div class="layui-inline">
+											        	<button id="reflesh" class="xiao-btn xiao-btn-success"><span id="hints" >30秒</span>刷新</button>
+											        </div>
+								                </div>
+								                <div class="layui-inline"style="float:right">
+														<@shiro.hasPermission name="/betagentproxie/update" >
+									             		  <button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betagentproxie/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>提现</button>
+									             	    </@shiro.hasPermission>
+									             </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="">
+										    <col width="">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="15"><font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+												  		<th id="th_id">订单编号</th>
+												  		<th id="th_agentid">代理账号</th>
+														<th id="th_applicationtime" >提现时间</th>
+														
+														<th id="th_money" >提现金额</th>
+														<th id="th_accountname" >账户名</th>
+														<th id="th_bankname" >银行名称</th>
+														<th id="th_accountno" >银行账户</th>
+														<th id="th_accounttype" >账户类型</th>
+														<th id="th_state" >订单状态</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														<!--end_no_export-->
+														<td >
+														${((_data.orderid))!''}
+														</td>
+														<td>
+														${((_data.agentid))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.applicationtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td class="xiao-color-e00 font-weight" style="white-space:nowrap">
+														<span style="color:blue;">
+															${(_data.money)!0}
+														</td>
+														<td >
+															${(_data.accountname)!''}
+														</td>
+														
+														<td >
+															${(_data.bankname)!''}
+														</td>
+														<td >
+															${(_data.accountno)!''}
+														</td>
+														<td >
+															<#if _data.accounttype==0>
+																对公
+																<#elseif _data.accounttype==1>
+																对私
+																<#elseif _data.accounttype==2>
+																<p style="color:green">ing</p>
+																<#else> 
+															</#if>
+														</td>
+														<td >
+															<#if _data.state==0>
+																<font style="color:green;">提现成功</font>
+																<#elseif _data.state==1>
+																<p style="color:red">提现失败</p>
+																<#elseif _data.state==2>
+																<p style="color:bule">提现申请中</p>
+																<#elseif _data.state==3>
+																<p style="color:red">订单未处理</p>
+																<#elseif _data.state==4>
+																<p style="color:red">交易结果未知</p>
+																<#elseif _data.state==5>
+																<p style="color:red">提现未知异常</p>
+																<#else> 
+															</#if>
+														</td>
+														<td style="white-space:nowrap">
+																
+																	<input type="hidden" value=${(_data.orderid)!''}>
+																	<input type="hidden" value=${(_data.id)!''}>
+																	<@shiro.hasPermission name="/betagentproxie/update" >
+										                           		  <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="${ctx}/betagentproxie/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-danger layui-btn-mini">再提一笔</a>
+										                            </@shiro.hasPermission>
+<!-- 																	<#if _data.state=1>
+																	<@shiro.hasPermission name="/betagentproxie/update" >
+										                           		  <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="${ctx}/betagentproxie/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-default layui-btn-mini">重新提现</a>
+										                            </@shiro.hasPermission>
+										                            </#if>
+										                            <#if _data.state=0> -->
+	<!-- 																<@shiro.hasPermission name="/betagentproxie/update" >
+										                           		  <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="${ctx}/betagentproxie/update/pre?id=${(_data.id)!''}" class="layui-btn xiao-btn-danger layui-btn-mini">再提一笔</a>
+										                            </@shiro.hasPermission> -->
+										                            <!-- </#if> -->
+																</td>
+<!-- 														<td>
+															<input type="hidden" value="${(_data.id)!''}">
+																<#if _data.state=0>
+																<@shiro.hasPermission name="/betagentproxie/update" >
+									                           		 <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="#" class="layui-btn xiao-btn-default layui-btn-mini confirm">确定</a>
+									                            </@shiro.hasPermission>
+									                            <@shiro.hasPermission name="/betagentproxie/update" >
+									                            	<a style="padding:0  15px;line-height: 25px;height: 25px;" href="#" class="layui-btn xiao-btn-danger layui-btn-mini cancel">取消</a>
+									                            </@shiro.hasPermission>
+									                            </#if>
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

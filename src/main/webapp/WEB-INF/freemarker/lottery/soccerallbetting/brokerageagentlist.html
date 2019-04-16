@@ -1,0 +1,226 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/soccerallbetting/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+</script>
+<style>
+.xiao-ht-table td, .xiao-ht-table th {
+    padding: 0px 0;
+}
+</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+				<!-- 
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>投注汇总管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/soccerallbetting/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/soccerallbetting/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/soccerallbetting/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/soccerallbetting/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+		              -->
+		               <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagentreportformjc/list/v2?k=33&date=${(date)}&isissue=${(isissue)}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">投注汇总搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				
+							                		&nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">游戏类型</label>
+									                    <div class="layui-input-inline">
+									                        <select name="type" id="type" class="layui-input">
+									                        		<option value="">请选择</option>
+																  	<option value="1" 
+																  	<#if returnDatas.queryBean.type??>
+																		 <#if returnDatas.queryBean.type=1> selected
+																		 </#if> 
+																    </#if> >足球</option>
+																    <option value="3" 
+																		 <#if "${type}"="3"> selected
+																		 </#if> 
+																     >篮球</option>
+																    <option value="4" 
+																		 <#if "${type}"="4"> selected
+																		 </#if> 
+																     >北单</option>
+															</select>   
+									                    </div>
+									                </div>
+							                		
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="13">投注汇总列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  -->
+												  
+												  <!--first_end_no_export-->
+														<th  >用户ID</th>
+														<th  >返代理佣金</th>
+														<th id="th_settlementtime" >结算时间</th>
+														<th  >游戏类型</th>
+														
+														<!--  <th>操作</th>  -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+													<!-- 
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														 -->
+														
+														<!--end_no_export-->
+														
+														<td >
+															<!--  ${(_data.memberid2)!0}  -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/betmember/look?id2=${(_data.memberid2)!0}">${(_data.memberid2)!0}</a>
+															(${(_data.membernickname)!''})
+														</td>
+														
+														
+														
+														
+														<td >
+															<font style="color:blue">${-(_data.brokerageagentmoney)!''}</font>
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.settlementtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														
+														
+														<td >
+															<!-- ${(_data.type)!0} （0：彩票，1：足球）  -->
+															<#if returnDatas.queryBean.type==0>
+																<span  >彩票</span>
+															<#elseif returnDatas.queryBean.type==1>
+																<span  >足球</span>
+															<#elseif returnDatas.queryBean.type==3>
+																<span  >篮球</span>
+															<#elseif returnDatas.queryBean.type==4>
+																<span  >北单</span>
+															</#if>
+														</td>
+														
+														<!--  
+														<td>
+															<@shiro.hasPermission name="/soccerallbetting/update" >
+								                           		 <a href="#" data-action="${ctx}/soccerallbetting/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/soccerallbetting/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+														-->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

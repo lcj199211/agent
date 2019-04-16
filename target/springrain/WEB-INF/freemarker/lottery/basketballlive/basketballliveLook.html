@@ -1,0 +1,213 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>篮球实况管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加篮球实况</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/basketballlive/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">fid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.fid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">zid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.zid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">编号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.num)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客队*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.awayteam)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">客队id2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.awayteamid2)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主队*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.hometeam)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">主队id2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.hometeamid2)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">赛事名*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.matchname)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开始时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.starttime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进行时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.time)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">第一节*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.onescore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">第二节*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.twoscore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">第三节*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.threescore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">第四节*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.fourscore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">比分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allscore)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">alllanban*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.alllanban)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">allzhugong*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allzhugong)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">allqiangduan*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allqiangduan)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">allgaimao*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allgaimao)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">allshiwu*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allshiwu)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">犯规*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allfangui)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">投篮命中率*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.alltoulanmingzhonglv)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">罚球命中率*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allfaqiumingzhonglv)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">3分命中率*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.allsanfenmiingzhonglv)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

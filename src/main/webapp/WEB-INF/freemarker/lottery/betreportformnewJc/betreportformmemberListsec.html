@@ -1,0 +1,170 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>用户留存</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						         <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/seclist?k=10&date=${date}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          </form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+											<tr>
+													<th colspan="13">用户留存&nbsp;&nbsp;&nbsp;<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												</tr>
+												<tr>
+												  <!--first_end_no_export-->
+												  		<th>用户ID</th>
+														<th>昵称</th>
+														<th id="th_bankmoney">银行金币</th>
+														<th id="th_gamemoney">游戏金币</th>
+														<th id="th_freezingscore">冻结金币</th>
+														<th id="th_score" >总金币数</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td style="text-align: center;">
+															<a href="${ctx}/betmember/look?id2=${(_data.id2)!''}" style="color: blue"><u>${(_data.id2)!''}</u></a>
+														</td>
+														<td style="text-align: center;">
+															${(_data.nickname)!''}
+														</td>
+														<td 
+														<#if (_data.bankmoney??)&&(_data.bankmoney<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" class="yhjb" value="${(_data.bankmoney)!0}">
+															${(((_data.bankmoney?floor))?string(',###'))!0}
+														</td>
+														<td
+														<#if (_data.gamemoney??)&&(_data.gamemoney<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" class="yxjb" value="${(_data.gamemoney)!0}">
+															${(((_data.gamemoney?floor))?string(',###'))!0}
+														</td>
+														<td 
+														<#if (_data.freezingscore??)&&(_data.freezingscore<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" class="djjb" value="${(_data.freezingscore)!0}">
+															${(((_data.freezingscore?floor))?string(',###'))!0}
+														</td>
+														<td 
+														<#if (_data.score??)&&(_data.score<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" class="zjbs" value="${(_data.score)!0}">
+															${(((_data.score?floor))?string(',###'))!0}
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color: #eafcff">
+													<td style="text-align: center;">小计</td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"><a id="yhjb"></a></td>
+													<td style="text-align: center;"><a id="yxjb"></a></td>
+													<td style="text-align: center;"><a id="djjb"></a></td>
+													<td style="text-align: center;"><a id="zjbs"></a></td>
+												</tr>
+											 </#if>
+											</tbody>
+											
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+var yhjb = 0;
+$(".yhjb").each(function(){
+	yhjb+=parseFloat($(this).val());
+});
+$("#yhjb").css("color","blue");
+$("#yhjb").text(outputmoney(parseInt(yhjb)));
+
+var yxjb = 0;
+$(".yxjb").each(function(){
+	yxjb+=parseFloat($(this).val());
+});
+$("#yxjb").css("color","blue");
+$("#yxjb").text(outputmoney(parseInt(yxjb)));
+
+var djjb = 0;
+$(".djjb").each(function(){
+	djjb+=parseFloat($(this).val());
+});
+$("#djjb").css("color","blue");
+$("#djjb").text(outputmoney(parseInt(djjb)));
+
+var zjbs = 0;
+$(".zjbs").each(function(){
+	zjbs+=parseFloat($(this).val());
+});
+$("#zjbs").css("color","blue");
+$("#zjbs").text(outputmoney(parseInt(zjbs)));
+</script>
+</html>
+

@@ -1,0 +1,138 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betvip/delete");
+	}
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+	       			</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							        <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betvip/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									 <!--  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">VIP等级设置搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table> -->
+									<!--   查询  结束 -->
+									</form> 
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even>
+											<thead>
+												<tr>
+														<th id="th_level" >等级</th>
+														<th id="th_bottom" >经验范围下限</th>
+														<th id="th_top" >经验范围上限</th>
+														<th id="th_allowance" >救济</th>
+														<th id="th_signin" >签到奖励</th>
+												        <th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															${(_data.level)!0}
+														</td>
+														<td >
+															${(_data.bottom)!0}
+														</td>
+														<td >
+															${(_data.top)!0}
+														</td>
+														<td >
+															${(_data.allowance)!0}
+														</td>
+														<td >
+															${(_data.signin)!0}
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betvip/update" >
+								                           		 <a style="padding: 0 30px; height: 25px; line-height: 25px;" href="#" data-action="${ctx}/betvip/update/pre?id=${(_data.id)}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                           <!--  <@shiro.hasPermission name="/betvip/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission> -->
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv'></div>
+											<@h.layPage page=returnDatas.page /> 
+										</#if>
+								</div>
+							</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

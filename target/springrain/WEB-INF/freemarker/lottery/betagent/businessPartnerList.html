@@ -1,0 +1,140 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<!-- <script src="${ctx}/js/custom/common/form.js"></script>
+ -->
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<!--	 <@shiro.hasPermission name="/bettransferagentaccounts/list" >
+		             		<button type="button" class="layui-btn layui-btn-small" data-action="${ctx}/bettransferagentaccounts/list?a=1"><i class="layui-icon layui-icon-specil">&#xe61f;</i>到账记录</button>
+		             	</@shiro.hasPermission>
+		             <@shiro.hasPermission name="/betagent/list" >
+		             		<button type="button" class="layui-btn layui-btn-small" data-action="${ctx}/betagent/list?a=1"><i class="layui-icon layui-icon-specil">&#xe61f;</i>收款账户</button>
+		             	</@shiro.hasPermission>
+		             	-->
+		             	<@shiro.hasPermission name="/betagent/update" >
+		             		<button type="button" class="layui-btn layui-btn-small" data-action="${ctx}/businesspartner/update/pre?agentid=${agentid}&a=1"><i class="layui-icon layui-icon-specil">&#xe61f;</i>个人设置</button>
+		             	</@shiro.hasPermission> 
+		             	<!-- <@shiro.hasPermission name="/betagent/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/betagent/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission> -->
+		             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form autocomplete="off" class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagent/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="3" style="text-align: left;border-right: 0px">
+													<#if List??>
+														<#list List as _agent>
+															<font>-> </font><a href="${ctx}/businesspartner/list?agentid=${(_agent!'')}"><u>${_agent!''}</u></a>
+														</#list>													
+													</#if>
+													</th><th colspan="20" style="border-left: 0px;">合作商家<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												
+												<tr style="background-color:#eafcff;" >
+												  <!--first_end_no_export-->
+												  		<th style="width: 60px">所属</th>
+														<th>代理商ID</th>
+														<th>账号</th>
+														<th>昵称</th>
+														<th>联系电话</th>
+														<th>微信</th>
+														<th>QQ</th>
+														<th></th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														
+														<!--end_no_export-->
+														<td style="text-align: center;">
+															${(_data.parentid)!''}
+														</td>
+														<td style="text-align: center;">
+														<a style="color: blue;" id="agentid" href="${ctx}/businesspartner/list?agentid=${(_data.agentid!'')}">
+															<u>	${(_data.agentid)!''}</u></a>
+														</td>
+														<td style="text-align: center;">
+															${(_data.account)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.nickname)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.mobile)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.weixin)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.qq)!''}
+														</td>
+														
+														<td style="text-align: center; ">
+															<@shiro.hasPermission name="/betagent/update" >
+								                           		 <a href="#" data-action="${ctx}/businesspartner/update/pre?agentid=${(_data.agentid)}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+	</div>
+	<div class="footer"></div>
+</body>
+
+</html>
+

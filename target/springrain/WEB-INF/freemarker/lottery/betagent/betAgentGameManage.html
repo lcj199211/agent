@@ -1,0 +1,184 @@
+<#ftl output_format="HTML" auto_esc=true> <@h.commonHead title="代理管理系统"
+keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/ztree/js/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript" src="${ctx}/js/ztree/js/ztreeUtils.js"></script>
+<script type="text/javascript" src="${ctx}/js/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/select2/js/i18n/zh-CN.js"></script>
+<script type="text/javascript" src="${ctx}/js/custom/common/select2remote.js"></script>
+<script type="text/javascript" src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/select2/css/select2.min.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/css/custom/common/myztree.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+
+</head>
+<body>
+
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+		<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title">
+				<li class="layui-this"><i class="layui-icon">&#xe630;</i> <span
+					class="layui-breadcrumb" style="visibility: visible;"> <a>
+					<cite>首页</cite><span class="layui-box">&gt;</span>
+					</a><a><cite>代理</cite><span class="layui-box">&gt;</span>
+					</a><a><cite>游戏权限</cite>
+					</a> </span></li>
+				<li style="float:right;">
+					<button type="button" onclick="history.go(-1)"
+						class="layui-btn layui-btn-small" style="margin-top:8px;">
+						<i class="layui-icon layui-icon-specil">&#xe603;</i>返回
+					</button></li>
+			</ul>
+ 
+			<div class="layui-body layui-tab-content site-demo-body">
+				<div class="layui-tab-item layui-show">
+				  <div class="layui-main">
+						<div id="LAY_preview" class="layui-my-form">
+							<header class="larry-personal-tit">
+								<span>游戏权限</span>
+							</header>
+							<div class="larry-personal-body clearfix changepwd">
+							<form id="validForm" name="updateForm" class="layui-form <!--  -->" method="post">
+							<div class="layui-form-item col-lg-6">
+							<input type="hidden" id="parentid" name="parentid" autocomplete="off"
+									class="layui-input" value="${(returnDatas.data.parentid)!''}">
+								<input type="hidden" autocomplete="off"
+									class="layui-input" value="${(returnDatas.data.id)!''}">
+								<label class="layui-form-label" style="width:150px">代理商id:</label>
+								<div class="layui-inline col-lg-5">
+								<input style="border: 0;margin-top: -3px" readonly="readonly" type="text" id="agentid" name="agentid" autocomplete="off"
+									class="layui-input" value="${(returnDatas.data.agentid)!''}">
+								</div>
+							</div>
+							<div class="layui-form-item col-lg-6">
+							<label class="layui-form-label" style="width:150px">游戏管理:</label>
+							
+								<div class="layui-inline col-lg-5">
+									<input lay-filter="choseall" id="choseall" name="choseall" title="全选/取消全选" type="checkbox" >
+									<!-- <input lay-filter="chosecontrary" id="chosecontrary" name="chosecontrary" title="反选" type="checkbox" > -->
+									<div style="height: 15px"></div>
+									<div style="width:650px">
+									<#if betAgentGamemanagesList??>
+										<#list betAgentGamemanagesList as _gamemanagedata>
+											<div style="width: 150px;float: left;" display="inline-block">
+											 	<input lay-filter="gamemanage" title="${_gamemanagedata.gcname!''}" type="checkbox" name="gamemanage" 
+											 	value="${_gamemanagedata.gameclassid}" <#if _gamemanagedata.state=1 >checked</#if>>
+											</div>
+										</#list>
+									</#if>
+									</div>
+								</div>
+							<div class="layui-form-item change-submit">
+								<label class="layui-form-label"></label>
+									<div class="layui-inline" style="text-align: center;">
+										<button type="submit" class="layui-btn" style="width: 150px;margin-left: 80px; margin-top: 15px;" id="smtbtn">保存</button>
+									</div>
+									
+							</div>
+						</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<!-- 主体内容结束 -->
+	<@h.footer />
+	</div>
+	<script>
+	jQuery(function() {
+		/*
+		init_valid(_before,_after)
+		@_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		@_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		  springrain.initValid(null, function() {
+				window.location.href = "${ctx}/betagent/list?agentid=${(returnDatas.data.parentid)}"
+		}); 
+	}); 
+	//初始化
+	var gamecheck="";
+	var url="";
+	    $("input:checkbox[name=gamemanage]:checked").each(function(i){
+	    if(gamecheck!=""){
+	      gamecheck+=",";
+	      }    
+	     gamecheck += $(this).val();  
+	     console.log(gamecheck);    
+	    });
+	    url='${ctx}/betagent/update?g=1&agentid='+ $("#agentid").val() +'&check='+gamecheck
+	    $('#validForm').attr('action',url)
+	    //点击每一个
+	    layui.use(['form'], function () {
+	            var form = layui.form()
+	            , layer = layui.layer;
+	            form.on('checkbox(gamemanage)', function (data) {
+				   	gamecheck="";
+				    $("input:checkbox[name=gamemanage]:checked").each(function(i){
+				   /*  if(gamecheck!=""){
+				      gamecheck+=",";
+				      }   */
+				     gamecheck += $(this).val()+","; 
+				    });
+				     console.log(gamecheck);  
+				      url='${ctx}/betagent/update?g=1&agentid='+ $("#agentid").val() +'&check='+gamecheck
+				      $('#validForm').attr('action',url)
+	            });
+	            //全（不）选
+	             form.on('checkbox(choseall)', function (data) {
+					if($('#choseall').is(':checked')) {
+					 gamecheck="";
+						$("input[name=gamemanage]").attr('checked',true);
+						$("input[name=gamemanage]").next().addClass("layui-form-checked");
+						$("input[name=gamemanage]").each(function(i){
+						     gamecheck += $(this).val()+",";  
+						});
+						    console.log(gamecheck);    
+						     url='${ctx}/betagent/update?g=1&agentid='+ $("#agentid").val() +'&check='+gamecheck
+				      $('#validForm').attr('action',url);
+					}else{
+					$("input[name=gamemanage]").attr('checked',false);
+						$("input[name=gamemanage]").next().removeClass("layui-form-checked");
+						     gamecheck = "";  
+						     console.log(gamecheck);    
+						     url='${ctx}/betagent/update?g=1&agentid='+ $("#agentid").val() +'&check='+gamecheck
+				      $('#validForm').attr('action',url);
+					}        
+	            });
+	            
+	            //反选
+	             form.on('checkbox(chosecontrary)', function (data) {
+	            	gamecheck="";
+	            	
+	            	$("input[name=gamemanage]").each(function(){
+	            		/* if($(this).attr('checked')){
+	            			$(this).removeAttr('checked');
+	            		}else{
+	            			$(this).attr("checked","checked")
+	            		}  */
+		            	 $(this).attr("checked",!$(this).attr("checked"));
+	            	})
+				     $("input[name=gamemanage]").each(function(index,ele){
+				     	if($(ele).attr('checked')){
+				     		$(ele).next().addClass("layui-form-checked");
+				     		gamecheck +=$(this).val()+",";  
+				     	}else{
+				     		$(ele).next().removeClass("layui-form-checked");
+				     	}
+				     })
+						 console.log(gamecheck);
+				    url='${ctx}/betagent/update?g=1&agentid='+ $("#agentid").val() +'&check='+gamecheck
+			      	$('#validForm').attr('action',url);        	
+	            });
+	            
+	        });
+</script>
+<div class="footer"></div>
+</body>
+</html>

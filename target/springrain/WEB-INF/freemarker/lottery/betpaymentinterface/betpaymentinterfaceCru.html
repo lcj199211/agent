@@ -1,0 +1,250 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<script src="${ctx}/js/webuploader/webuploader.html5only.min.js"></script>
+<script src="${ctx}/js/custom/common/springrain.js"></script>
+<link rel="stylesheet" type="text/css" href="${ctx}/js/webuploader/webuploader.css">
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betpaymentinterface/list?springraintoken="+springraintoken});
+		 
+		 
+		 
+		 var uploader = WebUploader.create({
+			 auto:true,
+		    // swf文件路径
+		    swf: '${ctx}/js/webuploader/Uploader.swf',
+		    // 文件接收服务端。
+		    server: '${ctx}/betpaymentinterface/twobarcodeupload?springraintoken='+springraintoken,
+		    // 选择文件的按钮。可选。
+		    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+		    pick: '#filePicker',
+		    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+		     accept: {
+		        title: 'Images',
+		        extensions: 'gif,jpg,jpeg,bmp,png',
+		        mimeTypes: 'image/*'
+		    }
+		});
+		
+		 uploader.on( 'fileQueued', function( file ) {
+		    var $li = $('<div id="' + file.id + '" class="file-item thumbnail layui-inline">' +
+		                '<img>' +
+		                '<div class="info">' + file.name + '</div>' 
+		                +'</div>'),
+	        $img = $li.find('img');
+
+
+		    // $list为容器jQuery实例
+		    $list = $("#fileList");
+		    $list.append( $li );
+
+		    // 创建缩略图
+		    // 如果为非图片文件，可以不用调用此方法。
+		    // thumbnailWidth x thumbnailHeight 为 100 x 100
+		    var thumbnailWidth = thumbnailHeight = 100;
+		    uploader.makeThumb( file, function( error, src ) {
+		        if ( error ) {
+		            $img.replaceWith('<span>不能预览</span>');
+		            return;
+		        }
+
+		        $img.attr( 'src', src );
+		    }, thumbnailWidth, thumbnailHeight );
+		});
+		 
+		// 文件上传过程中创建进度条实时显示。
+		 uploader.on( 'uploadProgress', function( file, percentage ) {
+		     var $li = $( '#'+file.id ),
+		         $percent = $li.find('.progress span');
+
+		     // 避免重复创建
+		     if ( !$percent.length ) {
+		         $percent = $('<p class="progress"><span></span></p>')
+		                 .appendTo( $li )
+		                 .find('span');
+		     }
+
+		     $percent.css( 'width', percentage * 100 + '%' );
+		 });
+
+		 // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+		 uploader.on( 'uploadSuccess', function( file,response ) {
+			 $("[name=twobarcode]").val(response.data);
+		     $( '#'+file.id ).addClass('upload-state-done');
+		 });
+
+		 // 文件上传失败，显示上传出错。
+		 uploader.on( 'uploadError', function( file ) {
+		     var $li = $( '#'+file.id ),
+	         $error = $li.find('div.error');
+
+		     // 避免重复创建
+		     if ( !$error.length ) {
+		         $error = $('<div class="error"></div>').appendTo( $li );
+		     }
+
+		     $error.text('上传失败');
+		 });
+
+		 // 完成上传完了，成功或者失败，先删除进度条。
+		 uploader.on( 'uploadComplete', function( file ) {
+		     $( '#'+file.id ).find('.progress').remove();
+		 });
+	});
+	
+		 
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			             <li style="float:right;">
+					        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          				<header class="larry-personal-tit">
+													<span>添加支付接口</span>
+												</header>
+												<div class="xiao-ht-inputFormWrap">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betpaymentinterface/update" >
+													<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>
+													<div class=" ">
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">支付名称*</span>
+															<input  type="text" name="banktype" id="banktype" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.banktype)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">支付昵称*</span>
+															<input type="text" name="bankname" id="bankname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.bankname)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">账号、商户号</span>
+															<input type="text" name="bankcard" id="bankcard"  autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.bankcard)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">开户行</span>
+															<div class="xiao-ht-inputForm" style="border: none;">
+																<textarea name="bankofdeposit" id="bankofdeposit" class="layui-textarea" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.bankofdeposit)!''}">${(returnDatas.data.bankofdeposit)!''}</textarea>
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">二维码</span>
+															<div id="uploader-demo" class="xiao-ht-inputForm" style="border: none;">
+																<!--用来存放item-->
+																<div id="fileList" class="uploader-list"></div>
+																<div id="filePicker" class="">选择图片</div>
+																<img alt="" src="${ctx}/betpaymentinterface/img?url=${(returnDatas.data.twobarcode)!''}">
+																<input type="hidden" value="${(returnDatas.data.twobarcode)!''}" name="twobarcode">
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName" >类型</span>
+															<div class="xiao-ht-inputForm" style="border: none">
+															<select id="type" name="type" >
+																<option value="1" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '1')>selected="selected"</#if></#if> >银行卡</option>
+																<option value="2" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '2')>selected="selected"</#if></#if> >支付宝二维码</option>
+																<option value="3" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '3')>selected="selected"</#if></#if> >微信扫码支付</option>
+																<!-- <option value="4" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '4')>selected="selected"</#if></#if> >信用卡</option>
+																<option value="5" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '5')>selected="selected"</#if></#if> >快捷支付</option>
+																<option value="6" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '6')>selected="selected"</#if></#if> >扫码支付</option> -->
+																<option value="8" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '8')>selected="selected"</#if></#if> >原生支付宝APP</option>
+																<option value="30" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '30')>selected="selected"</#if></#if> >聚合支付宝H5支付</option>
+																<option value="31" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '31')>selected="selected"</#if></#if> >太极支付宝H5支付</option>
+																<!-- <option value="100" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '100')>selected="selected"</#if></#if> >新快捷支付</option>
+																<option value="101" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '101')>selected="selected"</#if></#if> >优付支付宝WAP(信用卡)</option>
+																<option value="102" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '102')>selected="selected"</#if></#if> >银联扫码支付</option>
+																<option value="103" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '103')>selected="selected"</#if></#if> >微信app原生支付</option>
+																<option value="104" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '104')>selected="selected"</#if></#if> >优付支付宝WAP</option>
+																<option value="105" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '105')>selected="selected"</#if></#if> >微信支付WAP</option>
+																<option value="106" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '106')>selected="selected"</#if></#if> >QQ支付WAP</option>
+																<option value="107" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '107')>selected="selected"</#if></#if> >京东扫码支付</option> -->
+																<option value="108" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '108')>selected="selected"</#if></#if> >易支付原生APP企业通道</option>
+																<option value="109" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '109')>selected="selected"</#if></#if> >易支付原生WAP企业通道</option>
+																<option value="110" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '110')>selected="selected"</#if></#if> >易支付优付支付通道</option>
+																<option value="111" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '111')>selected="selected"</#if></#if> >易支付个人转账通道</option>
+																<option value="115" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '115')>selected="selected"</#if></#if> >易支付个人转账通道（新版）</option>
+																<option value="116" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '116')>selected="selected"</#if></#if> >易支付聚合支付通道</option>
+																<option value="117" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '117')>selected="selected"</#if></#if> >易支付聚合企业支付通道</option>
+																<option value="118" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '118')>selected="selected"</#if></#if> >易支付微信扫码个人转账通道</option>
+																<option value="120" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '120')>selected="selected"</#if></#if> >易支付个人转账Z通道</option>
+																<option value="121" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '121')>selected="selected"</#if></#if> >易支付银联H5通道</option>
+																<!-- <option value="123" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '123')>selected="selected"</#if></#if> >易支付易宝银联H5通道</option> -->
+																<option value="124" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '124')>selected="selected"</#if></#if> >易支付个人转账WS通道</option>
+																<option value="125" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '125')>selected="selected"</#if></#if> >易支付易宝银联H5通道(绑卡)</option>
+																<option value="126" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '126')>selected="selected"</#if></#if> >易支付易宝分账通道</option>
+																<option value="127" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '127')>selected="selected"</#if></#if> >易支付支付宝红包通道</option>
+																<option value="128" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '128')>selected="selected"</#if></#if> >易支付微信扫码个人转账通道（升级版）</option>
+																<option value="129" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '129')>selected="selected"</#if></#if> >易支付支付宝转账ZZ通道</option>
+																<option value="1001" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '1001')>selected="selected"</#if></#if> >微信收款码2</option>
+																<option value="2001" <#if (returnDatas.data.type)??><#if (((returnDatas.data.type)!'') == '2001')>selected="selected"</#if></#if> >支付宝收款码2</option>
+															</select>
+																</div>
+													<#-- 		<input type="text" name="type" id="type"  autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.bankcard)!''}"> -->
+															
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">状态*</span>
+															<div class="xiao-ht-inputForm" style="border: none">
+																<select id="state" name="state" >
+																	<option value="1" <#if (returnDatas.data.state)??><#if (((returnDatas.data.state)!'') == 1)>selected="selected"</#if></#if> >上线</option>
+																	<option value="0" <#if (returnDatas.data.state)??><#if (((returnDatas.data.state)!'') == 0)>selected="selected"</#if></#if> >下线</option>
+																</select>
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">排序号</span>
+															<input type="text" name="order1" id="order1"  autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.order1)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">限额</span>
+															<input type="text" name="limit1" id="limit1" placeholder="不填表示不限"  autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.limit1)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<#-- <div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">秘钥*</span>
+															<input type="text" name="mkey" id="mkey" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.mkey)!''}">
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	 -->
+														<div class="layui-form-item xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">备注</span>
+															<div class="xiao-ht-inputForm" style="border: none;width: 70%;">
+																<textarea name="remarks" id="remarks" class="layui-textarea" autocomplete="off" class="xiao-ht-inputForm" value="${(returnDatas.data.remarks)!''}">${(returnDatas.data.remarks)!''}</textarea>
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>	
+														<div class="layui-form-item xiao-ht-inputFormItem xiao-ht-formBtn clearfix">
+															<a id="smtbtn" class="xiao-btn xiao-btn-default">保存</a>
+															<a class="xiao-btn" id="rstbtn" >重置</a>
+														</div>
+													</div>
+													</form>
+												</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+		
+</body>
+</html>

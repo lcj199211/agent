@@ -1,0 +1,227 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+	$('#reflesh').click(function(){
+		location.reload(true);
+})	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+			<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>提现</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				<div style="overflow-x:scroll" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						         <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/seclist?k=5&&date=${audittime}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          <input type="hidden" name="virtualmember"  value="${(virtualmember)!0}" />
+							          </form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+											<thead>
+											<tr>
+													<th colspan="14">提现列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_end_no_export-->
+														<th style="white-space: nowrap;">会员ID</th>
+														<th style="white-space: nowrap;" id="th_applicationtime" >申请时间</th>
+														<th style="white-space: nowrap;" id="th_audittime" >审核时间</th>
+														<th style="white-space: nowrap;" id="th_bwcs" >提现前分</th>
+														<th style="white-space: nowrap;" id="th_freezingscore" >冻结分</th>
+														<th style="white-space: nowrap;" id="th_awcs" >提现后分</th>
+														<th style="white-space: nowrap;">收款方式</th>
+														<th style="white-space: nowrap;">账号</th>
+														<th style="white-space: nowrap;" id="th_money" >提现金额</th>
+														<th style="white-space: nowrap;">真实姓名</th>
+														<th style="white-space: nowrap;" id="th_state" >状态</th>
+														<th style="white-space: nowrap;">来源</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td style="text-align: center;">
+															<a     href="${ctx}/betmember/look?id2=${(_data.memberid2)!''}" style="color: blue"><u>${(_data.memberid2)!''}</u></a>
+														</td>
+														<td style="white-space: nowrap;text-align: center;">
+															<!--日期型-->
+														${((_data.applicationtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td style="white-space: nowrap;text-align: center;">
+															<!--日期型-->
+														${((_data.audittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td 
+														<#if (_data.bwcs??)&&(_data.bwcs<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input class="txqf" type="hidden" value="${(_data.bwcs)!0}">
+															${((_data.bwcs))!0}
+														</td>
+														<td 
+														<#if (_data.freezingscore??)&&(_data.freezingscore<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input class="djf" type="hidden" value="${(_data.freezingscore)!0}">
+															${((_data.freezingscore))!0}
+														</td>
+														<td 
+														<#if (_data.awcs??)&&(_data.awcs<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input class="txhf" type="hidden" value="${(_data.awcs)!0}">
+															${((_data.awcsx))!0}
+														</td>
+														<td style="text-align: center;">
+															${(_data.paymentmethod)!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.account)!''}
+														</td>
+														<td 
+														<#if (_data.money??)&&(_data.money<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input class="je" type="hidden" value="${(_data.money)!0}">
+															${((_data.money))!0}
+														</td>
+														<td style="text-align: center;">
+															${(_data.realname)!''}
+														</td>
+														<td style="text-align: center;">
+															<#if _data.state==0>
+																<p style="color:red">未处理</p>
+																<#elseif _data.state==1>
+																取消
+																<#elseif _data.state==2>
+																<p style="color:green">成功</p>
+																<#else> 
+															</#if>
+														</td>
+														<td style="text-align: center;">
+															${(_data.source)!''}
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color:#eafcff ">
+												<td style="text-align: center;">小计</td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"><a id="txqf"></a></td>
+												<td style="text-align: center;"><a id="djf"></a></td>
+												<td style="text-align: center;"><a id="txhf"></a></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"><a id="je"></a></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+var txqf = 0;
+$(".txqf").each(function(){
+	txqf+=parseFloat($(this).val());
+});
+$("#txqf").text(Math.floor(txqf*100)/100);
+if(txqf>=0){
+	$("#txqf").css("color","blue");
+}
+if(txqf<0){
+	$("#txqf").css("color","red");
+}
+
+var djf = 0;
+$(".djf").each(function(){
+	djf+=parseFloat($(this).val());
+});
+$("#djf").text(Math.floor(djf*100)/100);
+if(djf>=0){
+	$("#djf").css("color","blue");
+}
+if(djf<0){
+	$("#djf").css("color","red");
+}
+
+var txhf = 0;
+$(".txhf").each(function(){
+	txhf+=parseFloat($(this).val());
+});
+$("#txhf").text(Math.floor(txhf*100)/100);
+if(txhf>=0){
+	$("#txhf").css("color","blue");
+}
+if(txhf<0){
+	$("#txhf").css("color","red");
+}
+
+var je = 0;
+$(".je").each(function(){
+	je+=parseFloat($(this).val());
+});
+$("#je").text(Math.floor(je*100)/100);
+if(je>=0){
+	$("#je").css("color","blue");
+}
+if(je<0){
+	$("#je").css("color","red");
+}
+</script>
+</html>
+

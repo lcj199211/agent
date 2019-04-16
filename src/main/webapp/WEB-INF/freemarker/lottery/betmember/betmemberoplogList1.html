@@ -1,0 +1,183 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmemberoplog/delete");
+	}
+	
+	//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">	用户管理<span class="layui-box">&gt;</span></a>
+							  <a><cite>用户操作日志</cite></a>
+							</span>
+		             </li>
+		              <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+					<!--  <li style="float:right;">
+		             	<@shiro.hasPermission name="/betmemberoplog/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betmemberoplog/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/betmemberoplog/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/betmemberoplog/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li> -->
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form-pane" id="searchForm" action="${ctx}/betmember/list?k=6&id2=${betMember.id2!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap" style="border-top:1px solid #e2e2e2;">									  	
+							          	<tbody>							          		
+							          		<tr>
+							          			<td style="width:590px;">
+							          				<div class="layui-inline">
+									                    	 从<div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>到
+									                    <div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                     <div class="layui-input-inline">
+									                    		默认显示
+									                  		  <input type="radio" name="pageSize" value="50"
+																<#if returnDatas.page.pageSize==50>checked</#if> 									                  		  
+									                  		  >50条</input>
+															  <input type="radio" name="pageSize" value="100"
+															  <#if returnDatas.page.pageSize==100>checked</#if> 
+															  >100条</input>
+									                          <input type="radio" name="pageSize" value="200"
+									                          <#if returnDatas.page.pageSize==200>checked</#if> 
+									                          />200条
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td style="width:100px;">
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          			<td></td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">用户ID：${betMember.id2!''} &nbsp;&nbsp;&nbsp;用户名：${betMember.account!''}&nbsp;&nbsp;&nbsp;<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+<!-- 												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+ -->												  <!--first_end_no_export-->
+ 														<th id="th_time" >时间</th>
+														<!-- <th id="th_memberid2" >用户ID2</th> -->
+														<th id="th_operationdetails" >操作详情</th>
+														<th id="th_loginip" >登录地址</th>
+														<th id="th_logintool" >登陆</th>
+														
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="" align="center">
+														<td >
+															<!--日期型-->
+															${((_data.time)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td> -->
+														<!--end_no_export-->
+														<!-- <td >
+															${(_data.memberid2)!0}
+														</td> -->
+														<td >
+															${(_data.operationdetails)!''}
+														</td>
+														<td >
+															${(_data.loginip)!''}
+														</td>
+														<td >
+															${(_data.logintool)!''}
+														</td>
+														
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+</html>
+

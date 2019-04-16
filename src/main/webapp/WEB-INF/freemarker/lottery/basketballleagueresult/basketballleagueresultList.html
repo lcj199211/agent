@@ -1,0 +1,427 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/basketballleagueresult/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+				<!--
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>篮球比分结果管理</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/basketballleagueresult/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/basketballleagueresult/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             	<@shiro.hasPermission name="/basketballleagueresult/list/export" >
+				        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+				        </@shiro.hasPermission>
+		                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+		                <@shiro.hasPermission name="/basketballleagueresult/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+		             -->
+		              <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;"  class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/basketballleagueresult/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">篮球比分结果搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">赛事名</label>
+									                    <div class="layui-input-inline">
+									                        <input type="text" name="matchname" value="${(returnDatas.queryBean.matchname)!''}" placeholder="请输入赛事名 " class="layui-input"> 
+									                    </div>
+							                		</div>
+							                		&nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">编号</label>
+									                    <div class="layui-input-inline">
+									                        <input type="text" name="num" value="${(returnDatas.queryBean.num)!''}" placeholder="请输入编号 " class="layui-input"> 
+									                    </div>
+							                		</div>
+									                &nbsp;&nbsp;&nbsp;&nbsp;
+									                <div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入开赛时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入开赛时间" class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+										            &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="state" id="state" class="layui-input">
+									                        	<option value="3" 
+															  	<#if returnDatas.queryBean.state??>
+																	 <#if returnDatas.queryBean.state=3> selected
+																	 </#if> 
+															    </#if> >未确认</option>
+									                        	<option value="100" 
+									                        	<#if returnDatas.queryBean.state??>
+																	 <#if returnDatas.queryBean.state=100> selected
+																	 </#if> 
+															    </#if> >所有状态</option>
+																<option value="1" 
+																<#if returnDatas.queryBean.state??>
+																	 <#if returnDatas.queryBean.state=1> selected
+																	 </#if> 
+															    </#if> >已确认</option>
+															    <option value="2" 
+																<#if returnDatas.queryBean.state??>
+																	 <#if returnDatas.queryBean.state=2> selected
+																	 </#if> 
+															    </#if> >无效比赛</option>
+															  	
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="18">篮球比分结果列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  -->
+												  
+												  <!--first_end_no_export-->
+														<th id="zid" >zid</th>
+														<th id="num" >编号</th>
+														<th id="matchname" >赛事</th>
+														<th id="starttime" >开赛时间</th>
+														<th id="awayteam" >客队</th>
+														<th id="hometeam" >主队</th>
+														<th id="score" >得分</th>
+														<th id="sf" >胜负</th>
+														<th id="letpoints" >让分</th>
+														<th id="rfsf" >让分胜负</th>
+														<th id="sfc" >胜分差</th>
+														<th id="dxf" >大小的预设</th>
+														<th id="dxfresult" >大小结果</th>
+														<th id="createdate" >抓取时间</th>
+														<th id="state" >状态</th><!-- 1.正常 3.删除 -->
+														<!--  <th id="th_issettle" >1已结算 3未结算</th> -->
+														<th>用户</th>
+														<th>操作</th>
+														<th>冻结</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+													<!-- 
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														 -->
+														
+														<!--end_no_export-->
+														<td >
+															${(_data.zid)!''}
+														</td>
+														<td >
+															${(_data.num)!''}
+														</td>
+														<td >
+															${(_data.matchname)!''}
+														</td>
+														<td >
+															<!--日期型-->
+															${((_data.starttime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.awayteam)!''}
+														</td>
+														<td >
+															${(_data.hometeam)!''}
+														</td>
+														<td >
+															${(_data.score)!''}
+														</td>
+														<td >
+															${(_data.sf)!''}
+														</td>
+														<td >
+															${(_data.letpoints)!''}
+														</td>
+														<td >
+															${(_data.rfsf)!''}
+														</td>
+														<td >
+															${(_data.sfc)!''}
+														</td>
+														<td >
+															${(_data.dxf)!''}
+														</td>
+														<td >
+															${(_data.dxfresult)!''}
+														</td>
+														<td >
+															<!--日期型-->
+															${((_data.createdate)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--  ${(_data.state)!0}  -->
+															<#if _data.state==1>
+																<span style="color:#288a53" >已确认</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="disable"><u>未确认</u></span>
+															<#elseif _data.state==3>
+																<span style="color:red" >未确认</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="restore"><u>确认</u></span>
+															<#elseif _data.state==2>
+																无效比赛
+															</#if>
+														</td>
+														<td>
+															<a class="xiao-color-00e" style="text-decoration:underline;"  href="${ctx}/basketballleagueresult/list?k=1&zid=${(_data.zid)!''}">投注用户</a>
+														</td>
+														<td>
+															<@shiro.hasPermission name="/basketballleagueresult/update" >
+								                           		 <a href="#" data-action="${ctx}/basketballleagueresult/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+														</td>
+														<td>
+															<!--  
+															 <input type="hidden" value="${(_data.id)!''}"><span class="layui-btn layui-btn-danger layui-btn-mini dongjie"><u>冻结投注用户</u></span>
+								                           	 &nbsp;
+								                           	 <input type="hidden" value="${(_data.id)!''}"><span class="layui-btn layui-btn-warm layui-btn-mini jiedong"><u>解冻</u></span>
+								                           	 &nbsp;
+								                           	 -->
+								                           	  <input type="hidden" value="${(_data.zid)!''}"><span class="layui-btn layui-btn-mini jiesuan"><u>重新结算</u></span>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+//重新结算
+	$(".jiesuan").click(function(){
+		var i=$(this).prev().val();
+		layer.confirm('确认要重新结算？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+			    layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/basketballleaguearrange/update?k=2",
+					data:{zid:i},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("重新结算成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+//启用
+	$(".restore").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		layer.confirm('确认该结果？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+			    layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/basketballleagueresult/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("修改成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+//禁用
+	$(".disable").click(function(){
+		var s=3;
+		var i=$(this).prev().val();
+		layer.confirm('改为未确认？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){ 
+				layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/basketballleagueresult/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("修改成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	
+	})
+
+$(".dongjie").click(function(){
+		var s=0;
+		var i=$(this).prev().val();
+		layer.confirm('冻结投注该场次所有用户？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+				layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/basketballleagueresult/update?k=2",
+					data:{id:i,status:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("操作成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+	
+	$(".jiedong").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		layer.confirm('解冻投注该场次所有用户？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+				layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/basketballleagueresult/update?k=2",
+					data:{id:i,status:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("操作成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+</script>
+</html>
+

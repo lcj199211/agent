@@ -1,0 +1,159 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>大乐透开解结果管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加大乐透开解结果</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/lotteryphasedlt/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">彩票类型*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lotterytype)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">期号*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.phaseno)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">开奖号码*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.wincode)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">一等奖基本奖金*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win1)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">二等奖基本奖金*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win2)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">三等奖基本奖金*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win3)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">一等奖追加奖金*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.zwin1)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">二等奖追加奖金*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.zwin2)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">三等奖追加奖金*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.zwin3)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">奖池*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.poolamount)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">加奖奖池*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.addpoolamount)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">销售额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.saleamount)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">官方兑奖截止时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.endtime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">官方开奖时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.starttime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!--日期型-->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">平台截止时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${((returnDatas.data.localendtime)?string('yyyy-MM-dd'))!'' }
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">是否修正（0否1是）*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.istrue)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

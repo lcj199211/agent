@@ -1,0 +1,1567 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+//重算报表
+	function recalculate(){
+			//询问框
+			var starttime = $('#starttime').val();
+			var endtime = $('#endtime').val();
+			layer.confirm('确定重算报表？', {offset:['',''], btn: ['确定','取消']}, 
+			function(){
+				$.ajax({
+					type:"get",
+					url:"${ctx}/betagentreportformjc/update?k=1&starttime="+starttime+"&endtime="+endtime,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);	
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			  
+			});
+
+		}
+		
+		
+		function clearpageindex(){
+			$('#pageIndex').val(1);
+		}
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief" >
+				<ul class="layui-tab-title site-demo-title">
+		             <li class="layui-this">
+		             </li>
+		             
+					 <li style="float:right;">
+					 <@shiro.hasPermission name="/betreportform/createreportform" >
+		             		<button type="button" class="layui-btn layui-btn-small" style="margin-top:8px;" id="createreportform"><i class="layui-icon">&#xe61f;</i>生成昨日报表</button>
+		             	</@shiro.hasPermission>
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagentreportformjc/list/v2?k=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <input type="hidden" name="p" id="p" value="${(p)!'0'}">
+									  <input type="hidden" name="show" id="show" value="${(show)!'0'}">
+									  <div class="layui-table search-wrap">
+									  	<div class="xiao-cell xiao-pull-left xiao-record">
+										
+											
+											<div class="xiao-btnlist xiap-pull-left layui-inline">
+									 				<div class="xiao-btnlist-item">
+													<a  href="${ctx}/betagentreportformjc/list/v2?springraintoken=${springraintoken!''}"><span id="thismonth">本周</span></a>
+													<!-- <a style="text-decoration:underline;"  href="#"><span id="thismonth">本周</span></a> -->
+													</div>
+													
+													
+													
+													<div class="xiao-btnlist-item">
+													<a id="sadfff">上周</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="adger" >本月</a>
+													</div>
+													<div  class="xiao-btnlist-item">
+													<a id="asdtret" >上月</a>
+													</div>
+												</div>
+									</div>
+											
+												
+											
+											
+											
+											<!-- <span id="thismonth">本月</span></a>&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;" href="#"><span  id="lastmonth">上月</span></a> -->
+											
+										</div>
+										<div class="layui-input-inline xiao-input-wrap pull-left">
+											<div class="layui-input-inline xiao-input-wrap pull-left">
+												<input id="starttime" name="starttime" onclick="laydate({istime: true, format: 'YYYY-MM-DD',choose:startDate})" placeholder="请输入日期 " value="${startDate!''}" class="laydate-icon ">
+											</div>
+										到
+											<div class="layui-input-inline">
+												<input id="endtime" name="endtime" onclick="laydate()" placeholder="请输入日期 " value="${endDate!''}" class="laydate-icon ">
+											</div>
+										</div>
+										
+										
+										<@shiro.hasPermission name="/betagentreportformjc/update" >
+											<button class="layui-btn xiao-mb0" type="button" onclick="recalculate();"><i class="layui-icon" style="top:4px;right:5px;"></i>重算报表</button>
+			             					${((recalculatestate))!''}
+			             				</@shiro.hasPermission>
+                                        
+										
+										<div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even >
+											<thead>
+												<tr>
+													<th <#if agentparentid?? && agentparentid=='A101'>colspan="24"<#else>colspan="23"</#if>>（报表数据1小时更新1次）开始时间：${((job4start))!''}&nbsp;&nbsp;&nbsp;结束时间：${((job4end))!''}<!-- 发放福利：${((welfare))!0}&nbsp;&nbsp;&nbsp;游戏输赢：${((gamewin))!0} --><font id='' class='recorsView'>
+											共<span>${returnDatas.page.pageCount!''}</span>页,共 <span><#if addtotalcount??>${(returnDatas.page.totalCount+1)!''}<#else>${returnDatas.page.totalCount!''}</#if></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												<!--   <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th> -->
+												 
+												  <!--first_end_no_export-->
+														<th nowrap="nowrap">日期</th>
+														
+														<th nowrap="nowrap">注册</th><!-- 
+														<th nowrap="nowrap">注册送</th> -->
+														<!--  <th nowrap="nowrap">转账</th> -->
+														  
+														<th nowrap="nowrap">代理转账</th>
+														<th nowrap="nowrap">代理会员转账</th>
+														
+														<th nowrap="nowrap">充值</th><!-- 
+														<th nowrap="nowrap">充值送</th> 
+														<th nowrap="nowrap">首充送</th> -->
+														<th nowrap="nowrap">活动福利</th>
+														<th nowrap="nowrap">提现</th>
+														<th nowrap="nowrap">投注额</th>
+														<th nowrap="nowrap">未结算</th>
+														<th nowrap="nowrap">已结算</th>
+														<th nowrap="nowrap">派彩</th>
+														<th nowrap="nowrap">当日结算派彩</th>
+														<#if agentparentid?? && agentparentid=='A101'>
+														<th nowrap="nowrap">大神佣金</th>
+														</#if>
+														<th nowrap="nowrap">输赢</th>
+														<th nowrap="nowrap">投注佣金</th>
+														<th nowrap="nowrap">公司佣金</th>
+														 <th nowrap="nowrap">代理提现</th> 
+														 <th nowrap="nowrap">商户代付提现</th> 
+														
+														<!-- <th>佣金</th> -->
+														
+														<!-- <th>卡收</th>
+														<th>签到</th>
+														<th>救济</th>
+														<th>亏损</th>
+														<th>首冲</th>
+														<th>排行</th> -->
+														<!-- <th>红包</th>
+														<th>投注退佣</th> -->
+														<!-- <th>下级返利</th> -->
+														<!-- <th>总福利</th> -->
+														<!-- <th>游戏输赢(按结算时间)</th> -->
+														<!-- <th>昨日留存</th>
+														<th>今日留存</th> 
+														<th nowrap="nowrap">不出票库存</th>
+														-->
+														
+														<th nowrap="nowrap">冻结分库存</th>
+														<th nowrap="nowrap">游戏分库存</th>
+														<th nowrap="nowrap">银行分库存</th>
+														 <th nowrap="nowrap">24点输赢</th> 
+														 <th nowrap="nowrap">24点未结算</th> 
+														 <th nowrap="nowrap">24点已结算</th> 
+														<!-- <th>风控值</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										 
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr>
+														<!--end_no_export-->
+														<td style="text-align: center; white-space:nowrap">
+															<!--日期型-->
+														${((_data.date)?string('MM-dd'))!''}
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="zc" type="hidden" value="${(_data.registernum)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=3&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<font style="color: blue;">
+																${((_data.registernum))!0}
+																</font>
+															</a>
+														</td>
+<!-- 														<td style="text-align: center;">
+														<input class="zcs" type="hidden" value="${(_data.registersend)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=21&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<font style="color: blue;">
+																${((_data.registersend))!0}
+																</font>
+															</a>
+														</td> -->
+														<!-- <td style="text-align: center;">
+														<input class="noissuexxxxxxxx" type="hidden" value="${(_data.noissuetransferscore)!0}">
+														<input class="xxxxxxxx" type="hidden" value="${((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0}">
+														<a style="text-decoration:underline;color: blue;" href="${ctx}/betagentreportformjc/list/v2?k=25&virtualmember=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">														
+															<a style="text-decoration:underline;color: blue;" href="${ctx}/betagentreportformjc/list/v2?k=25&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.transferaccount??>
+															<#if (((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.transferaccount!0)-(_data.noissuetransferscore!0))!0}
+															</font>
+															</#if>
+															<#else>
+															<font style="color:blue;">0</font>
+															</#if>
+															</a>
+														</td>  -->
+														
+														<td style="text-align: center;">
+														<input class="dlzz" type="hidden" value="${(_data.transferaccountagent1!0)}">													
+															<a style="text-decoration:underline;color: blue;" href="${ctx}/betagentreportformjc/list/v2?k=101&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.transferaccountagent1??>
+															<#if (_data.transferaccountagent1!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.transferaccountagent1!0)}
+															</font>
+															</#if>
+															<#if (_data.transferaccountagent1!0) &lt; 0 >
+															<font style="color: red;">
+															${(_data.transferaccountagent1!0)}
+															</font>
+															</#if>
+															<#else>
+															<font style="color:blue;">0</font>
+															</#if>
+															</a>
+														</td> 
+														<td style="text-align: center;">
+														<input class="xsdlzz" type="hidden" value="${(_data.transferaccountagent!0)}">													
+															<a style="text-decoration:underline;color: blue;" href="${ctx}/betagentreportformjc/list/v2?k=102&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.transferaccountagent??>
+															<#if (_data.transferaccountagent!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(_data.transferaccountagent!0)}
+															</font>
+															</#if>
+															<#if (_data.transferaccountagent!0) &lt; 0 >
+															<font style="color: red;">
+															${(_data.transferaccountagent!0)}
+															</font>
+															</#if>
+															<#else>
+															<font style="color:blue;">0</font>
+															</#if>
+															</a>
+														</td> 
+														
+														
+														<td style="text-align: center;">
+														<input type="hidden" class="noissuecz" value="${(_data.noissuebetgold)!0}">
+														<input type="hidden" class="cz" value="${((_data.recharge!0)-(_data.noissuebetgold!0))!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=4&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															
+															<#if (((_data.recharge!0)-(_data.noissuebetgold!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.recharge!0)-(_data.noissuebetgold!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.recharge!0)-(_data.noissuebetgold!0))!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.recharge!0)-(_data.noissuebetgold!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+<!-- 														<td style="text-align: center;">
+														<input class="czs" type="hidden" value="${(_data.payrebate)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=22&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<font style="color: blue;">
+																${((_data.payrebate))!0}
+																</font>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="sc" type="hidden" value="${(_data.firstrecharge)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=16&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<font style="color: blue;">
+																${((_data.firstrecharge))!0}
+																</font>
+															</a>
+														</td> -->
+														<td style="text-align: center;">
+														<input class="hdfl" type="hidden" value="${(_data.activitywelfare)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=66&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+																<font style="color: blue;">
+																${((_data.activitywelfare))!0}
+																</font>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="noissuetx" type="hidden" value="${_data.noissuebetwithdrawcash!0}">
+														<input class="tx" type="hidden" value="${((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=5&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.withdrawcash!0)-(_data.noissuebetwithdrawcash!0))!0}
+															</font>
+															</#if>
+															</a>
+													</td>
+													<!-- 投注额 -->
+														<td style="text-align: center;">
+														<input class="noissuetze" type="hidden" value="${(_data.noissuebettingtimetotalbettingmoney)!0}">
+														<input class="tze" type="hidden" value="${((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=9&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0}
+															</font>
+															</#if>
+															<#if (((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0) &lt; 0 >
+															<font style="color: red;">
+															${((_data.bettingmoney!0)-(_data.noissuebettingtimetotalbettingmoney)!0)!0}
+															</font>
+															</#if>
+														</td>
+														
+														<!-- 未结算 -->
+														<td style="text-align: center;">
+														<input class="noissueuntreated" type="hidden" value="${(_data.noissuebettingtimeunsettlebettingmoney)!0}">
+														<input class="untreated" type="hidden" value="${((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0}">
+															<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=29&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">												
+															
+															<#if (((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.untreatedbettingmoney!0)-(_data.noissuebettingtimeunsettlebettingmoney!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<!-- 已结算 -->
+														<td style="text-align: center;">
+														<input class="noissueyjstze" type="hidden" value="${(_data.noissuebettingtimebettingmoney)!0}">
+														<input class="yjstze" type="hidden" value="${((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0}">
+														
+															<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=30&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.bettingtimebettingmoney!0)-(_data.noissuebettingtimebettingmoney!0))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="noissuepc" type="hidden" value="${_data.noissuebettingtimebettingscore!0}">
+														<input class="pc" type="hidden" value="${((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0}">
+														
+															<#if (((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.bettingtimebettingscore!0)-(_data.noissuebettingtimebettingscore!0))!0}
+															</font>
+															</#if>
+														</td>
+														
+														
+														<!--  当日结算派彩  -->
+														<td style="text-align: center;">
+														<input class="settlenoissuepc" type="hidden" value="${_data.noissuesettletimebettingscore!0}">
+														<input class="settlepc" type="hidden" value="${((_data.settletimebettingscore!0)-(_data.noissuesettletimebettingscore!0))!0}">
+													
+															<#if (((_data.settletimebettingscore!0)-(_data.noissuesettletimebettingscore!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.settletimebettingscore!0)-(_data.noissuesettletimebettingscore!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.settletimebettingscore!0)-(_data.noissuesettletimebettingscore!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.settletimebettingscore!0)-(_data.noissuesettletimebettingscore!0))!0}
+															</font>
+															</#if>
+														</td>
+														
+														<#if agentparentid?? && agentparentid=='A101'>
+														<td style="text-align: center;">
+														<input class="noissuesettlebrokeragemoney" type="hidden" value="${_data.noissuesettletimebrokeragemoney!0}">
+														<input class="settlebrokeragemoney" type="hidden" value="${((_data.settletimebrokeragemoney!0)-(_data.noissuesettletimebrokeragemoney!0))!0}">
+														
+															<#if (((_data.settletimebrokeragemoney!0)-(_data.noissuesettletimebrokeragemoney!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.settletimebrokeragemoney!0)-(_data.noissuesettletimebrokeragemoney!0))!0}
+															</font>
+															</#if>
+															<#if (((_data.settletimebrokeragemoney!0)-(_data.noissuesettletimebrokeragemoney!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${((_data.settletimebrokeragemoney!0)-(_data.noissuesettletimebrokeragemoney!0))!0}
+															</font>
+															</#if>
+														</td>
+														</#if>
+														
+														<!-- 输赢 -->
+														<td style="text-align: center;">
+														<input class="noissuebettingtimeyxsy" type="hidden" value="${_data.noissuebettingtimebettingwin!0}">
+														<input class="bettingtimeyxsy" type="hidden" value="${(((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0}">
+														
+															<#if ((((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0) &gt;= 0 >
+															<font style="color: blue;">
+															${(((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0}
+															</font>
+															</#if>
+															<#if ((((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!1) &lt; 0 >
+															<font style="color: red;">
+															${(((_data.bettingtimebettingwin)!0)-(_data.noissuebettingtimebettingwin!0))!0}
+															</font>
+															</#if>
+														</td>
+														
+														<td style="text-align: center;">
+														<input class="noissuebettingtimecommission" type="hidden" value="${((_data.noissuebettingtimecommission))!0}">
+														<input class="bettingtimecommission" type="hidden" value="${((_data.bettingtimecommission!0)-(_data.noissuebettingtimecommission!0))!0}">
+														<font style="color:blue;">
+															${((_data.bettingtimecommission!0)-(_data.noissuebettingtimecommission!0))!0}
+														</font>
+														</td>
+														
+														<td style="text-align: center;color:blue;">
+														<input class="noissuebrokerageagentmoney" type="hidden" value="${((_data.noissuebrokerageagentmoney))!0}">
+														<input class="brokerageagentmoney" type="hidden" value="${(((_data.brokerageagentmoney)!0)-(_data.noissuebrokerageagentmoney!0))!0}">
+														
+															<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=33&isissue=1&type=1&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															${(((_data.brokerageagentmoney)!0)-(_data.noissuebrokerageagentmoney!0))!0}
+															</a>
+															
+														</td>
+														
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=31&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (_data.agentwithdrawcash!0) &gt;= 0 >
+																<font style="color: blue;">
+																${((_data.agentwithdrawcash))!0}
+																</font>
+															</#if>
+															<#if (_data.agentwithdrawcash!1) &lt; 0 >
+																<font style="color: red;">
+																${((_data.agentwithdrawcash))!0}
+																</font>
+															</#if>
+															</a>
+														</td>
+														
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=99&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if (_data.agentproxies!0) &gt;= 0 >
+																<font style="color: blue;">
+																${((_data.agentproxies))!0}
+																</font>
+															</#if>
+															<#if (_data.agentproxies!1) &lt; 0 >
+																<font style="color: red;">
+																${((_data.agentproxies))!0}
+																</font>
+															</#if>
+															</a>
+														</td>
+														
+														
+														<!-- <td style="text-align: center;">
+															<font style="color: blue;">
+															${((_data.tzty))!0}
+															</font>
+														
+														</td> -->
+														
+														
+														<#-- <td style="text-align: center;">
+														<input type="hidden" class="czks" value="${(_data.cardrecycle)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=17&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.cardrecycle &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.cardrecycle))!0}
+															</font>
+															</#if>
+															<#if _data.cardrecycle &lt; 0 >
+															<font style="color: red;">
+															${((_data.cardrecycle))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="qd" value="${(_data.signin)!0}" type="hidden">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=15&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.signin &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.signin))!0}
+															</font>
+															</#if>
+															<#if _data.signin &lt; 0 >
+															<font style="color: red;">
+															${((_data.signin))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="jj" type="hidden" value="${(_data.relief)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=13&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.relief &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.relief))!0}
+															</font>
+															</#if>
+															<#if _data.relief &lt; 0 >
+															<font style="color: red;">
+															${((_data.relief))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="ks" type="hidden" value="${(_data.daywinorfailrebate)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=12&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.daywinorfailrebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.daywinorfailrebate))!0}
+															</font>
+															</#if>
+															<#if _data.daywinorfailrebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.daywinorfailrebate))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="ph" type="hidden" value="${(_data.rank)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=14&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.rank &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.rank))!0}
+															</font>
+															</#if>
+															<#if _data.rank &lt; 0 >
+															<font style="color: red;">
+															${((_data.rank))!0}
+															</font>
+														</td> -->
+														<#-- <td style="text-align: center;">
+														<input class="hb" type="hidden" value="${(_data.redpackage)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=7&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.redpackage &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.redpackage))!0}
+															</font>
+															</#if>
+															<#if _data.redpackage &lt; 0 >
+															<font style="color: red;">
+															${((_data.redpackage))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input class="ty" type="hidden" value="${(_data.ty)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=19&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.ty &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.ty))!0}
+															</font>
+															</#if>
+															<#if _data.ty &lt; 0 >
+															<font style="color: red;">
+															${((_data.ty))!0}
+															</font>
+															</#if>
+															</a>
+														</td> -->
+														<#--
+														<td style="text-align: center;">
+														<input class="xjfl" type="hidden" value="${(_data.subordinaterebate)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=8&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.subordinaterebate &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.subordinaterebate))!0}
+															</font>
+															</#if>
+															<#if _data.subordinaterebate &lt; 0 >
+															<font style="color: red;">
+															${((_data.subordinaterebate))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														-->
+														<#-- <td style="text-align: center;">
+														<input class="zfl" type="hidden" value="${(_data.allwelfare)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betagentreportformjc/list/v2?k=20&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.allwelfare &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.allwelfare))!0}
+															</font>
+															</#if>
+															<#if _data.allwelfare &lt; 0 >
+															<font style="color: red;">
+															${((_data.allwelfare))!0}
+															</font>
+															</#if>
+															</a>												
+														</td> -->
+														
+														<td style="text-align: center;color:blue;">
+														<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=32&date=${((_data.date)?string('yyyy-MM-dd'))!''}&order=3">			
+															${((_data.freezingscore))!0}
+															</a>
+															
+														</td>
+														<td style="text-align: center;color:blue;">
+														<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=32&date=${((_data.date)?string('yyyy-MM-dd'))!''}&order=1">			
+															${((_data.gamescore))!0}
+															</a>
+														</td>
+														<td style="text-align: center;color:blue;">
+														<a style="text-decoration:underline;"     href="${ctx}/betagentreportformjc/list/v2?k=32&date=${((_data.date)?string('yyyy-MM-dd'))!''}&order=2">			
+															${((_data.bankscore))!0}
+															</a>
+															
+														</td>
+														<!-- <td style="text-align: center;">
+														<input type="hidden" value="${(_data.dayscore)!0}">
+														<input type="hidden" value="${(_data.score)!0}">
+															<a class="fkz"></a>
+														</td> -->
+														<td style="text-align: center;">
+															
+															<font style="color:blue;">
+																${((_data.daywinloss2!0)-(_data.daywinloss1!0))!0}
+															</font>
+														</td>
+														<td style="text-align: center;">
+															<font style="color:blue;">
+																${((_data.daynoissue2!0)-(_data.daynoissue1!0))!0}
+															</font>
+														</td>
+														<td style="text-align: center;">
+															<font style="color:blue;">
+																${((_data.dayisissue2!0)-(_data.dayisissue1!0))!0}
+															</font>
+														</td>
+													</tr>
+												</#list>
+												<tr style="text-align: center;background-color: #eafcff;">
+												<td>小计</td>
+												
+												<td>
+												<a id="zc" ></a>
+												</td>
+<!-- 												<td>
+												<a id="zcs" ></a>
+												</td> -->
+												<!-- <td>
+												<a id="xxxxxxxx" ></a>
+												</td> -->
+												<td>
+												<a id="dlzz" ></a>
+												</td>
+												<td>
+												<a id="xsdlzz" ></a>
+												</td>
+												<td>
+												<a id="cz" ></a>
+												</td>
+	<!-- 											<td>
+												<a id="czs" ></a>
+												</td>
+												<td>
+												<a id="sc" ></a>
+												</td> -->
+												<td>
+												<a id="hdfl" ></a>
+												</td>
+												<td>
+												<a id="tx" ></a>
+												</td>
+												<td>
+												<a id="tze" ></a>
+												</td>
+												<td><a id="untreated" ></a></td>
+												<td><a id="yjstze"></a></td>
+												<td><a id="pc"></a></td>
+												<!-- 当日结算派彩 -->
+												<td><a id="settlepc"></a></td>
+												<td><a id="settlebrokeragemoney"></a></td>
+												<td><a id="bettingtimeyxsy"></a></td>
+												<td><a id="bettingtimecommission"></a></td>
+												<td><a id="brokerageagentmoney"></a></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td><a id="agentproxies"></td>
+												<!-- 
+												<td><input id="czks" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="qd" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="jj" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="ks" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="sc" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												<td><input id="ph" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:50px"></td>
+												-->
+												<!-- <td><input id="hb" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td>
+												<td><input id="ty" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												<!-- <td><input id="xjfl" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												<!-- <td><input id="zfl" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+											<!-- 	<td><input id="yxsy" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												<!-- <td></td>
+												<td></td> -->
+												<!-- <td></td> -->
+											<!-- 	<td><input id="fkz" readonly="readonly" type="text" style="border: 0px;background: transparent;text-align: center;width:85px"></td> -->
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+									
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<!-- <font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font>-->
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+<script>
+
+$("#createreportform").click(function(){
+
+	
+	 
+		//询问框
+		layer.confirm('确定生成昨日报表？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betreportform/createreportform",
+				data:{},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已生成昨日报表！',{offset:['','']});
+						setTimeout("location.reload(true);",2000);
+						
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		});
+	
+
+})
+
+function startDate(e){
+	var myDate = new Date();
+	var startTime = new Date(Date.parse(e));
+	var lw = new Date(myDate - 1000 * 60 * 60 * 24 * 40);//最后一个数字40可改，40天的意思
+	if(startTime<lw){
+		alert("只能查40天以前的数据");
+		$("#starttime").val("");
+	}
+} 
+
+
+var now = new Date(); //当前日期
+var nowDayOfWeek = now.getDay(); //今天本周的第几天
+var nowDay = now.getDate(); //当前日
+var nowMonth = now.getMonth(); //当前月
+var nowYear = now.getYear(); //当前年
+nowYear += (nowYear < 2000) ? 1900 : 0; //
+var lastMonthDate = new Date(); //上月日期
+lastMonthDate.setDate(1);
+lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+var lastYear = lastMonthDate.getYear();
+var lastMonth = lastMonthDate.getMonth();
+//格式化日期：yyyy-MM-dd
+function formatDate(date) {
+    var myyear = date.getFullYear();
+    var mymonth = date.getMonth() + 1;
+    var myweekday = date.getDate();
+    if (mymonth < 10) {
+        mymonth = "0" + mymonth;
+    }
+    if (myweekday < 10) {
+        myweekday = "0" + myweekday;
+    }
+    return (myyear + "-" + mymonth + "-" + myweekday);
+}
+jQuery(function(){
+	function getLastWeekStartDate() {
+	    var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 6);
+	    return formatDate(weekStartDate);
+	}
+	function getLastWeekEndDate() {
+	    var weekEndDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek );
+	    return formatDate(weekEndDate);
+	}
+	function getMonthStartDate() {
+	    var monthStartDate = new Date(nowYear, nowMonth, 1);
+	    return formatDate(monthStartDate);
+	}
+	function getMonthEndDate() {
+	    var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth));
+	    return formatDate(monthEndDate);
+	}
+	function getMonthDays(myMonth) {
+	    var monthStartDate = new Date(nowYear, myMonth, 1);
+	    var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+	    var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+	    return days;
+	}
+	//获得上月开始时间
+	/* function getLastMonthStartDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthStartDate;
+		if(lastMonth==11){
+			lastMonthStartDate = new Date(LastYear, lastMonth, 1);	
+		}else{
+			lastMonthStartDate = new Date(nowYear, lastMonth, 1);
+		}
+	    
+	    return formatDate(lastMonthStartDate);
+	} */
+	
+	//获得上月开始时间（40-本月月当前时间  1、如果>=上个月天数，则查询整个月的  
+	//2、如果如果<上个月天数，则查 开始时间：上个月天数-（40-本月月当前时间）  结束时间：上个月月底  ）
+	function getLastMonthStartDate() {
+	 	if((40-nowDay)>=getEndDay()){
+	 		return getLastMonthStartDateByCount(1);
+		}else{ 
+			var startDay=getEndDay()-(40-nowDay)+1;
+			return getLastMonthStartDateByCount(startDay);
+		}
+	}
+	
+	function getLastMonthStartDateByCount(startDay){
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthStartDate;
+		if(lastMonth==11){
+			lastMonthStartDate = new Date(LastYear, lastMonth, startDay);	
+		}else{
+			lastMonthStartDate = new Date(nowYear, lastMonth, startDay);
+		}
+	    return formatDate(lastMonthStartDate);
+	}
+	
+	//上个月天数
+	function getEndDay(){
+	   //获取上月月份  
+	   var mouth=lastMonth;
+	   if(nowMonth==0){
+		   mouth = 12;
+	   } 
+	   var days;
+	   if (mouth == 2) {
+	       days = nowYear %4 == 0 ? 29: 28;
+	   }else if(mouth == 1 || mouth == 3 || mouth == 5 || mouth == 7 ||mouth == 8 ||mouth ==10  ||mouth == 12){
+	       days = 31;
+	   }else{
+	       days = 30;
+	   }
+	   return days;
+	}
+	
+	
+	//获得上月结束时间
+	function getLastMonthEndDate() {
+		var LastYear =now.getFullYear()-1;//上年
+		var lastMonthEndDate;
+		if(lastMonth==11){
+			lastMonthEndDate = new Date(LastYear, lastMonth, getMonthDays(lastMonth));
+		}else{
+			lastMonthEndDate = new Date(nowYear, lastMonth, getMonthDays(lastMonth));
+		}
+	    return formatDate(lastMonthEndDate);
+	}
+
+	var firstDay=getLastWeekStartDate();
+	var lastDay=getLastWeekEndDate();
+	$("#sadfff").attr("href","${ctx}/betagentreportformjc/list/v2?k=1&starttime="+firstDay+"&endtime="+lastDay); 
+	var firstDay1=getMonthStartDate();
+	var lastDay1=getMonthEndDate();
+	$("#adger").attr("href","${ctx}/betagentreportformjc/list/v2?k=1&starttime="+firstDay1+"&endtime="+lastDay1);
+	var firstDay2=getLastMonthStartDate();
+	var lastDay2=getLastMonthEndDate();
+	$("#asdtret").attr("href","${ctx}/betagentreportformjc/list/v2?k=1&starttime="+firstDay2+"&endtime="+lastDay2);
+
+
+
+
+	
+	
+	var href = window.location.href;
+	var result = href.split('?')[href.split('?').length-1];
+	var url_list = $('.xiao-btnlist').find('a');
+	for(var i = 0; i < url_list.length ; i++){
+		if(url_list[i].href == href){
+//				console.log(url_list[i].href);
+			url_list[i].style.backgroundColor = "#009688";
+			url_list[i].style.display = "block";
+			url_list[i].style.color = "#fff";
+		}
+	}
+});
+    
+	
+function clearpageindex(){
+	
+	if($("#starttime").val()==""){
+		alert("开始时间不能为空！");
+	}else{
+		$("#pageIndex").val(1);
+		springrain.commonSubmit('searchForm');
+	}
+}
+
+/* if($("#p").val()==0){
+	$("#searchForm").attr("action","${ctx}/betagentreportformjc/list/v2?k=1");
+}else if($("#p").val()==1){
+	$("#searchForm").attr("action","${ctx}/betagentreportformjc/list/v2");
+}else{
+	$("#searchForm").attr("action","${ctx}/betagentreportformjc/list/v2?k=18");
+} */
+function Request(name){
+   new RegExp("(^|&)"+name+"=([^&]*)").exec(window.location.search.substr(1));
+   return RegExp.$2
+}
+
+/* if($("#show").val()==-1){
+	$("#lastmonth").attr("style","color:blue;");
+	$("#p").val(0);
+}
+if($("#show").val()==0){
+	$("#thismonth").attr("style","color:blue;");
+	$("#p").val(0);
+} */
+
+var zc = 0;
+$(".zc").each(function(){
+	zc+=parseFloat($(this).val());
+});
+$("#zc").text(Math.round(zc*100)/100);
+if(zc>=0){
+	$("#zc").css("color","blue");
+}
+if(zc<0){
+	$("#zc").css("color","red");
+}
+
+var zcs = 0;
+$(".zcs").each(function(){
+	zcs+=parseFloat($(this).val());
+});
+$("#zcs").text(Math.round(zcs*100)/100);
+if(zcs>=0){
+	$("#zcs").css("color","blue");
+}
+if(zcs<0){
+	$("#zcs").css("color","red");
+}
+
+var czs = 0;
+$(".czs").each(function(){
+	czs+=parseFloat($(this).val());
+});
+$("#czs").text(Math.round(czs*100)/100);
+if(czs>=0){
+	$("#czs").css("color","blue");
+}
+if(czs<0){
+	$("#czs").css("color","red");
+}
+
+var sc = 0;
+$(".sc").each(function(){
+	sc+=parseFloat($(this).val());
+});
+$("#sc").text(Math.round(sc*100)/100);
+if(sc>=0){
+	$("#sc").css("color","blue");
+}
+if(sc<0){
+	$("#sc").css("color","red");
+}
+
+var hdfl = 0;
+$(".hdfl").each(function(){
+	hdfl+=parseFloat($(this).val());
+});
+$("#hdfl").text(Math.round(hdfl*100)/100);
+if(hdfl>=0){
+	$("#hdfl").css("color","blue");
+}
+if(hdfl<0){
+	$("#hdfl").css("color","red");
+}
+
+
+/* var noissuexxxxxxxx = 0;
+
+$(".noissuexxxxxxxx").each(function(){
+	noissuexxxxxxxx+=parseFloat($(this).val());
+}); */
+/* if(noissuexxxxxxxx>=0){
+	$("#xxxxxxxx").html("<font style='color:blue;'>"+Math.round(noissuexxxxxxxx*100)/100+"</font> / ");
+}
+if(noissuexxxxxxxx<0){
+	$("#xxxxxxxx").html("<font style='color:red;'>"+Math.round(noissuexxxxxxxx*100)/100+"</font> / ");
+}  */
+
+/* var xxxxxxxx = 0;
+$(".xxxxxxxx").each(function(){
+	xxxxxxxx+=parseFloat($(this).val());
+});
+if(xxxxxxxx>=0){
+	$("#xxxxxxxx").html($("#xxxxxxxx").html()+"<font style='color:blue;'>"+Math.round(xxxxxxxx*100)/100+"</font>");
+}
+if(xxxxxxxx<0){
+	$("#xxxxxxxx").html($("#xxxxxxxx").html()+"<font style='color:red;'>"+Math.round(xxxxxxxx*100)/100+"</font>");
+} */
+
+var dlzz = 0;
+$(".dlzz").each(function(){
+	dlzz+=parseFloat($(this).val());
+});
+if(dlzz>=0){
+	$("#dlzz").html($("#dlzz").html()+"<font style='color:blue;'>"+Math.round(dlzz*100)/100+"</font>");
+}
+if(dlzz<0){
+	$("#dlzz").html($("#dlzz").html()+"<font style='color:red;'>"+Math.round(dlzz*100)/100+"</font>");
+} 
+var xsdlzz = 0;
+$(".xsdlzz").each(function(){
+	xsdlzz+=parseFloat($(this).val());
+});
+if(xsdlzz>=0){
+	$("#xsdlzz").html($("#xsdlzz").html()+"<font style='color:blue;'>"+Math.round(xsdlzz*100)/100+"</font>");
+}
+if(xsdlzz<0){
+	$("#xsdlzz").html($("#xsdlzz").html()+"<font style='color:red;'>"+Math.round(xsdlzz*100)/100+"</font>");
+}  
+
+var noissuecz = 0;
+
+$(".noissuecz").each(function(){
+	noissuecz+=parseFloat($(this).val());
+});
+/* if(noissuecz>=0){
+	$("#cz").html("<font style='color:blue;'>"+Math.round(noissuecz*100)/100+"</font> / ");
+}
+if(noissuecz<0){
+	$("#cz").html("<font style='color:red;'>"+Math.round(noissuecz*100)/100+"</font> / ");
+} */ 
+
+var cz = 0;
+$(".cz").each(function(){
+	cz+=parseFloat($(this).val());
+});
+if(cz>=0){
+	$("#cz").html($("#cz").html()+"<font style='color:blue;'>"+Math.round(cz*100)/100+"</font>");
+}
+if(cz<0){
+	$("#cz").html($("#cz").html()+"<font style='color:red;'>"+Math.round(cz*100)/100+"</font>");
+} 
+
+
+var noissuetx = 0;
+
+$(".noissuetx").each(function(){
+	noissuetx+=parseFloat($(this).val());
+});
+/* if(noissuetx>=0){
+	$("#tx").html("<font style='color:blue;'>"+Math.round(noissuetx*100)/100+"</font> / ");
+}
+if(noissuetx<0){
+	$("#tx").html("<font style='color:red;'>"+Math.round(noissuetx*100)/100+"</font> / ");
+}  */
+
+var tx = 0;
+$(".tx").each(function(){
+	tx+=parseFloat($(this).val());
+});
+if(tx>=0){
+	$("#tx").html($("#tx").html()+"<font style='color:blue;'>"+Math.round(tx*100)/100+"</font>");
+}
+if(tx<0){
+	$("#tx").html($("#tx").html()+"<font style='color:red;'>"+Math.round(tx*100)/100+"</font>");
+} 
+
+var noissuetze = 0;
+
+$(".noissuetze").each(function(){
+	noissuetze+=parseFloat($(this).val());
+});
+/* if(noissuetze>=0){
+	$("#tze").html("<font style='color:blue;'>"+Math.round(noissuetze*100)/100+"</font> / ");
+}
+if(noissuetze<0){
+	$("#tze").html("<font style='color:red;'>"+Math.round(noissuetze*100)/100+"</font> / ");
+}  */
+
+var tze = 0;
+$(".tze").each(function(){
+	tze+=parseFloat($(this).val());
+});
+if(tze>=0){
+	$("#tze").html($("#tze").html()+"<font style='color:blue;'>"+Math.round(tze*100)/100+"</font>");
+}
+if(tze<0){
+	$("#tze").html($("#tze").html()+"<font style='color:red;'>"+Math.round(tze*100)/100+"</font>");
+}
+
+
+
+
+var noissueuntreated = 0;
+
+$(".noissueuntreated").each(function(){
+	noissueuntreated+=parseFloat($(this).val());
+});
+/* if(noissueuntreated>=0){
+	$("#untreated").html("<font style='color:blue;'>"+Math.round(noissueuntreated*100)/100+"</font> / ");
+}
+if(noissueuntreated<0){
+	$("#untreated").html("<font style='color:red;'>"+Math.round(noissueuntreated*100)/100+"</font> / ");
+}  */
+
+var untreated = 0;
+$(".untreated").each(function(){
+	untreated+=parseFloat($(this).val());
+});
+if(untreated>=0){
+	$("#untreated").html($("#untreated").html()+"<font style='color:blue;'>"+Math.round(untreated*100)/100+"</font>");
+}
+if(untreated<0){
+	$("#untreated").html($("#untreated").html()+"<font style='color:red;'>"+Math.round(untreated*100)/100+"</font>");
+}
+
+var noissueyjstze = 0;
+
+$(".noissueyjstze").each(function(){
+	noissueyjstze+=parseFloat($(this).val());
+});
+/* if(noissueyjstze>=0){
+	$("#yjstze").html("<font style='color:blue;'>"+Math.round(noissueyjstze*100)/100+"</font> / ");
+}
+if(noissueyjstze<0){
+	$("#yjstze").html("<font style='color:red;'>"+Math.round(noissueyjstze*100)/100+"</font> / ");
+}  */
+
+var yjstze = 0;
+$(".yjstze").each(function(){
+	yjstze+=parseFloat($(this).val());
+});
+if(yjstze>=0){
+	$("#yjstze").html($("#yjstze").html()+"<font style='color:blue;'>"+Math.round(yjstze*100)/100+"</font>");
+}
+if(yjstze<0){
+	$("#yjstze").html($("#yjstze").html()+"<font style='color:red;'>"+Math.round(yjstze*100)/100+"</font>");
+}
+
+
+var noissuepc = 0;
+
+$(".noissuepc").each(function(){
+	noissuepc+=parseFloat($(this).val());
+});
+/* if(noissuepc>=0){
+	$("#pc").html("<font style='color:blue;'>"+Math.round(noissuepc*100)/100+"</font> / ");
+}
+if(noissuepc<0){
+	$("#pc").html("<font style='color:red;'>"+Math.round(noissuepc*100)/100+"</font> / ");
+} */ 
+
+var pc = 0;
+$(".pc").each(function(){
+	pc+=parseFloat($(this).val());
+});
+if(pc>=0){
+	$("#pc").html($("#pc").html()+"<font style='color:blue;'>"+Math.round(pc*100)/100+"</font>");
+}
+if(yjstze<0){
+	$("#pc").html($("#pc").html()+"<font style='color:red;'>"+Math.round(pc*100)/100+"</font>");
+}
+
+//当日结算派彩
+
+var settlenoissuepc = 0;
+
+$(".settlenoissuepc").each(function(){
+	settlenoissuepc+=parseFloat($(this).val());
+});
+/* if(settlenoissuepc>=0){
+	$("#settlepc").html("<font style='color:blue;'>"+Math.round(settlenoissuepc*100)/100+"</font> / ");
+}
+if(settlenoissuepc<0){
+	$("#settlepc").html("<font style='color:red;'>"+Math.round(settlenoissuepc*100)/100+"</font> / ");
+}  */
+
+var settlepc = 0;
+$(".settlepc").each(function(){
+	settlepc+=parseFloat($(this).val());
+});
+if(settlepc>=0){
+	$("#settlepc").html($("#settlepc").html()+"<font style='color:blue;'>"+Math.round(settlepc*100)/100+"</font>");
+}
+if(settlepc<0){
+	$("#settlepc").html($("#settlepc").html()+"<font style='color:red;'>"+Math.round(settlepc*100)/100+"</font>");
+}
+
+//公司佣金
+var noissuebrokerageagentmoney = 0;
+
+$(".noissuebrokerageagentmoney").each(function(){
+	noissuebrokerageagentmoney+=parseFloat($(this).val());
+});
+/* if(noissuebrokerageagentmoney>=0){
+	$("#brokerageagentmoney").html("<font style='color:blue;'>"+Math.round(noissuebrokerageagentmoney*100)/100+"</font> / ");
+}
+if(noissuebrokerageagentmoney<0){
+	$("#brokerageagentmoney").html("<font style='color:red;'>"+Math.round(noissuebrokerageagentmoney*100)/100+"</font> / ");
+}  */
+
+var brokerageagentmoney = 0;
+$(".brokerageagentmoney").each(function(){
+	brokerageagentmoney+=parseFloat($(this).val());
+});
+if(brokerageagentmoney>=0){
+	$("#brokerageagentmoney").html($("#brokerageagentmoney").html()+"<font style='color:blue;'>"+Math.round(brokerageagentmoney*100)/100+"</font>");
+}
+if(brokerageagentmoney<0){
+	$("#brokerageagentmoney").html($("#brokerageagentmoney").html()+"<font style='color:red;'>"+Math.round(brokerageagentmoney*100)/100+"</font>");
+}
+
+
+
+var noissuesettlebrokeragemoney = 0;
+
+$(".noissuesettlebrokeragemoney").each(function(){
+	noissuesettlebrokeragemoney+=parseFloat($(this).val());
+});
+/* if(noissuesettlebrokeragemoney>=0){
+	$("#settlebrokeragemoney").html("<font style='color:blue;'>"+Math.round(noissuesettlebrokeragemoney*100)/100+"</font> / ");
+}
+if(noissuesettlebrokeragemoney<0){
+	$("#settlebrokeragemoney").html("<font style='color:red;'>"+Math.round(noissuesettlebrokeragemoney*100)/100+"</font> / ");
+}  */
+
+var settlebrokeragemoney = 0;
+$(".settlebrokeragemoney").each(function(){
+	settlebrokeragemoney+=parseFloat($(this).val());
+});
+if(settlebrokeragemoney>=0){
+	$("#settlebrokeragemoney").html($("#settlebrokeragemoney").html()+"<font style='color:blue;'>"+Math.round(settlebrokeragemoney*100)/100+"</font>");
+}
+if(settlebrokeragemoney<0){
+	$("#settlebrokeragemoney").html($("#settlebrokeragemoney").html()+"<font style='color:red;'>"+Math.round(settlebrokeragemoney*100)/100+"</font>");
+}
+
+
+
+
+var noissuebettingtimeyxsy = 0;
+
+$(".noissuebettingtimeyxsy").each(function(){
+	noissuebettingtimeyxsy+=parseFloat($(this).val());
+});
+/* if(noissuebettingtimeyxsy>=0){
+	$("#bettingtimeyxsy").html("<font style='color:blue;'>"+Math.round(noissuebettingtimeyxsy*100)/100+"</font> / ");
+}
+if(noissuebettingtimeyxsy<0){
+	$("#bettingtimeyxsy").html("<font style='color:red;'>"+Math.round(noissuebettingtimeyxsy*100)/100+"</font> / ");
+}  */
+
+var bettingtimeyxsy = 0;
+$(".bettingtimeyxsy").each(function(){
+	bettingtimeyxsy+=parseFloat($(this).val());
+});
+if(bettingtimeyxsy>=0){
+	$("#bettingtimeyxsy").html($("#bettingtimeyxsy").html()+"<font style='color:blue;'>"+Math.round(bettingtimeyxsy*100)/100+"</font>");
+}
+if(bettingtimeyxsy<0){
+	$("#bettingtimeyxsy").html($("#bettingtimeyxsy").html()+"<font style='color:red;'>"+Math.round(bettingtimeyxsy*100)/100+"</font>");
+}
+
+
+var noissuebettingtimecommission = 0;
+
+$(".noissuebettingtimecommission").each(function(){
+	noissuebettingtimecommission+=parseFloat($(this).val());
+});
+/* if(noissuebettingtimecommission>=0){
+	$("#bettingtimecommission").html("<font style='color:blue;'>"+Math.round(noissuebettingtimecommission*100)/100+"</font> / ");
+}
+if(noissuebettingtimeyxsy<0){
+	$("#bettingtimecommission").html("<font style='color:red;'>"+Math.round(noissuebettingtimecommission*100)/100+"</font> / ");
+}  */
+
+var bettingtimecommission = 0;
+$(".bettingtimecommission").each(function(){
+	bettingtimecommission+=parseFloat($(this).val());
+});
+if(bettingtimecommission>=0){
+	$("#bettingtimecommission").html($("#bettingtimecommission").html()+"<font style='color:blue;'>"+Math.round(bettingtimecommission*100)/100+"</font>");
+}
+if(bettingtimecommission<0){
+	$("#bettingtimecommission").html($("#bettingtimecommission").html()+"<font style='color:red;'>"+Math.round(bettingtimecommission*100)/100+"</font>");
+}
+
+
+
+
+var zfl = 0;
+$(".zfl").each(function(){
+	zfl+=parseFloat($(this).val());
+});
+zfl = parseFloat(zfl);
+$("#zfl").val(Math.round(zfl*100)/100);
+if(zfl>=0){
+	$("#zfl").css("color","blue");
+}
+if(zfl<0){
+	$("#zfl").css("color","red");
+}
+
+
+var czks = 0;
+$(".czks").each(function(){
+	ks+=parseFloat($(this).val());
+});
+czks = parseFloat(czks);
+$("#czks").val(Math.round(czks*100)/100);
+if(ks>=0){
+	$("#czks").css("color","blue");
+}
+if(ks<0){
+	$("#czks").css("color","red");
+}
+
+var qd = 0;
+$(".qd").each(function(){
+	qd+=parseFloat($(this).val());
+});
+qd = parseFloat(qd);
+$("#qd").val(Math.round(qd*100)/100);
+if(qd>=0){
+	$("#qd").css("color","blue");
+}
+if(qd<0){
+	$("#qd").css("color","red");
+}
+
+var jj = 0;
+$(".jj").each(function(){
+	jj+=parseFloat($(this).val());
+});
+jj = parseFloat(jj);
+$("#jj").val(Math.round(jj*100)/100);
+if(jj>=0){
+	$("#jj").css("color","blue");
+}
+if(jj<0){
+	$("#jj").css("color","red");
+}
+
+var ks = 0;
+$(".ks").each(function(){
+	ks+=parseFloat($(this).val());
+});
+ks = parseFloat(ks);
+$("#ks").val(Math.round(ks*100)/100);
+if(ks>=0){
+	$("#ks").css("color","blue");
+}
+if(ks<0){
+	$("#ks").css("color","red");
+}
+
+var sc = 0;
+$(".sc").each(function(){
+	sc+=parseFloat($(this).val());
+});
+sc = parseFloat(sc);
+$("#sc").val(Math.round(sc*100)/100);
+if(sc>=0){
+	$("#sc").css("color","blue");
+}
+if(sc<0){
+	$("#sc").css("color","red");
+}
+
+var hdfl = 0;
+$(".hdfl").each(function(){
+	hdfl+=parseFloat($(this).val());
+});
+hdfl = parseFloat(hdfl);
+$("#hdfl").val(Math.round(hdfl*100)/100);
+if(hdfl>=0){
+	$("#hdfl").css("color","blue");
+}
+if(sc<0){
+	$("#hdfl").css("color","red");
+}
+
+var ph = 0;
+$(".ph").each(function(){
+	ph+=parseFloat($(this).val());
+});
+ph = parseFloat(ph);
+$("#ph").val(Math.round(ph*100)/100);
+if(ph>=0){
+	$("#ph").css("color","blue");
+}
+if(ph<0){
+	$("#ph").css("color","red");
+}
+
+var hb = 0;
+$(".hb").each(function(){
+	hb+= parseFloat($(this).val());
+});
+hb = parseFloat(hb);
+$("#hb").val(Math.round(hb*100)/100);
+if(hb>=0){
+	$("#hb").css("color","blue");
+}
+if(hb<0){
+	$("#hb").css("color","red");
+}
+
+var ty = 0;
+$(".ty").each(function(){
+	ty+= parseFloat($(this).val());
+});
+ty = parseFloat(ty);
+$("#ty").val(Math.round(ty*100)/100);
+if(ty>=0){
+	$("#ty").css("color","blue");
+}
+if(ty<0){
+	$("#ty").css("color","red");
+}
+
+var xjfl = 0;
+$(".xjfl").each(function(){
+	xjfl+=parseFloat($(this).val());
+});
+xjfl = parseFloat(xjfl);
+$("#xjfl").val(Math.round(xjfl*100)/100);
+if(xjfl>=0){
+	$("#xjfl").css("color","blue");
+}
+if(xjfl<0){
+	$("#xjfl").css("color","red");
+}
+
+var yxsy = 0;
+$(".yxsy").each(function(){
+	yxsy+=parseFloat($(this).val());
+});
+yxsy = parseFloat(yxsy);
+$("#yxsy").val(Math.round(yxsy*100)/100);
+if(yxsy>=0){
+	$("#yxsy").css("color","blue");
+}
+if(yxsy<0){
+	$("#yxsy").css("color","red");
+}
+
+
+
+
+
+
+
+
+
+
+
+/* $(".fkz").each(function(){
+	var sadfasfd=parseFloat(parseFloat($(this).prev().prev().val()) - parseFloat($(this).prev().val()));
+	$(this).text(Math.round(sadfasfd*100)/100);
+	if(parseFloat($(this).prev().prev().val()) - parseFloat($(this).prev().val())>=0){
+		$(this).css("color","blue");
+	}else{
+		$(this).css("color","red");
+	}
+});
+
+var fkz = 0;
+$(".fkz").each(function(){
+	fkz+=parseFloat($(this).text());
+});
+fkz = parseFloat(fkz);
+$("#fkz").val(Math.round(fkz*100)/100);
+if(fkz>=0){
+	$("#fkz").css("color","blue");
+}else{
+	$("#fkz").css("color","red");
+} */
+</script>
+</html>
+
+

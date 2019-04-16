@@ -1,0 +1,441 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+jQuery(function(){
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})
+//120秒刷新
+/* var t; 
+	t=120; 
+	function shua() 
+	{ 
+	t=t-1; 
+	document.getElementById("hints").innerHTML=t+" 秒"; 
+	if (t==0) 
+	{ 
+	document.location.reload(); 
+	} 
+}  */
+
+
+//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+	function clearformurl(){
+		$('#searchForm').attr("action","${ctx}/betmember/list");
+	}
+	
+	
+</script>
+</head>
+<body >
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap" >
+				<div class="xiao-ht-content-bg layui-tab-brief" style="overflow-x:scroll">
+					<ul class="layui-tab-title site-demo-title">
+			             <!-- <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								网站地图导航
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>BetMember管理</cite></a>
+								</span>
+			             </li> -->
+						 <li style="float:right;">
+			             	<!-- <@shiro.hasPermission name="/betmember/list/export" >
+					        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button> -->
+			                <!-- <@shiro.hasPermission name="/betmember/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission> -->
+			               <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" ><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content" >
+						          <!-- 查询  开始 -->
+							          <form id="searchForm" onkeydown="if(event.keyCode==13)return false;" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!-- 查询  结束 -->
+									  
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap" >
+										<table class="xiao-ht-table" lay-even>
+												<thead>
+													<tr>
+													  <!--first_start_no_export-->
+													  
+													  <!--first_end_no_export-->
+													  		<th>序号</th>
+													  		<th id="th_id2" >用户ID</th>
+															<th id="_account" >用户名</th>
+															<th id="_nickname" >昵称</th>
+															<th id="t_realname" >真实姓名</th>
+															<th  id="th_daysocre">每日输赢</th>
+															<th id="th_winorfail" >总输赢</th>
+															<th id="th_gamescore">总分</th>
+															<th  id="th_exp">VIP</th>
+															<th id="th_ty">退佣</th>
+															<th id="th_subordinate" >下线</th>
+															<th id="th_logintimes" >登录</th>
+															<th id="th_logintime" >登录时间</th>
+															<th>登录地址</th>
+															<th id="h_status" >状态</th>
+															<th>来源</th>
+															<!-- <th style="text-align:center">操作</th> -->
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<td>
+																${_data_index+1}
+															</td>
+															<!--end_no_export-->
+															<td >
+																<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betmember/look?id2=${(_data.id2)!''}&id=${(_data.id)!''}">${(_data.id2)!''}</a>
+															</td>
+															<td >
+																<a class="xiao-color-861db1" style="text-decoration:underline;" href="${ctx}/betmember/list?k=6&id2=${_data.id2!''}">${(_data.account)!''}</a>
+															</td>
+															<td style="white-space:nowrap">
+																${(_data.nickname)!''}
+															</td>
+															<td style="white-space:nowrap">
+																<a class="xiao-color-00e"  style="text-decoration:underline;" href="${ctx}/betmember/list?realname=${(_data.realname)!''}">${(_data.realname)!''}</a>
+															</td>
+															<td>
+																<input class="t1" type="hidden" value="${(_data.dayscore)!''}">
+																<#if _data.dayscore??>
+																
+																<span 
+																<#if _data.dayscore??>
+																<#if (_data.dayscore>=0)>
+																style="color:blue"
+																<#elseif (_data.dayscore<0)>
+																style="color:red"
+																</#if>
+																</#if>
+																>${(_data.dayscore)!''}</span>
+																
+																</#if>
+																<#if _data.isinternal??>
+																<#if _data.isinternal=1>																
+																&nbsp;&nbsp;<input type="hidden" value="${(_data.id)!''}" />
+																</#if>
+																</#if>
+															</td>
+															<td >
+																<input class="t2" type="hidden" value="${(_data.winorfail)!''}">
+																<a
+																 <#if _data.winorfail??>
+																<#if (_data.winorfail>=0)>
+																style="color:blue"
+																<#elseif (_data.winorfail<0)>
+																style="color:red"
+																</#if>
+																</#if>
+																href="${ctx}/betmember/list?k=1&id=${_data.id!''}" style="text-decoration:underline;">${(_data.winorfail)!''}</a>
+															</td>
+															<td >
+																<input class="t3" type="hidden" value="${(_data.score)!''}">
+																<span
+																 <#if _data.score??>
+																<#if (_data.score>=0)>
+																style="color:blue"
+																<#elseif (_data.score<0)>
+																style="color:red"
+																</#if>
+																</#if>
+																>${(_data.score)!0}</span>
+															</td>
+															<td>
+																VIP${(_data.level)!''}
+															</td>
+															<td>
+																<input class="t4" type="hidden" value="${(_data.ty)!''}">
+																<a
+																 <#if _data.ty??>
+																<#if (_data.ty>=0)>
+																style="color:blue"
+																<#elseif (_data.ty<0)>
+																style="color:red"
+																</#if>
+																</#if>
+																href="${ctx}/betmember/memberbettingtylist?id=${_data.id!''}" style="text-decoration:underline;">${(_data.ty)!''}</a>
+																
+															</td>
+															<td >
+															<input class="t5" type="hidden" value="${(_data.subordinate)!0}">
+																<a 
+																 <#if (_data.subordinate??)&&(_data.subordinate>=0)>
+																 style="color:blue"
+																 </#if> 
+																 href="${ctx}/betmember/list?parentid=${(_data.id2)!''}" style="text-decoration:underline;">${(_data.subordinate)!0}</a>
+															</td>
+															<td style="color:blue">
+															<input class="t6" type="hidden" value="${(_data.logintimes)!0}">
+																${(_data.logintimes)!0}
+															</td>
+															<td style="white-space:nowrap">
+																${(_data.logintime)!''}
+															</td>
+															<td style="white-space:nowrap">
+																<a style="text-decoration:underline;" href="${ctx}/betmember/list?k=22&ip2=${(_data.loginip)!''}">${(_data.loginip)!''}</a> <a class="xiao-color-00e" href="${ctx}/betmember/list?k=22&memberid2=${(_data.id2)!''}" style="text-decoration:underline;">查</a>
+															</td>
+															<td style="white-space:nowrap">
+																<#if _data.status==0>
+																	<font style="color:red">冻结</font>&nbsp;&nbsp;<input type="hidden" value="${(_data.id)!''}" />
+																	<#else>
+																	<font style="color:green">启用</font>
+																</#if>
+															</td>
+															<td style="white-space:nowrap">
+																${(_data.logintool)!''}
+															</td>
+															<!-- <td style="text-align:center">
+																<@shiro.hasPermission name="/betmember/update" >
+									                           		 <a href="#" data-action="${ctx}/betmember/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+									                            </@shiro.hasPermission>
+									                            <@shiro.hasPermission name="/betmember/delete" >
+									                            	<a style="margin:2px" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+									                            </@shiro.hasPermission>
+															</td> -->
+														</tr>
+													</#list>
+													<tr  style="background-color:#eafcff;">
+													  <!--first_start_no_export-->
+												  		<td>小计</td>
+														<td  ></td>
+														<td  ></td>
+														<td  ></td>
+														<td  ></td>
+														<td > <a style="border:0px;text-align: center;"  id="t1"></a></td>
+														<td  ><a style="border:0px;text-align: center;" id="t2"></a></td>
+														<td ><a style="border:0px;text-align: center;" id="t3"></a></td>
+														<td  ></td>
+														<td ><a style="border:0px;text-align: center;" id="t4"></a></td>
+													
+														<td ><a style="border:0px;text-align: center;" id="t5"></a></td>
+														<td><a style="border:0px;text-align: center;" id="t6"></a></td>
+														<td ></td>	<td ></td>	
+														<td></td>
+														<td></td>
+													</tr> 
+												 </#if>
+												 	
+												</tbody>
+												
+											</table>
+											
+											<#if returnDatas.page??> 
+												<div id='laypageDiv' class="xiao-inline-block"></div>
+												<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th>
+												<@h.layPage page=returnDatas.page /> 
+											</#if>
+										</div>
+								</div>
+							</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betmember/delete");
+	}
+	
+	$(".allUser").change(
+		function(){
+			var a=$(this).attr("id");
+			$("#find").attr("name",a);
+		}
+	)
+	jQuery(function(){
+		var a=$("input[name='1']:checked").attr("id");
+			$("#find").attr("name",a);
+	})	
+	
+		
+		
+
+		
+	
+	
+	var href = window.location.href;
+	var result = href.split('&springraintoken')[0];
+	var url_list = $('.xiao-btnlist').find('a');
+	for(var i = 0; i < url_list.length ; i++){
+		if(url_list[i].href == result){
+//			console.log(url_list[i].href);
+			url_list[i].style.backgroundColor = "#009688";
+			url_list[i].style.display = "block";
+			url_list[i].style.color = "#fff";
+		}
+	}
+	
+	 
+	 $(".unfreeze").click(function(){
+			var id=$(this).prev().val();
+			//询问框
+layer.confirm('确定解冻用户？', {
+offset:['',''],
+btn: ['确定','取消'] //按钮
+}, function(){
+
+	$.ajax({
+				type:"post",
+				url:"${ctx}/betmember/update?unfreeze=1",
+				
+				data:{id:id},
+				success:function(result){
+					if("error"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						
+					}else if("success"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						setTimeout("location.reload(true);",2000);
+						
+					}
+				},
+			})
+}, function(){
+
+});
+			
+		})
+		
+		$('.adddayscore').click(function(){
+			var a=$(this).prev().val();
+			//prompt层
+			layer.prompt({title: '输入分数，并确认', formType:0,offset : ['','']}, function(pass, index){
+				 layer.close(index);
+			    $.ajax({
+				type:"post",
+				url:"${ctx}/betmember/update?adddaysocre=1",
+				
+				data:{id:a,dayscore:pass},
+				success:function(result){
+					if("error"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						
+					}else if("success"==result.status){
+						layer.msg(result.message,{offset:['','']});
+						 setTimeout("location.reload(true);",2000); 
+						
+					}
+				},
+			})
+			  
+			});
+		})
+		
+		
+	var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	
+	$("#t1").text(Math.round(t1*100)/100);
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	if(t2>=0){
+		$("#t2").css('color','blue');
+	}else if(t2<0){
+		$("#t2").css('color','red');
+	}
+	$("#t2").text(Math.round(t2*100)/100);
+	
+	var t3 = 0.;
+	$(".t3").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t3+= a*1;
+	});
+	if(t3>=0){
+		$("#t3").css('color','blue');
+	}else if(t3<0){
+		$("#t3").css('color','red');
+	}
+	$("#t3").text(Math.round(t3*100)/100);
+	
+	var t4 = 0.;
+	$(".t4").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t4+= a*1;
+	});
+	if(t4>=0){
+		$("#t4").css('color','blue');
+	}else if(t4<0){
+		$("#t4").css('color','red');
+	}
+	$("#t4").text(Math.round(t4*100)/100);
+	
+	var t5 = 0.;
+	$(".t5").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t5+= a*1;
+	});
+	if(t5>=0){
+		$("#t5").css('color','blue');
+	}else if(t5<0){
+		$("#t5").css('color','red');
+	}
+	$("#t5").text(Math.round(t5*100)/100);
+	
+	var t6 = 0.;
+	$(".t6").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t6+= a*1;
+	});
+	if(t6>=0){
+		$("#t6").css('color','blue');
+	}else if(t6<0){
+		$("#t6").css('color','red');
+	}
+	$("#t6").text(Math.round(t6*100)/100);
+</script>
+</body>
+</html>
+

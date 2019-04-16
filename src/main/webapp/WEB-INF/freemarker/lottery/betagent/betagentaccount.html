@@ -1,0 +1,162 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<!-- <script src="${ctx}/js/custom/common/form.js"></script> -->
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a>首页<span class="layui-box">&gt;</span></a>
+							  <a>代理<span>&gt;</span></a>
+							  <a><cite>收款账户</cite></a>
+							</span>
+		             </li>
+					<li style="float:right;">
+					<button type="button" onclick="history.go(-1)"
+						class="layui-btn layui-btn-small" style="margin-top:8px;">
+						<i class="layui-icon layui-icon-specil">&#xe603;</i>返回
+					</button></li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagentaccount/list" method="post">
+									 收款方式: <input id="accountname" type="text"/>
+									 收款账号: <input id="accountnum" type="text"/>
+									 开户行: <input id="bankofdeposit" type="text"/>
+									 <input id="insert" type="button" value="添加"/>
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+											<thead>
+												<tr>
+													<th colspan="9">账户列表</th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+														<th>收款方式</th>
+														<th>收款账号</th>
+														<th>开户行</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										   <tbody>
+													<#if agentAccountList??>
+														<#list agentAccountList as _datas>
+													<tr class="">
+														<td >
+															${_datas.accountname!''}
+														</td>
+														<td >
+															${_datas.accountnum!''}
+														</td>
+														<td >
+															${_datas.bankofdeposit!''}
+														</td>
+														<!-- data-action="${ctx}/betagent/delete?d=1&id=${(_datas.id)!''}" -->
+														<td>
+								                            <@shiro.hasPermission name="/betagent/delete" >
+								                            <input id="id" type="hidden" value="${(_datas.id)!''}"/>
+								                           		 <a  href="#"  class="layui-btn layui-btn-danger layui-btn-mini remove">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+														</#list>
+														</#if>
+											</tbody>
+										</table>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<div class="footer"></div>
+</body>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	
+	
+	
+	$(".remove").click(function(){
+					var id = $(this).prev().val();
+					if(!confirm("确认要删除？")){ 
+						window.event.returnValue = false; 
+					} 
+					$.ajax({
+						type:"post",
+						url:"${ctx}/betagent/delete?id="+id,
+						
+						data:{d:1},
+						success:function(result){
+							if("error"==result.status){
+								alert(result.message);
+								location.reload()
+							}else if("success"==result.status){
+								alert("删除成功！");
+								location.reload()
+							}
+						},
+					})
+					
+				})
+	
+	
+	$("#insert").click(function(){
+	
+				var a = $("#accountname").val();
+				var b = $("#accountnum").val();
+				var c = $("#bankofdeposit").val();
+				if(a==undefined || a=="" || a==null){
+				alert("收款账户不能为空");
+					return;
+				}
+				if(b==undefined || b=="" || b==null){
+				alert("收款账号不能为空");
+					return;
+				}
+					$.ajax({
+						type:"post",
+						url:"${ctx}/betagent/update",
+						
+						data:{i:1,accountname:a,accountnum:b,bankofdeposit:c},
+						success:function(result){
+							if("error"==result.status){
+								alert(result.message);
+								location.reload()
+							}else if("success"==result.status){
+								alert("账户添加成功！");
+								location.reload()
+							}
+						},
+					})
+					
+				})
+	
+</script>
+</html>
+

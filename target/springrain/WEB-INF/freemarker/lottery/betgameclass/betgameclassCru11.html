@@ -1,0 +1,409 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<style>
+			form {
+				margin: 0;
+			}
+			textarea {
+				display: block;
+			}
+		</style>
+		<link rel="stylesheet" href="${ctx}/js/kindeditor/themes/default/default.css" />
+		<script charset="utf-8" src="${ctx}/js/kindeditor/kindeditor-min.js"></script>
+		<script charset="utf-8" src="${ctx}/js/kindeditor/lang/zh_CN.js"></script>
+		<script>
+			var editor;
+			KindEditor.ready(function(K) {
+				editor = K.create('textarea[name="gamerules"]', {
+					allowFileManager : true,
+					afterBlur : function(){this.sync();}
+				});
+				
+				/* K('input[name=getHtml]').click(function(e) {
+					alert(editor.html());
+					
+				});
+				K('input[name=isEmpty]').click(function(e) {
+					alert(editor.isEmpty());
+				});
+				K('input[name=getText]').click(function(e) {
+					alert(editor.text());
+				});
+				K('input[name=selectedHtml]').click(function(e) {
+					alert(editor.selectedHtml());
+				});
+				K('input[name=setHtml]').click(function(e) {
+					editor.html('<h3>Hello KindEditor</h3>');
+				});
+				K('input[name=setText]').click(function(e) {
+					editor.text('<h3>Hello KindEditor</h3>');
+				});
+				K('input[name=insertHtml]').click(function(e) {
+					editor.insertHtml('<strong>插入HTML</strong>');
+				});
+				K('input[name=appendHtml]').click(function(e) {
+					editor.appendHtml('<strong>添加HTML</strong>');
+				});
+				K('input[name=clear]').click(function(e) {
+					editor.html('');
+				}); */
+			});
+		</script>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+
+
+<style type="text/css">
+			.mbt20 {
+				margin: 20px 0;
+			}
+			.xiao-ht-table .game_time {
+				float: initial;
+			}
+			#tab {
+				margin-bottom: 20px;
+			}
+</style>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			            <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								   <a><cite>游戏管理</cite></a>
+								</span>
+			            </li>
+			             <li style="float:right;">
+					        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+					<div id="LAY_preview" class="xiao-ht-content">
+						          				<header class="larry-personal-tit">
+													<span>添加游戏</span>
+												</header>
+													<div class="xiao-ht-tableWrap xiao-ht-hiddenScroll">
+													<form id="validForm" method="post" action="${ctx}/betgameclass/update">
+													<input type="hidden" id="gameclassid" name="gameclassid" value="${(returnDatas.data.gameclassid)!''}"/>	
+																	<table class=" game_table xiao-ht-table  mbt20">
+    																	<thead>
+    																		<tr>
+      																			<th>项目</th>
+      																			<th>内容</th>
+      																			<th>项目</th>
+      																			<th>内容</th>
+      																			<th>项目</th>
+      																			<th>内容</th>
+    																		</tr> 
+    																	</thead>
+    																	<tbody>
+    																		<tr>
+    																			<td>游戏名称*</td>
+    																			<td>
+    																				<input type="text" name="gcname" id="gcname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.gcname)!''}">
+    																			</td>
+    																			<td>英文标识*</td>
+    																			<td>
+    																				<input type="text" name="gename" id="gename" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.gename)!''}">
+    																			</td>
+    																			<td>简称</td>
+    																			<td>
+
+    																				<input type="text" name="gsname" id="gsname"  autocomplete="off" value="${(returnDatas.data.gsname)!''}">
+
+
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>最小号码*</td>
+    																			<td>
+    																				<input type="text" name="nmin" id="nmin" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.nmin)!''}">
+    																			</td>
+    																			<td>最大号码*</td>
+    																			<td>
+    																				<input type="text" name="nmax" id="nmax" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.nmax)!''}">
+    																			</td>
+    																			<td>号码数量*</td>
+    																			<td>
+    																				<input type="text" name="nlen" id="nlen" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.nlen)!''}">
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>开奖时间*</td>
+    																			<td>
+    																				<input class="game_time" type="text" name="msh" id="msh" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.msh)!''}"> 
+																					:
+																					<input class="game_time" type="text" name="msm" id="msm" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.msm)!''}">
+																					:
+																					<input class="game_time" type="text" name="mss" id="mss" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mss)!''}">
+    																			</td>
+    																			<td>结束时间*</td>
+    																			<td>
+    																				<input class="game_time" type="text" name="meh" id="meh" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.meh)!''}">
+																					:
+																					<input class="game_time" type="text" name="mem" id="mem" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mem)!''}">
+																					:
+																					<input class="game_time" type="text" name="mes" id="mes" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mes)!''}">
+    																			</td>
+    																			<td>首期时间*</td>
+    																			<td>
+    																				<input type="text" name="mstime" id="mstime" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mstime)!''}">
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>每天期数*</td>
+    																			<td>
+    																				<input type="text" name="mnums" id="mnums" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mnums)!''}">
+    																			</td>
+    																			<td>每期时间*</td>
+    																			<td>
+    																				<input type="text" name="mstep" id="mstep" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mstep)!''}">
+    																			</td>
+    																			<td>首期编码*</td>
+    																			<td>
+    																				<input type="text" name="msnum" id="msnum" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.msnum)!''}">
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>开奖/秒*</td>
+    																			<td>
+    																				<input type="text" name="mopen" id="mopen" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mopen)!''}">
+    																			</td>
+    																			<td>截止/秒*</td>
+    																			<td>
+    																				<input type="text" name="mstop" id="mstop" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.mstop)!''}">
+    																			</td>
+    																			<td>状态*</td>
+    																			<td>
+    																				<select name="state" id="state" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off">
+    																					<option value="1" <#if returnDatas.data??><#if returnDatas.data.state==1> selected</#if></#if>>上线</option>
+    																					<option value="0" <#if returnDatas.data??><#if returnDatas.data.state==0> selected</#if></#if>>下线</option>
+    																				</select>
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>本期开奖</td>
+    																			<td>
+    																				<input type="text" name="currenttickets" id="currenttickets"  autocomplete="off" value="${(returnDatas.data.currenttickets)!''}">
+    																			</td>
+    																			<td>-</td>
+    																			<td>-</td>
+    																			<td>性质分类*</td>
+    																			<td>
+    																				<select type="text" name="pt" id="pt" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.pt)!''}">
+    																					<option>---------请选择性质分类---------</option>
+    																				</select>
+    																				<input id="btn" style="text-align: center; line-height: 20px;" type="button" value="设置" class="xiao-btn xiao-btn-default">
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>投注上限*</td>
+    																			<td>
+    																				<input type="text" name="bettingceiling" id="bettingceiling" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.bettingceiling)!''}">
+    																			</td>
+    																			<td>投注下限*</td>
+    																			<td>
+    																				<input type="text" name="bettinglimit" id="bettinglimit" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.bettinglimit)!''}">
+    																			</td>
+    																			<td>退佣*</td>
+    																			<td>
+    																				<input type="text" name="ty" id="ty" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.ty)!''}">
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>排序状态*</td>
+    																			<td>
+    																				<input type="text" name="grank" id="grank" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" value="${(returnDatas.data.grank)!''}">
+    																			</td>
+    																			<td>-</td>
+    																			<td>-</td>
+    																			<td>官方网址</td>
+    																			<td>
+    																				<input type="text" name="msurl" id="msurl"  autocomplete="off" value="${(returnDatas.data.msurl)!''}">
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>投注子菜单</td>
+    																			<td >
+    																				<input  type="text" name="submenu" id="submenu"  autocomplete="off" value="${(returnDatas.data.submenu)!''}">
+    																			</td>
+    																			<td>特殊规则</td>
+    																			<td >
+    																				<!-- <input  type="text" name="specialrules" id="specialrules"  autocomplete="off" value="${(returnDatas.data.specialrules)!''}"> -->
+    																				<input type="checkbox" name="specialrules1" 
+    																				<#if returnDatas.data.specialrules??>
+    																				<#if returnDatas.data.specialrules?index_of("a")!=-1>
+    																				checked
+    																				</#if>
+    																				</#if>
+    																				>总和13、14赔率50%<br/>
+    																				<input type="checkbox" name="specialrules2"
+    																				<#if returnDatas.data.specialrules??>
+    																				<#if returnDatas.data.specialrules?index_of("b")!=-1>
+    																				 checked
+    																				 </#if>
+    																				</#if>
+    																				  >开和不吃不赔
+    																			</td>
+    																		</tr>
+    																		<tr>
+    																			<td>游戏规则</td>
+    																			<td colspan="5">
+																						<textarea name="gamerules" style="width:800px;height:400px;">${(returnDatas.data.gamerules)!''}</textarea>
+																						<!-- <p>
+																							<input type="button" name="getHtml" value="取得HTML" />
+																							<input type="button" name="isEmpty" value="判断是否为空" />
+																							<input type="button" name="getText" value="取得文本(包含img,embed)" />
+																							<input type="button" name="selectedHtml" value="取得选中HTML" />
+																							<br />
+																							<br />
+																							<input type="button" name="setHtml" value="设置HTML" />
+																							<input type="button" name="setText" value="设置文本" />
+																							<input type="button" name="insertHtml" value="插入HTML" />
+																							<input type="button" name="appendHtml" value="添加HTML" />
+																							<input type="button" name="clear" value="清空内容" />
+																							<input type="reset" name="reset" value="Reset" />
+																						</p> -->
+    																			</td>
+    																		</tr>
+    																	</tbody>
+																	</table>
+																	<div class="layui-form-item xiao-ht-inputFormItem xiao-ht-formBtn clearfix">
+																		<a id="smtbtn" class="xiao-btn xiao-btn-default">保存</a>
+																		<a class="xiao-btn" id="rstbtn" >重置</a>
+																	</div>
+														</div>
+													</form>
+					
+						<div class=" search-wrap xiao-input-wrap">
+							<div class="layui-inline">
+								<input class="xiao-input" type="text" name="" id="game_xz" value="" />
+								<input class="xiao-btn xiao-btn-default" type="button" id="btn_add" value="新增" />
+							</div>
+						</div>
+						<div class="xiao-ht-tableWrap">
+								<table id="tab" class="xiao-ht-table" lay-even>
+									<thead>
+										<tr>
+											<th>性质分类</th>
+											<th  colspan="2">操作</th>
+										</tr>
+									</thead>
+									<tbody id="xxx">
+										
+									</tbody>
+								</table>
+								<input type="button" id="tk_save" class="xiao-btn xiao-btn-default" value="保存" />
+								<input type="button" id="tk_cancel" class="xiao-btn xiao-btn-danger" value="取消" />
+						
+						
+					</div>
+												
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	<script>
+	jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betgameclass/list?springraintoken="+springraintoken+"&gameclassid="+${(returnDatas.data.gameclassid)!''}});
+	 });
+	
+/* 	$("#btn").click(function(){
+		$("#tk").show();
+	})
+	$("#tk_save").click(function(){
+		$("#tk").hide()
+	})
+	$("#tk_cancel").click(function(){
+		$("#tk").hide()
+	}) */
+		
+jQuery(document).ready(function(){
+    //加载玩法名称
+    jQuery.ajax({
+        url : ctx+"/betpt/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+           			 //游戏分类设置
+          	  		jQuery("#xxx").append("<tr>"+"<td>"+_obj.name+"</td><td><input type='button' class='btn_edit1 xiao-btn xiao-btn-default' value='编辑' /><input type='button' class='btn_delete1 xiao-btn xiao-btn-danger' value='删除' /></td>"+"</tr>");
+            	 	if(_obj.id=="${(returnDatas.data.pt)!''}"){
+						 jQuery("#pt").append("<option value='"+_obj.id+"' selected >"+_obj.name+"</option>");
+		 			}else{
+		 				jQuery("#pt").append("<option value='"+_obj.id+"'>"+_obj.name+"</option>");
+		 			}
+            });
+        }
+    });
+});
+
+jQuery("#btn").click(function(){
+	layer.open({
+  type: 2,
+  title: ' ',
+  shadeClose: true,
+      shade: false,
+      maxmin: true, //开启最大化最小化按钮
+      area: ['893px', '600px'],
+      content: '${ctx}/betpt/list',
+  end: function(){ //此处用于演示
+    window.parent.location.reload(); //刷新父页面
+  }
+});
+})
+
+/* var game_xz=document.getElementById("game_xz");
+				var tab=document.getElementById("tab");
+				var btn_add=document.getElementById("btn_add");
+				btn_add.onclick=function(){
+					if(game_xz.value!=""){
+						var otr=document.createElement("tr");
+						var otd=document.createElement("td");
+						otd.innerHTML=game_xz.value;
+						otr.appendChild(otd);
+					
+						var otd=document.createElement("td");
+						otd.innerHTML="<input type='button' class='btn_edit' value='编辑' />";
+						otr.appendChild(otd);	
+						otd.getElementsByClassName("btn_edit")[0].onclick=function(e){
+							var ele=e.target;
+							var val=ele.parentNode.previousElementSibling.innerHTML;
+							if(ele.parentNode.previousSibling.firstChild.nodeName!="INPUT"){
+								ele.parentNode.previousElementSibling.innerHTML="<input type='text' class='btn_val' value="+val+">";
+							}
+							$(".btn_val").blur(function(){
+							var a=$(this).val();
+							$(this).parent().text(a)
+							});
+						}
+
+					
+						var otd=document.createElement("td");
+						otd.innerHTML="<input type='button' class='btn_delete' value='删除' />";
+						otr.appendChild(otd);
+						otd.getElementsByClassName("btn_delete")[0].onclick=function(){
+							tab.tBodies[0].removeChild(this.parentNode.parentNode)
+						}
+						tab.tBodies[0].appendChild(otr);
+						game_xz.value=""
+					}
+				} */
+				
+	</script> 
+</body>
+</html>

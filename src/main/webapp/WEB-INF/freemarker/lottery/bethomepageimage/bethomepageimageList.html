@@ -1,0 +1,149 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/bethomepageimage/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/bethomepageimage/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/bethomepageimage/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/bethomepageimage/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">首页图片列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												
+												  <!--first_end_no_export-->
+												  <th >类型</th>
+												  <th id="title" >标题(客服QQ)</th>
+												  <th id="th_order1" >排序</th>
+														<th id="th_url" >图片地址</th>
+														
+														<th id="th_comment" >备注(客服微信)</th>
+														<th  >状态</th>
+														  <th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														
+														<!--end_no_export-->
+														<td >
+															<#if _data.type??>
+																<#if _data.type=1>
+																	手机
+																<#elseif _data.type=0>
+																	电脑
+																<#elseif _data.type=2>
+																	手机活动
+																<#elseif _data.type=3>
+																	电脑活动
+																</#if>
+															</#if>
+														
+														</td>
+														<td >
+															${(_data.title)!''}
+														</td>
+														<td >
+															${(_data.order1)!0}
+														</td>
+														<td >
+															${(_data.url)!''}
+														</td>
+														
+														<td >
+															${(_data.comment)!''}
+														</td>
+														<td >
+															<#if _data.state??>
+																<#if _data.state=1>
+																<font style="color:green;">启用</font>
+																<#elseif _data.state=0>
+																<font style="color:red;">停用</font>
+																<#elseif _data.state=3>
+																<font style="color:green;">客服微信</font>
+																</#if>
+															</#if>
+														</td>
+														<td>
+															<@shiro.hasPermission name="/bethomepageimage/update" >
+								                           		 <a href="#" data-action="${ctx}/bethomepageimage/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/bethomepageimage/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,168 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script type="text/javascript">
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		
+	});
+	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							   <a><cite>代理系统</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>退佣</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					 <button type="button" onclick="history.go(-1)"
+						class="layui-btn layui-btn-small" style="margin-top:8px;">
+						<i class="layui-icon layui-icon-specil">&#xe603;</i>返回
+					</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+									                 <div class="layui-input-inline xiao-input-wrap pull-left">
+											<div class="layui-input-inline xiao-input-wrap pull-left">
+												<input id="starttime"  name="starttime" onclick="laydate()" placeholder="请输入日期 " value="${starttime!''}" class="laydate-icon xiao-input">
+											</div>
+										到
+											<div class="layui-input-inline">
+												<input id="endtime"  name="endtime" onclick="laydate()" placeholder="请输入日期 " value="${endtime!''}" class="laydate-icon xiao-input">
+											</div>
+										</div>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="10">投注列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_end_no_export-->
+														<th>用户ID</th>
+														<th id="th_qibie" >期数</th>
+														<th id="th_bettingmoney" >投注金额</th>
+														<th id="th_bettingscore" >派彩</th>
+														<th id="th_bettingtime" >投注时间</th>
+														<th>游戏中文名</th>
+														<th>所属代理商</th>
+														<th id="th_ty" >退佣</th>
+														<th id="th_tystate" >退佣状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															${(_data.memberid2)!''}
+														</td>
+														<td >
+															${(_data.qibie)!''}
+														</td>
+														<td >
+															${((_data.bettingmoney)?string('#.##'))!0}
+														</td>
+														<td >
+															${((_data.bettingscore)?string('#.##'))!0}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.bettingtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															${(_data.gcname)!''}
+														</td>
+														<td >
+															${(_data.agentid)!''}
+														</td>
+														<td>
+															${((_data.ty)?string('#.##'))!0}
+														</td>
+														<td >
+														<#if _data.tystate=0>
+															未到账
+														<#else>
+															已到账
+														</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+<script>
+	function getUrlParam(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg); //匹配目标参数
+      if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+    
+	$("#searchForm").attr(action,"${ctx}/betagent/list?t=1&agentid="+getUrlParam("agentid"));
+</script>
+</html>
+

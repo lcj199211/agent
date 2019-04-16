@@ -1,0 +1,125 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betsubordinaterebate/update/pre?mark=dbcz";});
+	 });
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>单笔充值设置</span>
+												</header>
+												<!-- form id="validForm" class="layui-form "不可以删 不可以删 不可以删 不可以删 不可以删 不可以删 不可以删 不可以删 不可以删 不可以删 -->
+													<form id="validForm" class="layui-form <!--  -->"   method="post" action="${ctx}/betsubordinaterebate/update?mark=dbcz">
+														<table>
+															<tbody><!-- 
+																<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    						<#list	returnDatas.data as _data>
+																	<tr>
+																		<input  type="hidden" id="id" name="id" value="${(_data.id)!''}"/>
+																		<td>
+																			单笔充值<input  style="width:80px;" type="text" name="betamounts" id="betamounts" value="${(_data.betamounts)!''}">元及以上&nbsp;&nbsp;
+																		</td>
+																		
+																		<td>投注流水<input style="width:50px;" type="text" name="scbettingmultiple" id="scbettingmultiple" value="${(_data.scbettingmultiple)!''}" >倍&nbsp;&nbsp;</td>
+																		<td>返利<input  style="width:80px;"  type="text" name="rebate" id="rebate" value="${(_data.rebate*100)!''}" />%</td>
+																	</tr>
+																	</#list>
+																</#if> -->
+																<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+																	<tr><td>
+																	<input name="dbczmode" type="radio" value="0"  title="模式1" 
+																	<#if (dbczmode??)&&(dbczmode=0)>
+																	checked="checked"
+																	</#if>
+																	/>
+																	</td></tr>
+										    						<#list	returnDatas.data as _data>
+										    						<#if _data.betstream=0>
+																	<tr>
+																		<input  type="hidden" id="id" name="id" value="${(_data.id)!''}"/> 
+																		<input  type="hidden" id="betstream" name="betstream" value="${(_data.betstream)!''}"/> 
+																		<td>
+																			单笔充值<input  style="width:80px;" type="text" name="betamounts" id="betamounts" value="${(_data.betamounts)!''}">元及以上&nbsp;&nbsp;
+																		</td>
+																		
+																		<td>投注流水<input style="width:50px;" type="text" name="scbettingmultiple" id="scbettingmultiple" value="${(_data.scbettingmultiple)!''}" >倍&nbsp;&nbsp;</td>
+																		<td>返利<input  style="width:80px;"  type="text" name="rebate" id="rebate" value="${(_data.rebate*100)!''}" />%</td>
+																	</tr>
+																	</#if>
+																	</#list>
+																</#if>
+																
+																<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+																<tr><td>
+																<input name="dbczmode" type="radio" value="1"  title="模式2" 
+																<#if (dbczmode??)&&(dbczmode=1)>
+																	checked="checked"
+																	</#if>
+																/> 
+																</td></tr>
+										    						<#list	returnDatas.data as _data>
+										    						<#if _data.betstream=1>
+																	
+																	<tr>
+																		<input  type="hidden" id="id" name="id" value="${(_data.id)!''}"/>
+																		<input  type="hidden" id="betstream" name="betstream" value="${(_data.betstream)!''}"/> 
+																		<td>
+																			单笔充值<input  style="width:80px;" type="text" name="betamounts" id="betamounts" value="${(_data.betamounts)!''}">元及以上&nbsp;&nbsp;
+																		</td>
+																		
+																		<td>投注流水<input style="width:50px;" type="text" name="scbettingmultiple" id="scbettingmultiple" value="${(_data.scbettingmultiple)!''}" >倍&nbsp;&nbsp;</td>
+																		<td>返利<input  style="width:80px;"  type="text" name="rebate" id="rebate" value="${(_data.rebate)!''}" />分</td>
+																	</tr>
+																	</#if>
+																	</#list>
+																</#if>
+																
+																
+																<tr>
+																	<td colspan="4" align="center">
+																		<div class="layui-form-item change-submit">
+																			<label class="layui-form-label"></label>
+																			<div class="layui-inline">
+																				<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																				<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+																			</div>
+																		</div>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</form>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

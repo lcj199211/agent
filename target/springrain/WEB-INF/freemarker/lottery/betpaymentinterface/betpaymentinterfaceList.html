@@ -1,0 +1,212 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betpaymentinterface/delete");
+	}
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+						 <li style="float:right;">
+			             	<@shiro.hasPermission name="/betpaymentinterface/update" >
+			             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betpaymentinterface/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+			             	</@shiro.hasPermission>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+									<div class="xiao-ht-tableWrap">
+									<form class="layui-form layui-form-pane" id="searchForm"
+								action="${ctx}/betpaymentinterface/list" method="post">
+								<input type="hidden" name="pageIndex" id="pageIndex"
+									value="${(returnDatas.page.pageIndex)!'1'}" /> <input
+									type="hidden" name="sort" id="page_sort"
+									value="${(returnDatas.page.sort)!'desc'}" /> <input
+									type="hidden" name="order" id="page_order"
+									value="${(returnDatas.page.order)!'id'}" />
+									</form>
+										<table class="xiao-ht-table" lay-even>
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												 
+												  <!--first_end_no_export-->
+												  		<th id="id" >排序</th>
+												  		<th id="banktype" >通道</th>
+												  		<th id="type" >类型</th>
+														<th id="bankname" >姓名</th>
+														<th id="limit1" >限额</th>
+														
+														<th id="state" >状态</th>
+														<th id="remarks" >备注</th>
+														 <th style="text-align:center">操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														
+														<!--end_no_export-->
+														<td >
+															<!-- <a href="${ctx}/betpaymentinterface/look?id=${_data.id}">${(_data.id)!''}</a> -->
+															${(_data.order1)!''}
+														</td>
+														<td >
+															${(_data.banktype)!''}
+														</td>
+														<td >
+															<#if (_data.type??)>
+															<#if (_data.type='1')>
+																银行卡
+															<#elseif (_data.type='2')>
+																支付宝二维码
+															<#elseif (_data.type='3')>
+																微信扫码支付
+															<#elseif (_data.type='4')>
+																信用卡
+															<#elseif (_data.type='5')>
+																快捷支付
+															<#elseif (_data.type='6')>
+																扫码支付
+															<#elseif (_data.type='8')>
+																原生支付宝APP
+															<#elseif (_data.type='30')>
+																聚合支付宝H5支付
+															<#elseif (_data.type='31')>
+																太极支付宝H5支付
+															<#elseif (_data.type='100')>
+																新快捷支付
+															<#elseif (_data.type='101')>
+																优付支付宝WAP(信用卡)
+															<#elseif (_data.type='102')>
+																银联扫码支付
+															<#elseif (_data.type='103')>
+																微信app原生支付
+															<#elseif (_data.type='104')>
+																优付支付宝WAP
+															<#elseif (_data.type='105')>
+																微信支付WAP
+															<#elseif (_data.type='106')>
+																QQ支付WAP
+															<#elseif (_data.type='107')>
+																京东扫码支付
+															<#elseif (_data.type='108')>
+																易支付原生APP企业通道
+															<#elseif (_data.type='109')>
+																易支付原生WAP企业通道
+															<#elseif (_data.type='110')>
+																易支付优付支付通道
+															<#elseif (_data.type='111')>
+																易支付个人转账通道
+															<#elseif (_data.type='115')>
+																易支付个人转账通道（新版）
+															<#elseif (_data.type='116')>
+																易支付聚合支付通道
+															<#elseif (_data.type='117')>
+																易支付聚合企业支付通道
+															<#elseif (_data.type='118')>
+																易支付微信扫码个人转账通道
+															<#elseif (_data.type='120')>
+																易支付个人转账Z通道
+															<#elseif (_data.type='121')>
+																易支付银联H5通道
+															<#elseif (_data.type='123')>
+																易支付易宝银联H5通道
+															<#elseif (_data.type='124')>
+																易支付个人转账WS通道
+															<#elseif (_data.type='125')>
+																易支付易宝银联H5通道(绑卡)
+															<#elseif (_data.type='126')>
+																易支付易宝分账通道
+															<#elseif (_data.type='127')>
+																易支付支付宝红包通道
+															<#elseif (_data.type='128')>
+																易支付微信扫码个人转账通道（升级版）
+															<#elseif (_data.type='129')>
+																易支付支付宝转账ZZ通道
+															<#elseif (_data.type='1001')>
+																微信收款码2
+															<#elseif (_data.type='2001')>
+																支付宝收款码2
+															</#if>
+															</#if>
+														</td>
+														
+														<td >
+															${(_data.bankname)!''}
+														</td>
+														<td >
+															${(_data.limit1)!'不限'}
+														</td>
+														<td >
+															<#if _data.state==1>
+															<p style="color:green">上线</p>
+															<#else>
+															<p style="color:red">下线</p>
+															</#if>
+														</td>
+														<td >
+															${(_data.remarks)!''}
+														</td>
+														<td style="text-align:center">
+															<@shiro.hasPermission name="/betpaymentinterface/update" >
+								                           		 <a style="padding: 0 30px;height: 25px; line-height: 25px;" href="#" data-action="${ctx}/betpaymentinterface/update/pre?id=${_data.id}" class="layui-btn xiao-btn-default layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <#if _data.state==1>
+								                           		 <@shiro.hasPermission name="/betpaymentinterface/update" >
+								                            		<a style="padding: 0 30px;height: 25px; line-height: 25px;" href="#" data-action="${ctx}/betpaymentinterface/update/s?id=${_data.id}&state=0" class="layui-btn layui-btn-normal layui-btn-mini">暂停</a>
+								                          		  </@shiro.hasPermission>
+								                            </#if>
+								                            <#if _data.state==0>
+								                          		  <@shiro.hasPermission name="/betpaymentinterface/update" >
+								                            		<a style="padding: 0 30px;height: 25px; line-height: 25px;" href="#" data-action="${ctx}/betpaymentinterface/update/s?id=${_data.id}&state=1" class="layui-btn layui-btn-normal layui-btn-mini">启用</a>
+								                           		 </@shiro.hasPermission>
+								                            </#if>
+								                            <@shiro.hasPermission name="/betpaymentinterface/delete" >
+								                            	<a style="padding: 0 30px;height: 25px; line-height: 25px;" href="javascript:del('${(_data.id)!''}')" class="layui-btn xiao-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv' class="xiao-inline-block"></div>
+											<@h.layPage page=returnDatas.page /> 
+											<!-- <font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font> -->
+										</#if>
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

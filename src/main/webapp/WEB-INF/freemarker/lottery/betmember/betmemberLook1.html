@@ -1,0 +1,573 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		
+		<!-- 20170412 新增样式引入 -->
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/bootstrap/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/build/css/custom.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/font-awesome/css/font-awesome.min.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/web-static/xiao/css/xiao-style.css"/>
+		<!-- 样式引入end -->
+		
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>会员管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+		
+				<!-- 内容部分替换 right_col 替换 layui-body  -->
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="right_col" role="main">
+						<form id="searchForm" action="${ctx}/betmember/list" method="post">
+							<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+				            <div class="page-title">
+				              <div class="title_left">
+				                <div class="col-md-12 col-sm-12 col-xs-12 form-group pull-left top_search">
+				                  <div class="input-group">
+				                    <input id="id2" type="text" class="form-control" placeholder="输入用户ID" value="${(returnDatas.data.id2)!''}">
+				                    <span class="input-group-btn">
+				                      <button class="btn btn-default" type="button" onclick="springrain.commonSubmit('searchForm');">查询</button>
+				                    </span>
+				                  </div>
+				                </div>
+				              </div>
+				
+				              <div class="title_right">
+				                <!--<h3>余额： <small>Some examples to get you started</small></h3>-->
+				                <div class="xiao-springrain-row">
+				                	<p class="xiao-springrain-item pull-left">余额: <span class="xiao-color-e00">${(returnDatas.data.score)!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">银行: <span class="xiao-color-00e">${(returnDatas.data.bankscore)!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">投注: <span class="xiao-color-0e0">${totalbetmoney!0}</span> </p>
+				                	<p class="xiao-springrain-item pull-left">乐豆: <span class="xiao-color-f80">${(returnDatas.data.coins)!0}</span> </p>
+				                	<a class="xiao-springrain-item xiao-pt2 pull-left" href="#">转账</a>
+				                	<a class="xiao-springrain-item xiao-pt2 pull-left" href="#">转账记录</a>
+				                	<div class="clearfix"></div>
+				                </div>
+				              </div>
+				              <div class="clearfix"></div>
+				            </div>
+				        </form>
+							<div class="clearfix"></div>
+							<div class="xiao-springrain-operationList">
+								<a href="${ctx}/betgold/list?memberid=${(returnDatas.data.id)!''}"><i class="fa fa-pencil-square-o"></i>充值记录</a>
+								<a href="${ctx}/betwithdrawcash/list?memberid=${(returnDatas.data.id)!''}"><i class="fa fa-paint-brush"></i>提现记录</a>
+								<a href="${ctx}/betmember/list?k=1&id=${(returnDatas.data.id)!''}"><i class="fa fa-bomb"></i>每日输赢</a>
+								<a href="${ctx}/betmember/list?parentid=${(returnDatas.data.id)!''}"><i class="fa fa-sitemap"></i>下线列表</a>
+								<a href="#"><i class="fa fa-file-text-o"></i>操作日志</a>
+								<a href="#"><i class="fa fa-space-shuttle"></i>在线投注</a>
+								<a href="#"><i class="fa fa-database"></i>金币记录</a>
+								<a href="#"><i class="fa fa-key"></i>权限管理</a>
+							</div>
+				
+				            <div class="clearfix"></div>
+				
+				            <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>用户基本信息 <small>填写后无法修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				                  <div class="x_content">
+				
+				                    <table class="xiao-springrain-userNews table">
+				                      <!--<thead>
+				                        <tr>
+				                          <th>#</th>
+				                          <th>First Name</th>
+				                          <th>Last Name</th>
+				                          <th>Username</th>
+				                        </tr>
+				                      </thead>-->
+				                      <tbody>
+				                        <tr>
+				                          <td scope="row">用户ID</td>
+				                          <td>${(returnDatas.data.id2)!''}</td>
+				                          <td>用户名</td>
+				                          <td>${(returnDatas.data.account)!''}</td>
+				                        </tr>
+				                        <tr>
+				                          <td scope="row">昵称</td>
+				                          <td>${(returnDatas.data.nickname)!''}</td>
+				                          <td>状态</td>
+				                          <td>
+				                          	<#if returnDatas.data.status==1>
+												启用
+												<#elseif returnDatas.data.status==0>
+												冻结
+											</#if>
+				                          </td>
+				                        </tr>
+				                        <tr>
+				                          <td scope="row">当前经验</td>
+				                          <td>${(returnDatas.data.exp)!''}</td>
+				                          <td>今日经验</td>
+				                          <td>${(returnDatas.data.todayexp)!''}</td>
+				                        </tr>
+				                        <tr>
+				                        	<td>vip等级</td>
+				                        	<td>${(returnDatas.data.level)!''}</td>
+				                        	<td>推荐人ID</td>
+				                        	<td>${(returnDatas.data.parentid)!''}</td>
+				                        </tr>
+				                        <tr>
+				                        	<td>所在游戏</td>
+				                        	<td colspan="3">韩国28|重庆时时彩|足球</td>
+				                        </tr>
+				                        <tr>
+				                        	<td>推荐收益</td>
+				                        	<td colspan="3">一层2580，二层0，三层0</td>
+				                        </tr>
+				                        <tr>
+				                        	<td>投注总流水</td>
+				                        	<td colspan="3">2580，今天：100，昨日：555  <a class="pull-right" href="#">查询</a></td>
+				                        </tr>
+				                      </tbody>
+				                    </table>
+				
+				                  </div>
+				                </div>
+				              </div>
+				
+				
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>用户主要信息 <small>可以修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				                  <div class="x_content">
+				
+				                    <table class="xiao-springrain-userNews table table-striped">
+				                      <!--<thead>
+				                        <tr>
+				                          <th>#</th>
+				                          <th>First Name</th>
+				                          <th>Last Name</th>
+				                          <th>Username</th>
+				                        </tr>
+				                      </thead>-->
+				                      <tbody>
+				                        <tr>
+				                          <td scope="row">真实姓名</td>
+				                          <td>
+				                          	李铁蛋 <a class="pull-right" href="#">修改</a>
+				                          </td>
+				                          <td>手机号码</td>
+				                          <td>13736492804 <a class="pull-right" href="#">修改</a></td>
+				                        </tr>
+				                        <!--<tr>
+				                          <td scope="row">手机号码</td>
+				                          <td colspan="3">13736492804 <a class="pull-right" href="#">修改</a></td>
+				                        </tr>-->
+				                        <tr>
+				                          <td>QQ号码</td>
+				                          <td>1191263252<a class="pull-right" href="#">修改</a></td>
+				                          <td>登录密码</td>
+				                          <td>123456789<a class="pull-right" href="#">修改</a></td>
+				                        </tr>
+				                        <!--<tr>
+				                          <td scope="row">登录密码</td>
+				                          <td colspan="3">123456789<a class="pull-right" href="#">修改</a></td>
+				                        </tr>-->
+				                        <tr>
+				                          <td>银行密码</td>
+				                          <td colspan="3">123456789<a class="pull-right" href="#">修改</a></td>
+				                        </tr>
+				                      </tbody>
+				                    </table>
+							
+				                  </div>
+				                </div>
+				              </div>
+				
+				              <div class="clearfix"></div>
+				
+				              <div class="col-md-12 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>绑定账户信息 <small>可以修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				
+				                    <p>提示：填写的信息 <code>一定要真实有效</code>,否则不予<code>提现</code></p>
+				
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action">
+				                        <thead>
+				                          <tr class="headings">
+				                            <th>
+				                              <input type="checkbox" id="check-all" class="flat">
+				                            </th>
+				                            <th class="column-title">编号 </th>
+				                            <th class="column-title">类别 </th>
+				                            <th class="column-title">账户 </th>
+				                            <th class="column-title">绑定时间 </th>
+				                            <!--<th class="column-title">Status </th>
+				                            <th class="column-title">Amount </th>-->
+				                            <th class="column-title no-link last"><span class="nobr">操作</span>
+				                            </th>
+				                            <th class="bulk-actions" colspan="7">
+				                              <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+				                            </th>
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                            <td class="a-center ">
+				                              <input type="checkbox" class="flat" name="table_records">
+				                            </td>
+				                            <td class=" ">1</td>
+				                            <td class=" ">农业银行 </td>
+				                            <td class=" ">6225 8555 5656 5522 338 </td>
+				                            <td class=" ">2016-10-15 21:15:25</td>
+				                            <!--<td class=" ">Paid</td>
+				                            <td class="a-right a-right ">$7.45</td>-->
+				                            <td class=" last"><a href="#">View</a>
+				                            </td>
+				                          </tr>
+				                          <tr class="odd pointer">
+				                            <td class="a-center ">
+				                              <input type="checkbox" class="flat" name="table_records">
+				                            </td>
+				                            <td class=" ">2</td>
+				                            <td class=" ">民生银行</td>
+				                            <td class=" ">6225 8555 5656 5522 338
+				                            </td>
+				                            <td class=" ">2016-10-15 21:15:25</td>
+				                            <!--<td class=" ">Paid</td>
+				                            <td class="a-right a-right ">$741.20</td>-->
+				                            <td class=" last"><a href="#">View</a>
+				                            </td>
+				                          </tr>
+				                          <tr class="even pointer">
+				                            <td class="a-center ">
+				                              <input type="checkbox" class="flat" name="table_records">
+				                            </td>
+				                            <td class=" ">3</td>
+				                            <td class=" ">支付宝</td>
+				                            <td class=" ">121000203 
+				                            </td>
+				                            <td class=" ">2016-10-15 21:15:25</td>
+				                            <!--<td class=" ">Paid</td>
+				                            <td class="a-right a-right ">$432.26</td>-->
+				                            <td class=" last"><a href="#">View</a>
+				                            </td>
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+				              </div>
+				              <!--绑定账号信息end-->	
+				            	
+				              <!-- 竞猜28 -->	
+				              <div class="col-md-12 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>竞猜28 <small>不可以修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action">
+				                        <thead>
+				                          <tr class="headings">
+				                            <th class="column-title">北京11 </th>
+				                            <th class="column-title">北京16 </th>
+				                            <th class="column-title">北京28 </th>
+				                            <th class="column-title">北京36 </th>
+				                            <th class="column-title">PK22 </th>
+				                            <th class="column-title">PK龙虎 </th>
+				                            <th class="column-title">PK冠亚 </th>
+				                            <th class="column-title">PK冠军 </th>
+				                            <th class="column-title">PK10 </th>
+				                            <th class="column-title">蛋蛋28 </th>
+				                            <th class="column-title">蛋蛋36</th>
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                            <td class=" ">80</td>
+				                            <td class=" ">10 </td>
+				                            <td class=" ">520 </td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                          </tr>
+				                        </tbody>
+				                        <thead>
+				                          <tr  class="headings">
+				                            <th class="column-title">加拿大11 </th>
+				                            <th class="column-title">加拿大16 </th>
+				                            <th class="column-title">加拿大28 </th>
+				                            <th class="column-title">加拿大36 </th>
+				                            <th class="column-title">韩国16 </th>
+				                            <th class="column-title">韩国28 </th>
+				                            <th class="column-title">韩国36 </th>
+				                            <th class="column-title">新加坡11 </th>
+				                            <th class="column-title">新加坡16 </th>
+				                            <th class="column-title">新加坡28 </th>
+				                            <th class="column-title"></th>
+				                          </tr>
+				                        </thead>
+				                        <tbody>
+				                          <tr class="even pointer">
+				                            <td class=" ">80</td>
+				                            <td class=" ">10 </td>
+				                            <td class=" ">520 </td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2016</td>
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+				              </div>
+				              <!-- 竞猜28end -->
+				              
+				              <!-- 竞猜时时彩 -->
+				              <div class="col-md-12 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>竞猜时时彩 <small>不可以修改</small></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action">
+				                        <thead>
+				                          <tr class="headings">
+				                            <th class="column-title">重庆时时彩	</th>
+				                            <th class="column-title">新疆时时彩 </th>
+				                            <th class="column-title">加拿大基诺 </th>
+				                            <th class="column-title">北京赛车 </th>
+				                            <th class="column-title">新加坡 </th>
+				                            <th class="column-title">蛋蛋固定 </th>
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="odd pointer">
+				                            <td class=" ">0</td>
+				                            <td class=" ">0 </td>
+				                            <td class=" ">0</td>
+				                            <td class=" ">0</td>
+				                            <td class=" ">0</td>
+				                            <td class=" ">0</td>
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+				              </div>
+				              <!-- 竞猜时时彩end -->
+				              
+				              <!-- 统计输赢结果信息 -->
+				              <div class="col-md-12 col-sm-12 col-xs-12">
+				                <div class="x_panel">
+				                  <div class="x_title">
+				                    <h2>统计输赢结果： <span class="xiao-color-e00">888888</span></h2>
+				                    <ul class="nav navbar-right panel_toolbox">
+				                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				                      </li>
+				                      <li class="dropdown">
+				                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                          <li><a href="#">Settings 1</a>
+				                          </li>
+				                          <li><a href="#">Settings 2</a>
+				                          </li>
+				                        </ul>
+				                      </li>
+				                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+				                      </li>
+				                    </ul>
+				                    <div class="clearfix"></div>
+				                  </div>
+				
+				                  <div class="x_content">
+				                    <div class="table-responsive">
+				                      <table class="table table-striped jambo_table bulk_action">
+				                        <thead>
+				                          <tr class="headings">
+				                            <th class="column-title">种类 </th>
+				                            <th class="column-title">系统充值 </th>
+				                            <th class="column-title">在线充值 </th>
+				                            <th class="column-title">提现 </th>
+				                            <th class="column-title">转账 </th>
+				                            <th class="column-title">兑换 </th>
+				                            <th class="column-title">签到 </th>
+				                            <th class="column-title">红包 </th>
+				                            <th class="column-title">返利 </th>
+				                            <th class="column-title">首冲 </th>
+				                            <th class="column-title">推广 </th>
+				                            <th class="column-title">救济</th>
+				                            <th class="column-title">注册 </th>
+				                            <th class="column-title">游戏输赢 </th>
+				                            <th class="column-title">差额</th>
+				                          </tr>
+				                        </thead>
+				
+				                        <tbody>
+				                          <tr class="even pointer">
+				                            <td class=" ">人民币</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                          </tr>
+				                          <tr class="odd pointer">
+				                            <td class=" ">乐豆</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                            <td class=" ">2016</td>
+				                            <td class=" ">2155 </td>
+				                            <td class=" ">6225</td>
+				                          </tr>
+				                        </tbody>
+				                      </table>
+				                    </div>
+				                  </div>
+				                </div>
+				              </div>
+				            </div>
+				    </div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+</html>

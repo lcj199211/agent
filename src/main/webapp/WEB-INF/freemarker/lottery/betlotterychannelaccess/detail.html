@@ -1,0 +1,267 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-titl">
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>出票参数</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post">
+													<table>
+														<tr>
+															<td>足球&nbsp;&nbsp;&nbsp;</td>
+															<td><select id="ticketzuqiu" name="ticketzuqiu" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_zq.systemissue??>
+																						 <#if gameplusawardsproportion_zq.systemissue=1> selected
+																						 </#if> 
+																				    </#if> >启用自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_zq.systemissue??>
+																						 <#if gameplusawardsproportion_zq.systemissue=3> selected
+																						 </#if> 
+																				    </#if> >禁用自动出票</option>
+																			</select></td>
+															<td>&nbsp;&nbsp;手动出票倍数&nbsp;&nbsp;</td>
+															<td><input type="text" name="issuebetmulriple" id="issuebetmulriple" class="layui-input" value="${(issuebetmulriple)!''}"></td>
+															<td>&nbsp;&nbsp;大赔率倍数自动出票&nbsp;&nbsp;</td>
+															<td style="width: 220px"><select id="autoticketzq" name="autoticketzq" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_zq.autobigticket??>
+																						 <#if gameplusawardsproportion_zq.autobigticket=1> selected
+																						 </#if> 
+																				    </#if> >启用大赔率倍数自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_zq.autobigticket??>
+																						 <#if gameplusawardsproportion_zq.autobigticket=3> selected
+																						 </#if> 
+																				    </#if> >禁用大赔率倍数自动出票</option>
+																			</select></td>
+																			<td>&nbsp;&nbsp;&nbsp;大赔率&nbsp;&nbsp;&nbsp;</td>
+																			<td><input type="text" name="bigticketodds_zq" id="bigticketodds_zq" class="layui-input" value="${(gameplusawardsproportion_zq.bigticketodds)!''}"></td>
+																			<td>&nbsp;&nbsp;&nbsp;统一自动出票倍数&nbsp;&nbsp;&nbsp;</td>
+																			<td><input type="text" name="ticketbetmultiple_zq" id="ticketbetmultiple_zq" class="layui-input" value="${(gameplusawardsproportion_zq.ticketbetmultiple)!''}"></td>
+														</tr>
+														<tr>
+															<td>篮球&nbsp;&nbsp;&nbsp;</td>
+															<td><select id="ticketlq" name="ticketlq" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_lq.systemissue??>
+																						 <#if gameplusawardsproportion_lq.systemissue=1> selected
+																						 </#if> 
+																				    </#if> >启用自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_lq.systemissue??>
+																						 <#if gameplusawardsproportion_lq.systemissue=3> selected
+																						 </#if> 
+																				    </#if> >禁用自动出票</option>
+																			</select></td>
+															<td>&nbsp;&nbsp;手动出票倍数&nbsp;&nbsp;</td>
+															<td><input type="text" name="issuebetmulriple_lq" id="issuebetmulriple_lq" class="layui-input" value="${(issuebetmulriple_lq)!''}"></td>
+															<td>&nbsp;&nbsp;大赔率倍数自动出票&nbsp;&nbsp;</td>
+															<td style="width: 220px"><select id="autoticketlq" name="autoticketlq" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_lq.autobigticket??>
+																						 <#if gameplusawardsproportion_lq.autobigticket=1> selected
+																						 </#if> 
+																				    </#if> >启用大赔率倍数自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_lq.autobigticket??>
+																						 <#if gameplusawardsproportion_lq.autobigticket=3> selected
+																						 </#if> 
+																				    </#if> >禁用大赔率倍数自动出票</option>
+																			</select></td>
+															<td>&nbsp;&nbsp;&nbsp;大赔率&nbsp;&nbsp;&nbsp;</td>
+															<td><input type="text" name="bigticketodds_lq" id="bigticketodds_lq" class="layui-input" value="${(gameplusawardsproportion_lq.bigticketodds)!''}"></td>
+															<td>&nbsp;&nbsp;&nbsp;统一自动出票倍数&nbsp;&nbsp;&nbsp;</td>
+															<td><input type="text" name="ticketbetmultiple_lq" id="ticketbetmultiple_lq" class="layui-input" value="${(gameplusawardsproportion_lq.ticketbetmultiple)!''}"></td>
+														</tr>
+														<tr>
+															<td>北单&nbsp;&nbsp;&nbsp;</td>
+															<td><select id="ticketbjdc" name="ticketbjdc" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_bjdc.systemissue??>
+																						 <#if gameplusawardsproportion_bjdc.systemissue=1> selected
+																						 </#if> 
+																				    </#if> >启用自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_bjdc.systemissue??>
+																						 <#if gameplusawardsproportion_bjdc.systemissue=3> selected
+																						 </#if> 
+																				    </#if> >禁用自动出票</option>
+																			</select></td>
+															<td>&nbsp;&nbsp;手动出票倍数&nbsp;&nbsp;</td>
+															<td><input type="text" name="issuebetmulriple_bjdc" id="issuebetmulriple_bjdc" class="layui-input" value="${(issuebetmulriple_bjdc)!''}"></td>
+															<td>&nbsp;&nbsp;大赔率倍数自动出票&nbsp;&nbsp;</td>
+															<td style="width: 220px"><select id="autoticketbjdc" name="autoticketbjdc" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_bjdc.autobigticket??>
+																						 <#if gameplusawardsproportion_bjdc.autobigticket=1> selected
+																						 </#if> 
+																				    </#if> >启用大赔率倍数自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_bjdc.autobigticket??>
+																						 <#if gameplusawardsproportion_bjdc.autobigticket=3> selected
+																						 </#if> 
+																				    </#if> >禁用大赔率倍数自动出票</option>
+																			</select></td>
+															<td>&nbsp;&nbsp;&nbsp;大赔率&nbsp;&nbsp;&nbsp;</td>
+															<td><input type="text" name="bigticketodds_bjdc" id="bigticketodds_bjdc" class="layui-input" value="${(gameplusawardsproportion_bjdc.bigticketodds)!''}"></td>
+															<td>&nbsp;&nbsp;&nbsp;统一自动出票倍数&nbsp;&nbsp;&nbsp;</td>
+															<td><input type="text" name="ticketbetmultiple_bjdc" id="ticketbetmultiple_bjdc" class="layui-input" value="${(gameplusawardsproportion_bjdc.ticketbetmultiple)!''}"></td>
+														</tr>
+														<tr>
+															<td>大乐透&nbsp;&nbsp;&nbsp;</td>
+															<td><select id="ticketdlt" name="ticketdlt" >
+																				<option value="1" 
+																					<#if gameplusawardsproportion_dlt.systemissue??>
+																						 <#if gameplusawardsproportion_dlt.systemissue=1> selected
+																						 </#if> 
+																				    </#if> >启用自动出票</option>
+																				  	<option value="3" 
+																				  	<#if gameplusawardsproportion_dlt.systemissue??>
+																						 <#if gameplusawardsproportion_dlt.systemissue=3> selected
+																						 </#if> 
+																				    </#if> >禁用自动出票</option>
+																			</select></td>
+															<td>&nbsp;&nbsp;手动出票倍数&nbsp;&nbsp;</td>
+															<td><input type="text" name="issuebetmultiple_dlt" id="issuebetmultiple_dlt" class="layui-input" value="${(issuebetmultiple_dlt)!''}"></td>
+														</tr>
+														<tr style="height: 20px">
+														</tr>
+														<tr>
+															<td colspan="6" style="text-align: center;"><button type="button" class="layui-btn" id="smtbtn">保存</button></td>
+														</tr>
+													</table>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+$("#smtbtn").click(function(){
+		var ticketzuqiu = $("#ticketzuqiu").val();
+		var ticketlq = $("#ticketlq").val();
+		var ticketbjdc = $("#ticketbjdc").val();
+		var ticketdlt = $("#ticketdlt").val();
+		var autoticketzq = $("#autoticketzq").val();
+		var autoticketlq = $("#autoticketlq").val();
+		var autoticketbjdc = $("#autoticketbjdc").val();
+		var issuebetmulriple = $("#issuebetmulriple").val();
+		var issuebetmulriple_lq = $("#issuebetmulriple_lq").val();
+		var issuebetmulriple_bjdc = $("#issuebetmulriple_bjdc").val();
+		var issuebetmultiple_dlt = $("#issuebetmultiple_dlt").val();		
+		var bigticketodds_zq = $("#bigticketodds_zq").val();
+		var bigticketodds_lq = $("#bigticketodds_lq").val();
+		var bigticketodds_bjdc = $("#bigticketodds_bjdc").val();
+		var ticketbetmultiple_bjdc = $("#ticketbetmultiple_bjdc").val();
+		var ticketbetmultiple_zq = $("#ticketbetmultiple_zq").val();
+		var ticketbetmultiple_lq = $("#ticketbetmultiple_lq").val();
+		
+		if(bigticketodds_zq==null){
+			bigticketodds_zq=20;
+		}
+		if(bigticketodds_lq==null){
+			bigticketodds_lq=20;
+		}
+		if(bigticketodds_bjdc==null){
+			bigticketodds_bjdc=20;
+		}
+		if(autoticketzq==null){
+			autoticketzq=3;
+		}
+		if(autoticketlq==null){
+			autoticketlq=3;
+		}
+		if(autoticketbjdc==null){
+			autoticketbjdc=3;
+		}
+		if(issuebetmulriple==null){
+			issuebetmulriple=1;
+		}
+		if(issuebetmulriple_lq==null){
+			issuebetmulriple_lq=1;
+		}
+		if(issuebetmulriple_bjdc==null){
+			issuebetmulriple_bjdc=1;
+		}
+		if(issuebetmultiple_dlt==null){
+			issuebetmultiple_dlt=1;
+		}
+		
+		if(ticketbetmultiple_bjdc==null){
+			ticketbetmultiple_bjdc=1;
+		}
+		if(ticketbetmultiple_zq==null){
+			ticketbetmultiple_zq=1;
+		}
+		if(ticketbetmultiple_lq==null){
+			ticketbetmultiple_bjdc=1;
+		}
+		var inputArry = [issuebetmulriple,issuebetmulriple_lq,issuebetmulriple_bjdc,issuebetmultiple_dlt,ticketbetmultiple_bjdc,ticketbetmultiple_zq,ticketbetmultiple_lq];
+		for(var i=0;i<inputArry.length;i++){
+			var x = /^(0.\d+|0|1)$/.test(inputArry[i]);
+			if(!x){
+			 alert("倍数不正确!");
+				return;
+			}
+		}
+		
+		var inputArry2 = [bigticketodds_zq,bigticketodds_lq,bigticketodds_bjdc];
+		for(var i=0;i<inputArry2.length;i++){
+			var y = /^[1-9]\d*(\.\d+)?$/.test(inputArry2[i]);
+			if(!y){
+			 alert("最大倍数不正确!");
+				return;
+			}
+		}
+		
+		layer.confirm('确定修改？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+			    layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/betlotterychannelaccess/detail/update",
+					data:{ticketzuqiu:ticketzuqiu,ticketlq:ticketlq,ticketbjdc:ticketbjdc,ticketdlt:ticketdlt,issuebetmulriple:issuebetmulriple,issuebetmulriple_lq:issuebetmulriple_lq,issuebetmulriple_bjdc:issuebetmulriple_bjdc,issuebetmultiple_dlt:issuebetmultiple_dlt,bigticketodds_zq:bigticketodds_zq,bigticketodds_lq:bigticketodds_lq,bigticketodds_bjdc:bigticketodds_bjdc,autoticketzq:autoticketzq,autoticketlq:autoticketlq,autoticketbjdc:autoticketbjdc,ticketbetmultiple_zq:ticketbetmultiple_zq,ticketbetmultiple_lq:ticketbetmultiple_lq,ticketbetmultiple_bjdc:ticketbetmultiple_bjdc},
+					success:function(result){
+						console.log(result)
+						if("success"==result.status){
+							layer.msg("设置成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+</script>
+
+</html>

@@ -1,0 +1,325 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/tool/getUrlParam.js"></script>
+<script>
+function clearpageindex(){
+	$('#pageIndex').val(1);
+}
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+	});
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>代理系统</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite></a>
+							</span>
+		             </li>
+		             <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div style="overflow-x:scroll" class="layui-body layui-tab-content site-demo-body" style="overflow-x:scroll">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportformsagent/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="layui-table search-wrap">
+									  	<div class="xiao-cell xiao-pull-left xiao-record">
+											&nbsp;&nbsp;&nbsp;报表列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;"  href="${ctx}/betreportformsagent/list">
+											<span id="thismonth">本月</span></a>&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;"  href="${ctx}/betreportformsagent/list?k=1"><span id="lastmonth">上月</span></a>
+											&nbsp;&nbsp;&nbsp;
+										</div>
+										<div class="layui-input-inline xiao-input-wrap pull-left">
+											<div class="layui-input-inline xiao-input-wrap pull-left">
+												<input id="starttime"  name="starttime" onclick="laydate()" placeholder="请输入日期 " value="${starttime!''}" class="laydate-icon xiao-input">
+											</div>
+										到
+											<div class="layui-input-inline">
+												<input id="endtime"  name="endtime" onclick="laydate()" placeholder="请输入日期 " value="${endtime!''}" class="laydate-icon xiao-input">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+										</div>
+									</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">报表列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+														<th id="th_date" >日期</th>
+														<th>下线</th>
+														<th id="th_recharge" >充值</th>
+														<th id="th_rechargeyj" >充值佣金</th>
+														<th id="th_withdraw" >提现</th>
+														<th id="th_betmoney" >投注额</th>
+														<th id="th_betyj" >投注返利</th>
+														<th id="th_gamewinorlose" >游戏输赢</th>
+														<!-- <th id="th_winorloseyj" >输赢返利</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+														${((_data.date)?string('MM-dd'))!''}
+														</td>
+														<td style="text-align: center;">
+															${(_data.membernum)!0}
+														</td>
+														<td style="text-align: center;">
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=2&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<input type="hidden" class="cz" value="${(_data.recharge)!0}">
+															<#if _data.recharge &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.recharge)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.recharge &lt; 0 >
+															<font style="color: red;">
+															${((_data.recharge)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" class="czyj" value="${(_data.rechargeyj)!0}" >
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=3&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.rechargeyj &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.rechargeyj)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.rechargeyj &lt; 0 >
+															<font style="color: red;">
+															${((_data.rechargeyj)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" value="${(_data.withdraw)!0}" class="tx">
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=4&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.withdraw &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.withdraw)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.withdraw &lt; 0 >
+															<font style="color: red;">
+															${((_data.withdraw)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" class="tze" value="${(_data.betmoney)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=5&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.betmoney &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.betmoney)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.betmoney &lt; 0 >
+															<font style="color: red;">
+															${((_data.betmoney)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" class="tzfl" value="${(_data.betyj)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=6&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.betyj &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.betyj)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.betyj &lt; 0 >
+															<font style="color: red;">
+															${((_data.betyj)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<td style="text-align: center;">
+														<input type="hidden" value="${(_data.gamewinorlose)!0}" class="yxsy">
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=7&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.gamewinorlose &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.gamewinorlose)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.gamewinorlose &lt; 0 >
+															<font style="color: red;">
+															${((_data.gamewinorlose)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														<#--
+														<td style="text-align: center;">
+														<input type="hidden" class="syfl" value="${(_data.winorloseyj)!0}">
+															<a style="text-decoration:underline;" href="${ctx}/betreportformsagent/list?k=8&&date=${((_data.date)?string('yyyy-MM-dd'))!''}">
+															<#if _data.winorloseyj &gt;= 0 >
+															<font style="color: blue;">
+															${((_data.winorloseyj)?string('#'))!0}
+															</font>
+															</#if>
+															<#if _data.winorloseyj &lt; 0 >
+															<font style="color: red;">
+															${((_data.winorloseyj)?string('#'))!0}
+															</font>
+															</#if>
+															</a>
+														</td>
+														-->
+													</tr>
+												</#list>
+											 
+											 <tr>
+											 	<td>小计</td>
+											 	<td></td>
+											 	<td><input id="cz" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td>
+											 	<td><input id="czyj" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td>
+											 	<td><input id="tx" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td>
+											 	<td><input id="tze" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td>
+											 	<td><input id="tzfl" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td>
+											 	<td><input id="yxsy" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td>
+											 	<!-- <td><input id="syfl" readonly="readonly" type="text" style="border: 0px; background:transparent;text-align: center;"></td> -->
+											 </tr>
+											</tbody>
+										</table>
+										</#if>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+	</div>
+</body>
+<script>
+var cz = 0;
+$(".cz").each(function(){
+	cz+= parseInt($(this).val());
+})
+$("#cz").val(cz);
+$("#cz").css("color","blue");
+
+var czyj = 0;
+$(".czyj").each(function(){
+	czyj+= parseInt($(this).val());
+})
+$("#czyj").val(czyj);
+if(czyj>=0){
+	$("#czyj").css("color","blue");
+}
+if(czyj<0){
+	$("#czyj").css("color","red");
+}
+
+var tx = 0;
+$(".tx").each(function(){
+	tx+= parseInt($(this).val());
+})
+$("#tx").val(tx);
+$("#tx").css("color","blue");
+
+var tze = 0;
+$(".tze").each(function(){
+	tze+= parseInt($(this).val());
+})
+$("#tze").val(tze);
+$("#tze").css("color","blue");
+
+var tzfl = 0;
+$(".tzfl").each(function(){
+	tzfl+= parseInt($(this).val());
+})
+$("#tzfl").val(tzfl);
+if(tzfl>=0){
+	$("#tzfl").css("color","blue");
+}
+if(tzfl<0){
+	$("#tzfl").css("color","red");
+}
+
+var yxsy = 0;
+$(".yxsy").each(function(){
+	yxsy+= parseInt($(this).val());
+})
+$("#yxsy").val(yxsy);
+if(yxsy>=0){
+	$("#yxsy").css("color","blue");
+}
+if(yxsy<0){
+	$("#yxsy").css("color","red");
+}
+
+/* var syfl = 0;
+$(".syfl").each(function(){
+	syfl+= parseInt($(this).val());
+})
+$("#syfl").val(syfl);
+if(syfl>0){
+	$("#syfl").css("color","blue");
+}
+if(syfl<0){
+	$("#syfl").css("color","red");
+}
+if($("#starttime").val()=="" && $("#endtime").val()==""){
+	if(getUrlParam("k")==1){
+		$("#lastmonth").css("color","blue");
+	}else{
+		$("#thismonth").css("color","blue");
+	}
+} */
+</script>
+
+
+</html>
+

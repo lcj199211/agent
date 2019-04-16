@@ -1,0 +1,394 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>北京单场赔率管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加北京单场赔率</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/bjdcadjuestodds/update">
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">fid*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.fid)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">让球胜*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.rqwin)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">让球平*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.rqflat)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">让球负*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.rqlose)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进0球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball0)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进1球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball1)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进2球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball2)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进3球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball3)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进4球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball4)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进5球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball5)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进6球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball6)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进7+球*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.ball7)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">上单*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.topsingle)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">上双*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.topdouble)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">下单*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.downsingle)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">下双*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.downdouble)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">胜其他*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win3A)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1:0*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win10)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">2:0*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win20)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">2:1*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win21)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">3:0*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win30)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">3:1*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win31)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">3:2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win32)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">4:0*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win40)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">4:1*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win41)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">4:2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.win42)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">平其他*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.flat1A)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">0:0*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.flat00)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1:1*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.flat11)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">2:2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.flat22)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">3:3*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.flat33)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">负其他*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose0A)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">0:1*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose01)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">0:2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose02)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1:2*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose12)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">0:3*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose03)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1:3*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose13)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">2:3*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose23)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">0:4*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose04)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">1:4*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose14)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">2:4*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.lose24)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">胜-胜*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp33)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">胜-平*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp31)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">胜-负*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp30)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">平-胜*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp13)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">平-平*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp11)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">平-负*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp10)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">负-胜*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp03)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">负-平*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp01)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">负-负*</label>
+																		<div class="layui-inline col-lg-5">  
+																			${(returnDatas.data.sp00)!''}
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

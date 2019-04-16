@@ -1,0 +1,129 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betactivitycenter/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betactivitycenter/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betactivitycenter/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="130">
+											<col>
+											<col width="110">
+											<col width="110">
+											<col width="70">
+											<col width="180">
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">活动列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+														<th id="title" >标题</th>
+														<th id="content" >内容</th>
+														<th id="th_activitybegintime" >开始时间</th>
+														<th id="th_activityendtime" >结束时间</th>
+														<th id="th_state" >状态</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!--end_no_export-->
+														<td >
+															${(_data.title)!''}
+														</td>
+														<td >
+															${(_data.content)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.activitybegintime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.activityendtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<#if _data.state??>
+																<#if _data.state==0>
+																<font color="#555555">已结束</font>
+																<#elseif _data.state==1>
+																<font color="red">进行中</font>
+																</#if>
+															</#if>
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betactivitycenter/update" >
+								                           		 <a href="#" data-action="${ctx}/betactivitycenter/update/pre?id=${_data.id}" >编辑&nbsp;|&nbsp;</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betactivitycenter/update" >
+								                           		 <a href="#" data-action="${ctx}/betactivitycenter/update/pre?id=${_data.id}" >设置&nbsp;|&nbsp;</a>
+								                            </@shiro.hasPermission>
+															<@shiro.hasPermission name="/betactivitycenter/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" >删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: springrain
+Implementation-Version: 3.0.0-SNAPSHOT
+Built-By: LM9527
+Specification-Title: springrain
+Implementation-Vendor-Id: org.springrain
+Created-By: IntelliJ IDEA
+Build-Jdk: 1.8.0_131
+Specification-Version: 3.0.0-SNAPSHOT
+Build-Version: 3.0.0-SNAPSHOT-2019-04-11T05:51:08Z
+

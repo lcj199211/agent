@@ -1,0 +1,229 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betagentalipay/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <!--  <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>BetAgentalipay管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betagentalipay/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betagentalipay/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagentalipay/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap" >
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          <!-- 	<tbody>
+							          		<tr>
+							          			<th colspan="2">BetAgentalipay搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody> -->
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="">
+										    <col width="">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="15"><font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th> -->
+												  
+												  <!--first_end_no_export-->
+														<th id="" >appid</th>
+														<th id="" >卖家支付宝账号ID</th>
+														<th id="" >支付宝公钥</th>
+														<th >应用公钥</th>
+														<th id="" >应用私钥</th>
+														
+														<th id="" >邮箱</th>
+														<th id="" >每日金额</th>
+														<th id="" >状态</th>
+														<th id="" >起始限额</th>
+														<th id="" >结束限额</th>
+														<th id="" >日限额</th>
+														<th id="" >起始时间</th>
+														<th id="" >结束时间</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td> -->
+														<!--end_no_export-->
+														<td >
+															${(_data.appid)!''}
+														</td>
+														<td>
+															${(_data.sellerid)!''}
+														</td>
+														<td >
+															<#if (_data.alipaypublickey??)&&(_data.alipaypublickey?length gt 10)>
+																${(_data.alipaypublickey?substring(0,10))!''}...
+																<#else>
+																${(_data.alipaypublickey)!''}
+															</#if>
+															
+														</td>
+														<td >
+															<#if (_data.rsapublickey??)&&(_data.rsapublickey?length gt 10)>
+															${(_data.rsapublickey?substring(0,10))!''}...
+															<#else>
+																${(_data.rsapublickey)!''}
+															</#if>
+														</td>
+														<td >
+															<#if (_data.alipayprivatekey??)&&(_data.alipayprivatekey?length gt 10)>
+															${(_data.alipayprivatekey?substring(0,10))!''}...
+															<#else>
+																${(_data.alipayprivatekey)!''}
+															</#if>
+														</td>
+														
+														<td >
+															${(_data.mailbox)!''}
+														</td>
+														<td >
+															${(_data.daymoney)!''}
+														</td>
+														<td >
+															<#if (_data.state??)&&(_data.state=1)>
+																<font style="color:green;">启用</font>
+															</#if>
+															<#if (_data.state??)&&(_data.state=2)>
+																<font style="color:red	;">停用</font>
+															</#if>
+														</td>
+														
+														<td>
+															${(_data.startmoney)!''}
+														</td>
+														<td>
+															${(_data.endmoney)!''}
+														</td>
+														<td>
+															${(_data.daylimit)!''}
+														</td>
+														<td>
+															${(_data.starttime)!''}
+														</td>
+														<td>
+															${(_data.endtime)!''}
+														</td>
+														
+														<td>
+															<@shiro.hasPermission name="/betagentalipay/update" >
+								                           		 <a href="#" data-action="${ctx}/betagentalipay/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betagentalipay/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

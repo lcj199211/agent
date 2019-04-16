@@ -1,0 +1,475 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betbetting/delete");
+	}
+	
+	//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+</script>
+<style type="text/css">
+tr.change:hover
+{
+background-color:#eafcff;
+}
+</style>
+<style>
+.xiao-ht-table td, .xiao-ht-table th {
+    padding: 0px 0;
+}
+</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+						<li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">报表<span class="layui-box">&gt;</span></a>
+								   <a><cite>代理报表</cite><span class="layui-box">&gt;</span></a>
+								   <a><cite>已结算</cite></a>
+								</span>
+			            </li>
+		            <!--  <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>投注管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	<button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li> 
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form-pane" id="searchForm" action="${ctx}/betreportform/agreport?k=9&agentid=${(agentid)!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							            <input type="hidden" name="directlyunder"  value="${(directlyunder)!''}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							          			<!--  
+							          				<div class="xiao-cell xiao-pull-left xiao-record">
+														&nbsp;&nbsp;&nbsp;
+														总投注金额:
+														${bettingmoneyTotal!0}
+														&nbsp;&nbsp;&nbsp;
+														总投注赢:
+														${bettingwinTotal!0}
+														&nbsp;&nbsp;&nbsp;
+													</div>
+							          				<div class="layui-inline">
+									                    	 从<div class="layui-input-inline">
+									                    	 <#setting date_format="yyyy-MM-dd">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime?date)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>到
+									                    <div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime?date)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                     <div class="layui-input-inline">
+									                    		默认显示
+									                  		  <input type="radio" name="pageSize" value="50"
+																<#if returnDatas.page.pageSize==50>checked</#if> 									                  		  
+									                  		  >50条</input>
+															  <input type="radio" name="pageSize" value="100"
+															  <#if returnDatas.page.pageSize==100>checked</#if> 
+															  >100条</input>
+									                          <input type="radio" name="pageSize" value="200"
+									                          <#if returnDatas.page.pageSize==200>checked</#if> 
+									                          />200条
+									                    </div>
+									                </div>
+									                &nbsp;&nbsp;&nbsp;&nbsp;
+									                -->
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">游戏类型</label>
+									                    <div class="layui-input-inline">
+									                        <select name="type" id="type" class="layui-input">
+																	<option value="100" 
+																		 <#if "${type}"="100"> selected
+																		 </#if> 
+																     >所有游戏</option>
+																	<option value="0" 
+																		 <#if "${type}"="0"> selected
+																		 </#if> 
+																     >彩票</option>
+																  	<option value="1" 
+																		 <#if "${type}"="1"> selected
+																		 </#if> 
+																     >足球</option>
+																      <option value="3" 
+																		 <#if "${type}"="3"> selected
+																		 </#if> 
+																     >篮球</option>
+																      <option value="4" 
+																		 <#if "${type}"="4"> selected
+																		 </#if> 
+																     >北单</option>
+															</select>   
+									                    </div>
+									                </div>
+									                <div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+										            <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<!-- <tr>
+													<th colspan="15">在线投注&nbsp;&nbsp;&nbsp;<#if gcname??>游戏：${gcname!''}&nbsp;&nbsp;&nbsp;</#if></th>
+												</tr> -->
+												<tr 　><th colspan="15">	<#if (directlyunder??)>直属&nbsp;&nbsp;&nbsp;</#if>所属代理ID：${agentid!''}</th></tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <th>操作</th> -->
+												  <!--first_end_no_export-->
+														
+												  		<th id="th_bettingtime" rowspan="2">投注时间</th>
+														 <th rowspan="2">方案id</th> 
+														<th rowspan="2" >用户ID(昵称)</th>
+														<th rowspan="2" >投注比赛数量</th>
+														<th rowspan="2" >投注玩法</th><!-- (逗号隔开) -->
+														<!--  <th id="th_playmethodid" >玩法id</th> -->
+														<th rowspan="2" >玩法</th>
+														<th rowspan="2" >购买类型</th>
+														<th colspan="3">投注内容</th>
+														<th rowspan="2" >倍数</th>
+														<th rowspan="2" id="th_bettingmoney">投注金额</th>
+														<th rowspan="2" >派彩</th>
+														<th rowspan="2" >佣金</th>
+														<!-- <th rowspan="2" >投注ip</th>
+														<th rowspan="2" >投注工具</th> -->
+														<th rowspan="2" >开奖情况</th>
+														   
+														   
+														<!-- <th id="th_memberid" >用户ID</th>
+														<th id="th_gameplayid" >玩法ID</th>
+														<th id="th_qibie" >期数</th>
+														<th id="th_bettingnum" >投注数量</th>
+														<th id="th_bettingmoney" >投注金额</th>
+														<th id="th_bettingscore" >投注输赢</th> -->
+												</tr> 
+												<tr　>
+														<th>编号</th>
+														<th>主队vs客队/投注</th>
+														<th>赛事情况</th>
+												</tr>  
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="change" align="center">
+														<!-- <td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betbetting/update" >
+								                           		 <a href="#" data-action="${ctx}/betbetting/update/pre?id=${_data.id}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betbetting/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+															${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.schemeid)!''}
+															<!--  <a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/soccerscheme/list?k=1&schemeid=${(_data.schemeid)!''}">${(_data.schemeid)!''}</a>  -->
+														</td> 
+														<td >
+															<!--  ${(_data.memberid2)!0}  -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/betmember/look?id2=${(_data.memberid2)!0}">${(_data.memberid2)!0}</a>
+															(${(_data.membernickname)!''})
+														</td>
+														<td >
+															<!--  ${(_data.matches)!0}  -->
+															${(_data.matches)!0}
+														</td>
+														<td >
+															${(_data.playtype)!''}
+														</td>
+														<td >
+															${(_data.playmethod)!''}
+														</td>
+														<!--  
+														<td >
+															${(_data.playmethodid)!0}
+														</td>
+														-->
+														<td >
+															<!--  ${(_data.buytype)!''}  -->
+															<#if (_data.buytype)=1>
+																跟买
+															<#elseif (_data.buytype)=2>
+																神单
+															<#else>
+																自购											
+															</#if>
+														</td>
+														<td min-width="400" colspan="3">
+															<table width="100%" style="border-top: 0">
+																
+																
+										    				<#if (_data.schemecontent??)&&(_data.schemecontent?size>0)> 
+										    					<#list	_data.schemecontent as _schemecontent>
+										    						
+											    					<tr>
+											    						<td rowspan="${((_schemecontent.resultMap?size)+1)!1}">${(_schemecontent.num)!''}<br/>${((_schemecontent.starttime)?string('MM-dd HH:mm'))!''}</td>
+											    						<td><#if _schemecontent.dan=1>
+													    							<font style="color:red">(胆)</font>
+													    						<#else>
+													    							
+													    						</#if>
+											    							${(_schemecontent.hometeam)!''} VS ${(_schemecontent.guestteam)!''} 
+											    						</td>
+											    						<td>
+											    						<#if _schemecontent.allscore??>
+											    						${(_schemecontent.halfscore)!''} / ${(_schemecontent.allscore)!''}<br/>(半/全)
+											    						<#else>
+											    						未结赛
+											    						</#if>
+											    						
+											    						</td>
+											    					</tr>
+											    					<#if (_schemecontent.resultMap??)&&(_schemecontent.resultMap?size>0)> 
+											    						<#list	_schemecontent.resultMap as _resultMap>
+												    					<tr>
+												    						<td>${(_resultMap.betname)!''} : 
+												    							<#if _resultMap.result=1>
+													    							<font style="color:red">${(_resultMap.oddsrealname)!''}</font>
+													    						<#elseif _resultMap.result=3 >
+													    							<font >${(_resultMap.oddsrealname)!''}</font>
+													    						<#else>
+													    							${(_resultMap.oddsrealname)!''}
+													    						</#if>
+													    						(${(_resultMap.odds)!''})</td>
+												    						<td>
+													    						<#if _resultMap.result=1>
+													    							<font style="color:red">${(_resultMap.resultname)!''}</font>
+													    						<#elseif _resultMap.result=3 >
+													    							<font >${(_resultMap.resultname)!''}</font>
+													    						<#else>
+													    							${(_resultMap.resultname)!''}
+													    						</#if>
+												    						</td>
+												    					</tr>
+												    					</#list>
+												 					</#if>
+										    					</#list>
+											 				</#if>
+															</table>
+														</td>
+														<td >
+															<#if (_data.betmulriple)=-1>
+																奖金优化
+															<#else>
+																${(_data.betmulriple)!''}											
+															</#if>
+														</td>
+														<td >	<input class="t2" type="hidden" value="${(_data.bettingmoney)!0}">
+															 ${((_data.bettingmoney))!''}  
+															<!-- <a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/soccerscheme/list?k=1&schemeid=${(_data.schemeid)!''}">${((_data.bettingmoney?floor)?string(',###'))!''}</a> -->
+														</td>
+														<td ><input class="tt2" type="hidden" value="${(_data.bettingwin)!0}">
+															<font style="color:red">${((_data.bettingwin))!''}</font>
+														</td>
+														<td >
+																${(_data.brokeragemoney)!0}											
+														</td>
+														<!--  
+														<td >
+															${(_data.bettingip)!''}
+														</td>
+														<td >
+															${(_data.bettingtool)!''}
+														</td>
+														-->
+														<td >
+															<!--  ${(_data.situation)!''}  0:未开奖  1:已开奖   2:已撤销 3:非正常-->
+															<#if _data.situation==1>
+																<span style="color:#288a53" >已开奖</span>
+															<#elseif _data.situation==0>
+																<span style="color:red" >未开奖</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${_data.id!''}"><span style="cursor:hand" class="cancelbetting"><u>撤销</u></span>
+															<#elseif _data.situation==2>
+																<span >已撤销</span>
+															<#else>
+																<span >非正常</span>
+															</#if>
+														</td>
+														
+														<!-- <td >
+															${(_data.memberid)!''}
+														</td>
+														<td >
+															${(_data.gameplayid)!0}
+														</td>
+														<td >
+															${(_data.qibie)!''}
+														</td>
+														<td >
+															${(_data.bettingnum)!0}
+														</td>
+														<td >
+															${(_data.bettingmoney)!0}
+														</td>
+														<td >
+															${(_data.bettingscore)!0}
+														</td> -->
+													</tr>
+												</#list>
+												 
+												<tr style="background-color:#eafcff;" align="center">
+														<td >
+														小计
+														</td>
+														<td >
+														</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td ></td>
+														<td ></td>
+														<td ></td>
+														<td ></td>
+														<td ></td>
+														<td >
+														</td>
+														<td >
+															<a style="border:0px;text-align: center;"  id="t2"></a>
+														</td>
+														<td ><a style="border:0px;text-align: center;"  id="tt2"></a></td>
+														<td ></td>
+														
+													</tr>
+													
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+		var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	
+	$("#t1").text((Math.floor(t1*100)/100));
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	if(t2>=0){
+		$("#t2").css('color','blue');
+	}else if(t2<0){
+		$("#t2").css('color','red');
+	}
+	$("#t2").text((Math.floor(t2*100)/100));
+	
+	var tt2 = 0.;
+	$(".tt2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		tt2+= a*1;
+	});
+	if(tt2>=0){
+		$("#tt2").css('color','blue');
+	}else if(tt2<0){
+		$("#tt2").css('color','red');
+	}
+	$("#tt2").text((Math.floor(tt2*100)/100));
+	</script>
+</body>
+</html>
+

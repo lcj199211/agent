@@ -1,0 +1,203 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/lotteryplaymethod/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		              <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div  style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/bjdcplaymethod/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />									
+								  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">大乐透玩法列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  -->
+												  
+												  <!--first_end_no_export-->
+														<th id="name" width="100">玩法名</th>
+														<th id="shortname" >短名</th>
+														<th id="state" width="100">状态</th><!--  1:正常  3:删除  -->
+														<th id="explain" >格式说明</th>
+														<th id="numbers" >号码个数</th>
+														<th id="demo" >注码演示</th>
+														<th width="100">操作 </th>
+														
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+														<td >
+															${(_data.name)!''}
+														</td>
+														<td >
+															${(_data.shortname)!''}
+														</td>
+														<td >
+															<!-- ${(_data.state)!0}   -->
+															<#if _data.state==1>
+																<span style="color:#288a53" >正常</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand"  class="disable"><u>禁用</u></span>
+															<#elseif _data.state==3>
+																<span style="color:red" >删除</span>&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="hidden" value="${(_data.id)!''}"><span style="cursor:hand" class="restore"><u>启用</u></span>
+															</#if>
+														</td>
+														<td >
+															${(_data.explain)!''}
+														</td>
+														<td >
+															${(_data.numbers)!''}
+														</td>
+														<td >
+															${(_data.demo)!''}
+														</td>
+<!-- 														<td> -->
+<!-- 															<@shiro.hasPermission name="/lotteryplaymethod/update" > -->
+<!-- 								                           		 <a href="#" data-action="${ctx}/lotteryplaymethod/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a> -->
+<!-- 								                            </@shiro.hasPermission> -->
+<!-- 								                            <@shiro.hasPermission name="/lotteryplaymethod/delete" > -->
+<!-- 								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a> -->
+<!-- 								                            </@shiro.hasPermission> -->
+<!-- 														</td> -->
+														<td>
+															<@shiro.hasPermission name="/bjdcplaymethod/update" >
+								                           		 <a href="#" data-action="${ctx}/bjdcplaymethod/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/bjdcplaymethod/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> 
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script type="text/javascript">
+//启用
+	$(".restore").click(function(){
+		var s=1;
+		var i=$(this).prev().val();
+		layer.confirm('确认要启用？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){
+			    layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/lotteryplaymethod/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("启用成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	})
+//禁用
+	$(".disable").click(function(){
+		var s=3;
+		var i=$(this).prev().val();
+		layer.confirm('确认要禁用？', {offset:['',''], btn: ['确定','取消'] }, 
+			function(){ 
+				layer.load();
+				$.ajax({
+					type:"post",
+					url:"${ctx}/lotteryplaymethod/update?k=1",
+					data:{id:i,state:s},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg("禁用成功",{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+							setTimeout("history.go(0);",2000);
+						}
+					},
+				})
+			}, 
+			function(){
+			}
+		);	
+	
+	})
+</script>
+</html>
+

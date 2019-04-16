@@ -1,0 +1,98 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			            <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								   <a><cite>站内消息管理</cite></a>
+								</span>
+			            </li>
+			             <li style="float:right;">
+					        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          				<header class="larry-personal-tit">
+													<span>添加站内消息</span>
+												</header>
+												<div class="xiao-ht-tableWrap xiao-ht-hiddenScroll">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betmessage/update">
+													<div class="xiao-ht-inputFormWrap ">
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">发送者ID</span>
+															<div class="xiao-ht-inputForm">  
+																${(returnDatas.data.sender)!''}
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">发送者</span>
+															<div class="xiao-ht-inputForm">  
+																${(returnDatas.data.sender)!''}
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">接收者ID</span>
+															<div class="xiao-ht-inputForm">  
+																${(returnDatas.data.receiver)!''}
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">标题</span>
+															<div class="xiao-ht-inputForm">  
+																${(returnDatas.data.title)!''}
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">内容</span>
+															<div class="xiao-ht-inputForm" style="border: none;">  
+																<textarea name="context" id="context" class="layui-textarea" class="layui-input">${(returnDatas.data.context)!''}</textarea>
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">发送时间</span>
+															<div class="xiao-ht-inputForm">  
+																${((returnDatas.data.time)?string('yyyy-MM-dd HH:mm:ss'))!'' }
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+														<div class="layui-form-item  xiao-ht-inputFormItem clearfix">
+															<span class="xiao-ht-inputName">状态</span>
+															<div class="xiao-ht-inputForm">  
+																<#if returnDatas.data.state==0>
+																	未查看
+																<#elseif returnDatas.data.state==1>
+																	查看
+																<#else>
+																	默认
+																</#if>  
+															</div>
+															<span class="layui-inline valid-info xiao-ht-tipsForm"></span>
+														</div>
+													</div>
+																	
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

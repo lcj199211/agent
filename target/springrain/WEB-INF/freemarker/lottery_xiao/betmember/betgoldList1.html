@@ -1,0 +1,213 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgold/delete");
+	}
+
+$(document).ready(function(){	
+	$('.confirm').click(function(){
+		var a=$(this).parent().parent().children(".center").children().val();
+		$.ajax({
+			type:"get",
+			url:"${ctx}/betgold/update?id="+a+"&state=2",
+			data:{},
+			success:function(){
+				window.location.href="${ctx}/betgold/list?date=1&submittime=${(returnDatas.queryBean.submittime?string('yyyy-MM-dd'))!''}&springraintoken="+springraintoken
+			},
+			error:function(result){
+				alert("error");
+			}
+			})
+	})
+	$('.cancel').click(function(){
+		var a=$(this).parent().parent().children(".center").children().val();
+		$.ajax({
+			type:"get",
+			url:"${ctx}/betgold/update?id="+a+"&state=1",
+			data:{},
+			success:function(){
+				window.location.href="${ctx}/betgold/list?date=1&submittime=${(returnDatas.queryBean.submittime?string('yyyy-MM-dd'))!''}&springraintoken="+springraintoken
+			},
+			error:function(result){
+				alert("error");
+			}
+			})
+	})
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})	
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betgold/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betgold/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		                <@shiro.hasPermission name="/betgold/delete" >
+		               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+		                </@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betgold/list?date=1&memberid=${returnDatas.queryBean.memberid!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">充值搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">提交时间</label>
+									                    <div class="layui-input-inline">
+									                           <!-- <input  name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input"> -->
+
+									                           <input style="height: 38px;margin-left: 20px;padding-left: 10px;border: 1px solid #e6e6e6;"  name="submittime" onclick="laydate()"  placeholder="请输入日期 " value="${(returnDatas.queryBean.submittime?string('yyyy-MM-dd'))!''}" class="laydate-icon">
+
+									                    </div>
+							                		</div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="12">充值列表&nbsp;&nbsp;&nbsp;用户ID：${id2!''}&nbsp;&nbsp;&nbsp;总计：${totolRecharge}&nbsp;&nbsp;&nbsp;昨日充值：${yesterdayRecharge}&nbsp;&nbsp;&nbsp;今日充值：${todayRecharge}&nbsp;&nbsp;&nbsp;充值笔数：${chargeNumber}&nbsp;&nbsp;&nbsp;<button id="reflesh">刷新</button>&nbsp;&nbsp;&nbsp;
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <!--first_end_no_export-->
+												  		<th id="th_id">订单编号</th>
+														<th id="th_submittime" >提交时间</th>
+														<th id="th_rechargetime" >充值时间</th>
+														<th id="th_brs" >充值前分</th>
+														<th id="th_ars" >充值后分</th>
+														<th id="th_source" >来源</th>
+														<th id="th_accountname" >账户名称</th>
+														<th id="th_money" >金额</th>
+														<th id="th_state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<!--end_no_export-->
+														<td>
+															${(_data.id)!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.submittime)?string('HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.rechargetime)?string('HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.brs)!0}
+														</td>
+														<td >
+															${(_data.ars)!0}
+														</td>
+														<td >
+															${(_data.source)!''}
+														</td>
+														<td >
+															${(_data.accountname)!''}
+														</td>
+														<td >
+															${(_data.money)!0}
+														</td>
+														<td >
+															<#if _data.state==0>
+																未处理
+																<#elseif _data.state==1>
+																取消
+																<#elseif _data.state==2>
+																<p style="color:red">成功</p>
+																<#else> 
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

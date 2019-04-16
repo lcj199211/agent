@@ -1,0 +1,370 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<style>
+	.xz_div{
+		overflow:hidden;
+	}
+	.xz_div  button{
+		float: left;
+   	 	background-color: #009688;
+    	width: 100px;
+    	height: 40px;
+    	border: none;
+   	 	border-radius: 5px;
+    	color: #fff;
+    	margin: 5px;
+    	cursor:pointer;
+	}
+</style>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief" style="overflow-x:scroll">
+					<ul class="layui-tab-title">
+			             <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>彩票管理</cite></a>
+								</span>
+			             
+			             
+			             </li> 
+						<!--  <li style="float:right;">
+			             	<@shiro.hasPermission name="/betgameclass/update" >
+			             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betgameclass/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+			             	</@shiro.hasPermission>
+			                <@shiro.hasPermission name="/betgameclass/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission>
+			             </li> -->
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							         <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betgameclass/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									 <!--   <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">彩票搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">名称</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input">
+									                    </div>
+							                		</div>
+									                 <div class="layui-inline">
+									                    <label class="layui-form-label">是否可用</label>
+									                    <div class="layui-input-inline">
+									                        <select name="active" id="active" class="layui-input">
+									                          <option value="">==请选择==</option>
+															  <option value="1">是</option>
+															  <option value="0">否</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table> -->
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+  									<!-- <div class="xz_div xiao-pull-left"> -->
+									<div class="xiao-ht-tableWrap">
+											<table class="xiao-ht-table" lay-even>
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												 
+												  <!--first_end_no_export-->
+												  		<!-- <th id="th_gameclassid">编号</th> -->
+												  		<th id="th_grank">排序</th>
+														<th id="th_gcname" >彩票名称</th>
+														<th id="th_pt">分类</th>
+														<th id="th_nlen">号码数</th>
+														<th id="th_nmin">开最小号</th>
+														<th id="th_nmax">开最大号</th>
+														<!-- <th>开始时间</th>
+														<th>结束时间</th> -->
+														<!-- <th id="th_mnums">期数</th> -->
+														<!-- <th id="th_bettinglimit" >投注下限</th>
+														<th id="th_bettingceiling" >投注上限</th> -->
+														<!-- <th id="th_gename" >彩票英文名</th>
+														<th id="th_gsname" >简称</th>
+														<th id="th_grank" >排序状态</th>
+														<th id="th_glock" >状态</th>
+														<th id="th_gkind" >1一般,2时时,3快开</th>
+														<th id="th_pt" >性质分类</th>
+														<th id="th_nlen" >号码数量</th>
+														<th id="th_nmin" >最小号码</th>
+														<th id="th_nmax" >最大号码</th>
+														<th id="th_gametxt" >gametxt</th>
+														<th id="th_gstockid" >股份类型</th>
+														<th id="th_gametype" >gametype</th>
+														<th id="th_submenu" >投注子菜单</th>
+														<th id="th_maxlost" >maxlost</th>
+														<th id="th_ratelost" >ratelost</th>
+														<th id="th_ratewin" >ratewin</th>
+														<th id="th_mclass" >mclass</th>
+														<th id="th_mlock" >mlock</th>
+														<th id="th_msh" >开始时</th>
+														<th id="th_msm" >开始分</th>
+														<th id="th_mss" >开始秒</th>
+														<th id="th_meh" >结束时</th>
+														<th id="th_mem" >结束分</th>
+														<th id="th_mes" >结束秒</th>
+														<th id="th_mstep" >每期时间</th>
+														<th id="th_mnums" >每天期数</th> -->
+														<!-- <th id="th_mopen" >开奖/秒</th> -->
+														<th id="th_mstop" >提前封盘</th>
+														<!-- <th id="th_mfine" >开奖时间微调</th>
+														<th id="th_msnum" >首期编码</th>
+														<th id="th_mstime" >首期时间</th>
+														<th id="th_msurl" >网址</th> -->
+														<th id="th_msurl" >最大分限注</th>
+														<th id="th_mstep" >每期时间</th>
+														<th id="th_ty" >代理投注退佣比例</th>
+														<th>代理投注退佣</th>
+														<th id="th_memberty" >用户投注退佣比例</th>
+														<th>用户投注退佣</th>
+														<!-- <th id="th_ty" >退佣</th> -->
+														<!-- <th id="th_currenttickets" >本期开奖</th> -->
+														<th id="th_state" >状态</th>
+														 <th style="text-align:center">操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td >
+															${_data.grank!''}
+														</td>
+														<!-- <td >
+															${(_data.gameclassid)!''}
+														</td> -->
+														<!--end_no_export-->
+														<td >
+															<a href="${ctx}/betperiod/list?gameclassid=${(_data.gameclassid)!''}">${(_data.gcname)!''}</a>
+														</td>
+														<td class="xz_td">
+															${_data.ptname!''}
+														</td>
+														<td >
+															${(_data.nlen)!''}
+														</td>
+														<td >
+															${(_data.nmin)!''}
+														</td>
+														<td >
+															${(_data.nmax)!''}
+														</td>
+														<td >
+															${(_data.mstop)!0}
+														</td>
+														<td >
+															${(_data.bettinglimit)!''}
+														</td>
+														<td >
+															${(_data.mstep)!''}
+														</td>
+														<td >
+															<#if _data.ty??>
+																${(_data.ty*100)!''}%															
+															</#if>
+														</td>
+														<td>
+															<#if _data.totalty??>
+																<#if _data.totalty=0>
+																	${_data.totalty!''}	
+																	<#else>
+																	<a href="${ctx}/betagent/agentbettingtylist?gameclassid=${_data.gameclassid!''}" style="color:blue;text-decoration:underline;">${(_data.totalty)!''}</a>&nbsp;
+																	<input type="hidden" value="${(_data.gameclassid)!''}">
+																	<input type="hidden" value="${(_data.gcname)!''}">
+																	<#if (_data.tymode??)>
+																	<#if (_data.tymode=0)>
+																	<a class="tzty" style="text-decoration:underline;">退</a>
+																	</#if>
+																	</#if>
+																</#if>																
+															</#if>
+														</td>
+														<td >
+															<#if _data.memberty??>
+																${(_data.memberty*100)!''}%															
+															</#if>
+														</td>
+														<td>
+															<#if _data.membertotalty??>
+																<#if _data.membertotalty=0>
+																	${_data.membertotalty!''}	
+																	<#else>
+																	<a href="${ctx}/betmember/bettingtylist?gameclassid=${_data.gameclassid!''}" style="color:blue;text-decoration:underline;">${(_data.membertotalty)!''}</a>&nbsp;
+																	<input type="hidden" value="${(_data.gameclassid)!''}">
+																	<input type="hidden" value="${(_data.gcname)!''}">
+																	<#if _data.membertymode??>
+																	<#if (_data.membertymode=0)>
+																	<a class="membertzty" style="text-decoration:underline;">退</a>
+																	</#if>
+																	</#if>
+																</#if>																
+															</#if>
+														</td>
+														<td >
+															<#if _data.state==1>
+																<span style="color:green;">开启</span>
+																<#else>
+																<span style="color:red;">停止</span>
+															</#if>
+														</td>
+														
+														<td style="text-align:center">
+															<@shiro.hasPermission name="/betgameclass/update" >
+								                           		 <a style="padding: 0 20px;line-height: 25px;height: 25px;" href="#" data-action="${ctx}/betgameclass/update/pre?gameclassid=${(_data.gameclassid)}&totallist=1" class="layui-btn xiao-btn-success layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                           <!--  <@shiro.hasPermission name="/betgameclass/update" >
+								                            	<a style="padding: 0 15px;line-height: 25px;height: 25px;" href="#" data-action="${ctx}/betgameplay/list?gameclassid=${(_data.gameclassid)}" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">赔率</a>
+								                            </@shiro.hasPermission>
+								                            <a style="padding: 0 15px;line-height: 25px;height: 25px;" href="#" data-action="${ctx}/betgameplay/list?gameclassid=${(_data.gameclassid)}" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">彩票玩法</a> -->
+								                            	
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script >
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgameclass/delete");
+	}
+	
+
+	
+	jQuery(function(){
+		jQuery.ajax({
+        url : ctx+"/betpt/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+          		jQuery(".xz_div").append("<button  name='"+_obj.id+"' >"+_obj.name+"</button>");
+            });
+          
+   	
+        }
+    });	
+	});
+		
+		
+		$(document).ready(function(){
+		$(".xz_div").on("click","button",function(){
+		window.location.href="${ctx}/betgameclass/list?pt="+$(this).attr("name");
+		})
+		
+		$(".tzty").click(function(){
+			var gcname=$(this).prev().val();
+			var gameclassid=$(this).prev().prev().val();
+			//询问框
+			layer.confirm('确定退还'+gcname+'的代理投注退佣？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betagent/manualrefundbettingty?gameclassid="+gameclassid,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已退还投注退佣！',{offset:['','']});
+							setTimeout("window.location.reload()",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+		})
+		
+		$(".membertzty").click(function(){
+			var gcname=$(this).prev().val();
+			var gameclassid=$(this).prev().prev().val();
+			//询问框
+			layer.confirm('确定退还'+gcname+'的用户投注退佣？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betmember/manualrefundbettingty?gameclassid="+gameclassid,
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已退还投注退佣！',{offset:['','']});
+							setTimeout("window.location.reload()",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+		})
+		})
+</script>
+</body>
+</html>
+

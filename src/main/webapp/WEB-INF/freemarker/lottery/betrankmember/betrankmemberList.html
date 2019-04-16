@@ -1,0 +1,176 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betrankmember/delete");
+	}
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+			            <!--  <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+								网站地图导航
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+								  <a><cite>会员排行榜管理</cite></a>
+								</span>
+			             </li>
+						 <li style="float:right;">
+			             	<@shiro.hasPermission name="/betrankmember/update" >
+			             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betrankmember/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+			             	</@shiro.hasPermission>
+			             	<@shiro.hasPermission name="/betrankmember/list/export" >
+					        	<button type="button"   class="layui-btn layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe609;</i>导出</button>
+					        </@shiro.hasPermission>
+			                <button type="button"  class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon layui-icon-specil">&#xe601;</i>导入</button>
+			                <@shiro.hasPermission name="/betrankmember/delete" >
+			               		 <button type="button"  class="layui-btn layui-btn-danger layui-btn-small"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			                </@shiro.hasPermission>
+			             </li> -->
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							       <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betrankmember/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <div class="search-wrap xiao-input-wrap">
+									  		<div class="xiao-btnlist xiap-pull-left">
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betrankconf/list">排行榜设置</a>
+													</div>
+													<div class="xiao-btnlist-item">
+														上榜用户
+													</div>
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betreceiverecord/list">领取记录</a>
+													</div>
+											</div>
+									  		<div class="xiao-pull-left">
+												<div class="layui-inline">
+													<div class="layui-input-inline">
+														<#if returnDatas.queryBean.date??>
+															<input  onclick="laydate()" name="date" value=${returnDatas.queryBean.date} placeholder="请输入日期" class="laydate-icon xiao-input">
+															<#else>
+																<input  onclick="laydate()" name="date" value=${.now} placeholder="请输入日期" class="laydate-icon xiao-input">
+														</#if>
+													</div>
+												</div>
+												<div class="layui-inline">
+													<button class="layui-btn mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+												</div>
+											</div>
+										</div>
+									 <!--  查询  结束 -->
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+												  <!--first_start_no_export-->
+												 <!--  <th>操作</th> -->
+												  <!--first_end_no_export-->
+													<!-- 	<th id="th_id" >表ID</th> -->
+														<th id="th_orderno" >排名</th>
+														<th id="th_memberid" >会员ID</th>
+														<th id="th_nickname" >昵称</th>
+														<th id="th_dayscore" >每日输赢</th>
+														<th id="th_award" >奖励分</th>
+														<th id="th_state" >状态</th>
+													<!--<th id="th_date" >排行榜日期</th> -->
+													
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- <td style="text-align:center">
+															<@shiro.hasPermission name="/betrankmember/update" >
+								                           		 <a href="#" data-action="${ctx}/betrankmember/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betrankmember/delete" >
+								                            	<a style="margin:2px 0 0 0" href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+														<!--end_no_export-->
+														<!-- <td >
+															${(_data.id)!''}
+														</td> -->
+														<td >
+															 ${_data_index+1}
+														</td>
+														<td >
+														${(_data.id2)!''}
+														</td>
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td >
+																${(_data.dayscore)!0}
+														</td>
+														<td >
+															${(_data.award)!0}
+														</td>
+														<td >
+																<#if _data.state??&&_data.state==1>
+																	领取
+																<#else>
+																	<p style="color:red">未领取</p>
+																</#if>
+														</td>
+													<!-- 	<td >
+															日期型
+														${((_data.date)?string('yyyy-MM-dd'))!''}
+														<#if _data.date??>
+															<#else>
+															${.now?string('yyyy-MM-dd')!''}
+														</#if>
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv' class="xiao-inline-block"></div>
+											<font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th>
+											<@h.layPage page=returnDatas.page /> 
+										</#if>
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+</html>
+

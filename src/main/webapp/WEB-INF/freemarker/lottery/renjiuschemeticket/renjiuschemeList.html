@@ -1,0 +1,244 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/renjiuschemeticket/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		              <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+	       		</ul>
+				
+				<div style="overflow: scroll;" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/renjiuschemeticket/list" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<th colspan="2">任九方案搜索</th>
+							          		</tr>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label class="layui-form-label">会员id</label>
+									                    <div class="layui-input-inline">
+									                           <input type="text" name="memberid2" value="${(returnDatas.queryBean.memberid2)!''}" placeholder="请输入会员id " class="layui-input">
+									                    </div>
+							                		</div>
+							                		  &nbsp;&nbsp;&nbsp;&nbsp;
+							                		<div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" style="width:180px;" placeholder="请输入时间 " class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+										            &nbsp;&nbsp;&nbsp;
+										            <div class="layui-inline">
+									                    <label class="layui-form-label">出票状态</label>
+									                    <div class="layui-input-inline">
+									                        <select name="issuestate" id="issuestate" class="layui-input">
+									                        		<option value="100" >所有状态</option>
+																	<option value="0" 
+																	<#if returnDatas.queryBean.issuestate??>
+																		 <#if returnDatas.queryBean.issuestate=0> selected
+																		 </#if> 
+																    </#if> >待分配</option>
+																  	<option value="1" 
+																  	<#if returnDatas.queryBean.issuestate??>
+																		 <#if returnDatas.queryBean.issuestate=1> selected
+																		 </#if> 
+																    </#if> >待传输</option>
+																  	<option value="2" 
+																  	<#if returnDatas.queryBean.issuestate??>
+																		 <#if returnDatas.queryBean.issuestate=2> selected
+																		 </#if> 
+																    </#if> >待出票</option>
+																  	<option value="3" 
+																  	<#if returnDatas.queryBean.issuestate??>
+																		 <#if returnDatas.queryBean.issuestate=3> selected
+																		 </#if> 
+																    </#if> >出票成功</option>
+																  	<option value="4" 
+																  	<#if returnDatas.queryBean.issuestate??>
+																		 <#if returnDatas.queryBean.issuestate=4> selected
+																		 </#if> 
+																    </#if> >出票失败</option>
+															</select>   
+									                    </div>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="xiao-ht-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="11">任九订单列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--  
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												 -->
+												  <!--first_end_no_export-->
+														<th width="150"  >提交时间</th>
+														<th  >方案号</th>
+														<th  >会员id</th>
+														<th  >投注内容</th>
+														<th  >投注倍数</th>
+														<th  >投注金额</th>
+														<th  >投注赢</th>
+														<th id="th_settletime" >结算时间</th>
+														 <th>结果</th>
+														 <th>出票状态</th>
+														  <!-- <th  >状态</th> 1:正常 3:删除 -->
+														 <!-- <th>操作</th>  -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										   <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+													<!-- 
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														 -->
+														<!--end_no_export-->
+														<td >
+															<!--日期型-->
+															${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!-- <a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/soccerleagueorderticket/list?k=1&orderid=${(_data.orderid)!''}">${(_data.orderid)!''}</a> -->
+															 ${(_data.schemeid)!''} 
+														</td>
+														
+														<td >
+															<!--  ${(_data.memberid2)!0}  -->
+															<a class="xiao-color-00e"   style="text-decoration:underline;"  href="${ctx}/betmember/look?id2=${(_data.memberid2)!''}">${(_data.memberid2)!''}</a>
+														</td>
+														<td >
+															${(_data.bettingcode)!''}
+														</td>
+														<td >
+															${(_data.betmulriple)!0}
+														</td>
+														<td >
+															${(_data.bettingmoney)!0}
+														</td>
+														<td >
+															${(_data.bettingwin)!''}
+														</td>
+														<td >
+															<!--  日期型  -->
+															${((_data.settletime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<#if _data.result==0>
+																<span>未结算</span>
+															<#elseif _data.result==1>
+																<span style="color:#288a53" >已返奖</span>
+															<#elseif _data.result==2>
+																<span  >已撤销</span>
+															<#elseif _data.result==3>
+																<span style="color:red" >未中奖</span>
+															<#elseif _data.result==4>
+																<span  >非正常</span>
+															</#if>
+														</td>
+														<td >
+															<#if _data.issuestate??>
+															<#if _data.issuestate==0>
+																<span>待分配</span>
+															<#elseif _data.issuestate==1>
+																<span  >待传输</span>
+															<#elseif _data.issuestate==2>
+																<span  >待出票</span>
+															<#elseif _data.issuestate==3>
+																<span style="color:green" >出票成功</span>
+															<#elseif _data.issuestate==4>
+																<span style="color:red" >出票失败</span>
+															</#if>
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>

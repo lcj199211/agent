@@ -1,0 +1,211 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betareaversioncontrol/list?springraintoken="+springraintoken});
+	 });
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>地域栏目版本管理</cite></a>
+							</span>
+		            </li>
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加地域栏目版本</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betareaversioncontrol/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">栏目*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="hidden" value="<#if (returnDatas.data.versioncontrol)??>${returnDatas.data.versioncontrol!"B"}<#else>B</#if>" name="versioncontrol" />
+																			<select id="versioncontrol" name="versioncontrol" disabled="disabled">
+																				<option value="A" <#if (returnDatas.data.versioncontrol)??><#if (((returnDatas.data.versioncontrol)!'') == "A")>selected="selected"</#if></#if> >资讯版（A版）</option>
+																				<option value="B" <#if (returnDatas.data.versioncontrol)??><#if (((returnDatas.data.versioncontrol)!'') == "B")>selected="selected"</#if><#else>selected="selected"</#if> >彩票版（B版）</option>
+																			</select>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<!-- <div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">行政地区*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="areaids" id="areaids" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.areaids)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div> -->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">地区*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="areanames" id="areanames" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.areanames)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																		<span>请去掉省、市、区，例如“深圳市”填写“深圳”，“广东省”填写“广东”</span>
+																	</div>
+																	<!--日期型-->
+																	<!-- <div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">创建时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="datetime" name="createdate" id="createdate" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.createdate)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div> -->
+																	<!--日期型-->
+																	<!-- <div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">修改时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="datetime" name="modifydate" id="modifydate" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.modifydate)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div> -->
+																	<!-- <div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">代理公司名称：zhouyunfei 樂彩；klc 麒麟；fhjc 鳳凰競彩；fhwc 鳳凰微彩； paike99 微投彩；bifa888 必中彩；yc 易彩；ttcai 天天彩；*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="company" id="company" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.company)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div> -->
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">状态*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<select id="status" name="status" >
+																				<option value="1" <#if (returnDatas.data.status)??><#if (((returnDatas.data.status)!'') == 1)>selected="selected"</#if></#if> >开启</option>
+																				<option value="0" <#if (returnDatas.data.status)??><#if (((returnDatas.data.status)!'') == 0)>selected="selected"</#if></#if> >关闭</option>
+																			</select>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">方向*</label>
+																		<div class="layui-inline col-lg-5">
+																			<input type="hidden" value="<#if (returnDatas.data.direction)??>${returnDatas.data.direction!2}<#else>2</#if>" name="direction" />
+																			<select id="direction" name="direction" disabled="disabled">
+																				<option value="1" <#if (returnDatas.data.direction)??><#if (((returnDatas.data.direction)!'') == 1)>selected="selected"</#if></#if> >只能访问</option>
+																				<option value="2" <#if (returnDatas.data.direction)??><#if (((returnDatas.data.direction)!'') == 2)>selected="selected"</#if><#else>selected="selected"</#if> >禁止访问</option>
+																			</select>
+																			
+																			<table border="3" style="display: none;">
+																				<tr>
+																					<th width="10%">版本</th>
+																					<th width="30%">地区</th>
+																					<th width="60%">方向</th>
+																				</tr>
+																				<tr>
+																					<td colspan="3"><span>情况一：深圳地区返回B版，其他地区返回A版</span></td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>只能访问</td>
+																				</tr>
+																				<tr>
+																					<td colspan="3"><span>情况二：深圳地区返回A版</span></td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>禁止访问</td>
+																				</tr>
+																				<tr>
+																					<td colspan="3"><span>情况三：深圳地区返回A版，其他地区返回A版</span></td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>只能访问</td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>禁止访问</td>
+																				</tr>
+																				<tr>
+																					<td colspan="3"><span>情况四：深圳地区返回A版，其他地区返回A版</span></td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>只能访问</td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>禁止访问</td>
+																				</tr>
+																				<tr>
+																					<td>A</td>
+																					<td>深圳</td>
+																					<td>只能访问</td>
+																				</tr>
+																				<tr>
+																					<td colspan="3"><span>情况五：深圳地区返回A版，其他地区返回A版</span></td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>只能访问</td>
+																				</tr>
+																				<tr>
+																					<td>B</td>
+																					<td>深圳</td>
+																					<td>禁止访问</td>
+																				</tr>
+																				<tr>
+																					<td>A</td>
+																					<td>深圳</td>
+																					<td>只能访问</td>
+																				</tr>
+																				<tr>
+																					<td>A</td>
+																					<td>深圳</td>
+																					<td>禁止访问</td>
+																				</tr>
+																			</table>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

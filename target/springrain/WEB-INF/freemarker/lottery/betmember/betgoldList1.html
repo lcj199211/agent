@@ -1,0 +1,313 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgold/delete");
+	}
+
+$(document).ready(function(){	
+	$('.confirm').click(function(){
+		var a=$(this).parent().parent().children(".center").children().val();
+		$.ajax({
+			type:"get",
+			url:"${ctx}/betgold/update?id="+a+"&state=2",
+			data:{},
+			success:function(){
+				window.location.href="${ctx}/betgold/list?date=1&submittime=${(returnDatas.queryBean.submittime?string('yyyy-MM-dd'))!''}&springraintoken="+springraintoken
+			},
+			error:function(result){
+				alert("error");
+			}
+			})
+	})
+	$('.cancel').click(function(){
+		var a=$(this).parent().parent().children(".center").children().val();
+		$.ajax({
+			type:"get",
+			url:"${ctx}/betgold/update?id="+a+"&state=1",
+			data:{},
+			success:function(){
+				window.location.href="${ctx}/betgold/list?date=1&submittime=${(returnDatas.queryBean.submittime?string('yyyy-MM-dd'))!''}&springraintoken="+springraintoken
+			},
+			error:function(result){
+				alert("error");
+			}
+			})
+	})
+	$('#reflesh').click(function(){
+		location.reload(true);
+	})
+})	
+//60秒刷新
+/* var t; 
+t=60; 
+function shua() 
+{ 
+t=t-1; 
+document.getElementById("hints").innerHTML=t+" 秒"; 
+if (t==0) 
+{ 
+document.location.reload(); 
+} 
+}  */
+
+
+//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+</script>
+
+</head>
+<body onload="window.setInterval(shua,1000); ">
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title ">
+					 <li class="layui-this">
+			            		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								   <a href="${ctx}">用户管理<span class="layui-box">&gt;</span></a>
+								   <a><cite>用户管理</cite><span class="layui-box">&gt;</span></a>
+								   <a><cite>充值记录</cite></a>
+								</span>
+			            </li>
+					 <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betgold/list?date=1&memberid=${returnDatas.queryBean.memberid!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap" style="border-top:1px solid #e2e2e2;">									  	
+							          	<tbody>							          		
+							          		<tr>
+							          			<td style="width:80px; text-align: right;">充值搜索</td>
+							          			<td style="width:430px;">
+							          				<div class="layui-inline">									                    
+									                    <div class="layui-input-inline">
+									                           <!-- <input  name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="layui-input"> -->
+
+									                           从<div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>到
+									                    <div class="layui-input-inline">
+									                           <input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+									                    </div>
+
+									                    </div>
+							                		</div>
+							          			</td>
+							          			<td style="width:100px;">
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          			<td></td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="40">
+										    <col width="120">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="12">充值记录&nbsp;&nbsp;&nbsp;用户ID：${id2!''}&nbsp;&nbsp;&nbsp;总计：${totolRecharge!0}&nbsp;&nbsp;&nbsp;充值笔数：${chargeNumber!0}&nbsp;&nbsp;&nbsp;<!-- <font id="hints" >60秒</font> --><button id="reflesh">刷新</button>&nbsp;&nbsp;&nbsp;
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+												  		<th id="th_id">订单ID</th>
+														<th id="th_submittime" >提交时间</th>
+														<th id="th_rechargetime" >充值时间</th>
+														<th id="th_brs" >充值前分</th>
+														<th id="th_money" >充值额</th>
+														
+														<th id="th_ars" >充值后分</th>
+														<th id="th_source" >来源</th>
+														<th id="th_accountname" >账户名称</th>
+														<th id="th_money" >金额</th>
+														<th id="th_state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="" align="center">
+														<!--end_no_export-->
+														<td>
+															${(_data.id)!''}
+														</td>
+														<td style="white-space:nowrap">
+															<!--日期型-->
+														${((_data.submittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td >
+														<td style="white-space:nowrap">
+															<!--日期型-->
+														${((_data.rechargetime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+														<#if (_data.state==2)>
+														<input class="t2" type="hidden" value="${(_data.brs)!''}">
+														</#if >
+															${(_data.brs)!''}
+														</td>
+														<td style="color:blue">
+														<#if (_data.state==2)>
+														<input class="t1" type="hidden" value="${(_data.money)!''}">
+														</#if >
+															${(_data.money)!''}
+														</td>
+														<td >
+														<#if (_data.state==2)>
+														<input class="t3" type="hidden" value="${(_data.ars)!''}">
+														</#if >
+															${(_data.ars)!''}
+														</td>
+														<td >
+															${(_data.source)!''}
+														</td>
+														<td >
+															${(_data.accountname)!''}
+														</td>
+														<td >
+														<#if (_data.state==2)>
+															<input class="t4" type="hidden" value="${(_data.realmoney)!''}">
+															</#if >
+															${(_data.realmoney)!0}
+														</td>
+														<td >
+															<#if _data.state==0>
+																未处理
+																<#elseif _data.state==1>
+																<p style="color:red">取消</p>
+																<#elseif _data.state==2>
+																<p style="color:green">成功</p>
+																<#else> 
+															</#if>
+														</td>
+													</tr>
+												</#list>
+												<tr class="" align="center" style="background-color:#eafcff;">
+														<!--end_no_export-->
+														<td>
+															小计
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														<a style="border:0px;text-align: center;"  id="t2"></a>
+														</td>
+														<td >
+															<a style="border:0px;text-align: center;"  id="t1"></a>
+														</td>
+														<td >
+														<a style="border:0px;text-align: center;"  id="t3"></a>
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td ><a style="border:0px;text-align: center;"  id="t4"></a>
+														</td>
+														<td >
+														</td>
+													</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+	var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	
+	$("#t1").text(Math.round(t1*100)/100);
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	
+	$("#t2").text(Math.round(t2*100)/100);
+	
+	var t3 = 0.;
+	$(".t3").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t3+= a*1;
+	});
+	
+	$("#t3").text(Math.round(t3*100)/100);
+	
+	var t4 = 0.;
+	$(".t4").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t4+= a*1;
+	});
+	
+	$("#t4").text(Math.round(t4*100)/100);
+	</script>
+</body>
+</html>
+

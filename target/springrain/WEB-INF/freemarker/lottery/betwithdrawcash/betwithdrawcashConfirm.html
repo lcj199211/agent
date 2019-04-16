@@ -1,0 +1,226 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betwithdrawcash/list?springraintoken="+springraintoken});
+	 });
+</script>
+<style>
+			.fill_tab{
+				border-collapse: collapse;
+				width: 450px;
+				height: 300px;
+				margin:20px;
+			}
+			.fill_tab th{
+				border: 1px solid #aaaaaa;
+				text-align: right;
+			}
+			.fill_tab th.left{
+				text-align: left;
+			}
+			.fill_tab th.left input{
+				width: 250px;
+				height: 30px;
+				margin-left: 20px;
+				font-size: 18px;
+				padding: 5px;
+				border: 0;
+			}
+			.fill_tab th.center{
+				text-align: center;
+			}
+			.fill_tab th.center button{
+				padding: 5px 10px;
+				border: 0;
+				cursor: pointer;
+				outline:none;
+				font-weight: bold;
+				color: black;
+			}
+		</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <!-- <li class="layui-this">
+		            		<i class="layui-icon">&#xe630;</i>
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							   <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							   <a><cite>充值管理</cite></a>
+							</span>
+		            </li> -->
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>确定订单</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betgold/update?ddbt=1">
+														<table class="fill_tab">
+															<tbody>
+																<tr>
+																	<th>订单号：</th>
+																	<th class="left">
+																		<input type="text" name="id" id="id" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off"/>
+																	</th>
+																</tr>
+																<tr>
+																	<th>金额：</th>
+																	<th class="left">
+																		<input type="text" name="memberid" id="memberid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" />
+																	</th>
+																</tr>
+																<tr>
+																	<th>真实姓名：</th>
+																	<th class="left">
+																		<input type="text" name="money" id="money" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" />
+																	</th>
+																</tr>
+																<tr>
+																	<th>来源：</th>
+																	<th class="left">
+																		<input type="text" type="text" name="source" id="source" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" />
+																	</th>
+																</tr>
+																<tr>
+																	<th>账户：</th>
+																	<th class="left">
+																		<input type="text" type="text" name="source" id="source" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" />
+																	</th>
+																</tr>
+																<tr>
+																	<th>开户行：</th>
+																	<th class="left">
+																		<input type="text" type="text" name="source" id="source" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" />
+																	</th>
+																</tr>
+																<tr>
+																	<th>电话：</th>
+																	<th class="left">
+																		<input type="text" type="text" name="source" id="source" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" />
+																	</th>
+																</tr>
+																<tr>
+																	<th colspan="2" class="center">
+																		充值：提现：福利：输赢：结果：
+																	</th>
+																</tr>
+																<tr>
+																	<th colspan="2" class="center">
+																		<button>确认补入</button>
+																		<button>取消</button>
+																	</th>
+																</tr>
+																
+															</tbody>
+														</table>
+																<!-- <input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">用户ID*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="memberid" id="memberid" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.memberid)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">充值前分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="brs" id="brs" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.brs)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">充值后分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="ars" id="ars" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.ars)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">来源*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="source" id="source" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.source)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">账户名称*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="accountname" id="accountname" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.accountname)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">金额*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="money" id="money" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.money)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">状态*</label>
+																		<div class="layui-inline col-lg-5">  
+																		
+																			<select id="state" name="state" >
+																		        	<option value="0" <#if (returnDatas.data.state)??><#if (((returnDatas.data.state)!'') == 0)>selected="selected"</#if></#if> >未处理</option>
+																					<option value="1" <#if (returnDatas.data.state)??><#if (((returnDatas.data.state)!'') == 1)>selected="selected"</#if></#if> >取消</option>
+																					<option value="2" <#if (returnDatas.data.state)??><#if (((returnDatas.data.state)!'') == 2)>selected="selected"</#if></#if> >成功</option>
+																		    </select>
+																		
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	日期型
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">提交时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input placeholder="请输入日期"  type="datetime" name="submittime" id="submittime" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" value="${(returnDatas.data.submittime)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	日期型
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">充值时间*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input placeholder="请输入日期"  type="datetime" name="rechargetime" id="rechargetime" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="laydate-icon" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" value="${(returnDatas.data.rechargetime)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div> -->
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

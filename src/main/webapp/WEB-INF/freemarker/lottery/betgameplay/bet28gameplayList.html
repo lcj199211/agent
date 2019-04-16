@@ -1,0 +1,442 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		
+			$(".updateoddsandbettinglimit").click(function(){
+		var id =$(this).prev().val();
+		var maxbetting=$(this).parent().prev().children().val();
+		var minbetting=$(this).parent().prev().prev().children().val();
+		var odds=$(this).parent().prev().prev().prev().prev().children().val();
+		//询问框
+		layer.confirm('确认提交？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgameplay/updateoddsandbettinglimit",
+				data:{id:id,maxbetting:maxbetting,minbetting:minbetting,odds:odds},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已提交！',{offset:['','']});
+						 window.location.reload();
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		}); 
+	})
+	
+	$(".updateoddsandbettinglimit222").click(function(){
+		var arr122 = new Array(); 
+		$(".asdfsadfsd").each(function (i){
+			var id=$(this).children(".id").val();
+			var odds=$(this).find(".odds").val();
+			var minbetting=$(this).find(".minbetting").val();
+			var maxbetting=$(this).find(".maxbetting").val();
+			var zzz=id+":"+odds+":"+minbetting+":"+maxbetting;
+			arr122.push(zzz);
+			
+		});
+		
+		//询问框
+		layer.confirm('确认提交？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betgameplay/updateoddsandbettinglimit?arr122="+arr122,
+				data:{k:2},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已提交！',{offset:['','']});
+						setTimeout("window.location.reload();",2000);
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		}); 
+	})
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgameplay/delete");
+	}
+</script>
+<style>
+.xiao-ht-table {
+     min-width: auto; 
+    width: auto; 
+}
+</style>
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title">
+			             <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+			             		<#if gameclassid=5>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京28</cite></a>
+								</span>
+								<#elseif gameclassid=6>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大28</cite></a>
+								</span>
+								<#elseif gameclassid=10>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京11</cite></a>
+								</span>
+								<#elseif gameclassid=11>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京16</cite></a>
+								</span>
+								<#elseif gameclassid=12>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>北京36</cite></a>
+								</span>
+								<#elseif gameclassid=16>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大11</cite></a>
+								</span>
+								<#elseif gameclassid=17>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大16</cite></a>
+								</span>
+								<#elseif gameclassid=18>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>加拿大36</cite></a>
+								</span>
+								<#elseif gameclassid=19>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋28</cite></a>
+								</span>
+								<#elseif gameclassid=20>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋36</cite></a>
+								</span>
+								<#elseif gameclassid=21>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡11</cite></a>
+								</span>
+								<#elseif gameclassid=22>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡16</cite></a>
+								</span>
+								<#elseif gameclassid=23>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡28</cite></a>
+								</span>
+								<#elseif gameclassid=24>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>新加坡36</cite></a>
+								</span>
+								<#elseif gameclassid=29>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK10</cite></a>
+								</span>
+								<#elseif gameclassid=30>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK22</cite></a>
+								</span>
+								<#elseif gameclassid=31>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK冠军</cite></a>
+								</span>
+								<#elseif gameclassid=32>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK龙虎</cite></a>
+								</span>
+								<#elseif gameclassid=33>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>赛车</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>PK冠亚军</cite></a>
+								<#elseif gameclassid=35>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋11</cite></a>
+								<#elseif gameclassid=36>
+								<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a>彩票管理<span class="layui-box">&gt;</span></a>
+								  <a><cite>竞猜28</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>蛋蛋16</cite></a>
+								</span>
+								</#if>
+			             </li> 
+						 <li style="float:right;">
+			             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+			             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          	
+						          <!-- 查询  开始 -->
+							        <form  id="searchForm" action="${ctx}/betgameplay/list?currentBetting=1" class="pull-left" method="post">
+							          	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							        	<!--  <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}"  /> -->
+									  	<div class="layui-table search-wrap xiao-mb0">
+									  		
+									  		
+											<div class="layui-inline">
+												<div class="xiao-btnlist xiap-pull-left">
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betgameclass/list?gameclassid=${gameclassid!''}">彩票管理</a>
+													</div>
+													<div class="xiao-btnlist-item" style="background:#009688; color:#FFF">
+														赔率/限额
+													</div>
+													<div class="xiao-btnlist-item">
+														<#if gameclassid=7>
+														<a href="${ctx}/betgameplay/list4">
+														<#elseif gameclassid=8>
+														<a href="${ctx}/betgameplay/list1">
+														<#elseif gameclassid=9>
+														<a href="${ctx}/betgameplay/list2">
+														<#elseif gameclassid=5>
+														<a href="${ctx}/betgameplay/list3">
+														<#elseif gameclassid=10>
+														<a href="${ctx}/betgameplay/list5">
+														<#elseif gameclassid=11>
+														<a href="${ctx}/betgameplay/list6">
+														<#elseif gameclassid=12>
+														<a href="${ctx}/betgameplay/list7">
+														<#elseif gameclassid=16>
+														<a href="${ctx}/betgameplay/list8">
+														<#elseif gameclassid=17>
+														<a href="${ctx}/betgameplay/list9">
+														<#elseif gameclassid=6>
+														<a href="${ctx}/betgameplay/list10">
+														<#elseif gameclassid=18>
+														<a href="${ctx}/betgameplay/list11">
+														<#elseif gameclassid=19>
+														<a href="${ctx}/betgameplay/list12">
+														<#elseif gameclassid=20>
+														<a href="${ctx}/betgameplay/list13">
+														<#elseif gameclassid=21>
+														<a href="${ctx}/betgameplay/list14">
+														<#elseif gameclassid=22>
+														<a href="${ctx}/betgameplay/list15">
+														<#elseif gameclassid=23>
+														<a href="${ctx}/betgameplay/list16">
+														<#elseif gameclassid=24>
+														<a href="${ctx}/betgameplay/list17">
+														<#elseif gameclassid=29>
+														<a href="${ctx}/betgameplay/list18">
+														<#elseif gameclassid=30>
+														<a href="${ctx}/betgameplay/list19">
+														<#elseif gameclassid=31>
+														<a href="${ctx}/betgameplay/list20">
+														<#elseif gameclassid=32>
+														<a href="${ctx}/betgameplay/list21">
+														<#elseif gameclassid=33>
+														<a href="${ctx}/betgameplay/list22">
+														<#elseif gameclassid=35>
+														<a href="${ctx}/betgameplay/list24">
+														<#elseif gameclassid=36>
+														<a href="${ctx}/betgameplay/list25">
+														</#if>
+														即时注单</a>
+													</div>
+													<!-- <div class="xiao-btnlist-item">
+														<a href="${ctx}/betcollectionaddress/list?id=${gameclassid!''}">采集地址</a>
+													</div> -->
+													
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betperiod/list?gameclassid=${gameclassid!''}">开奖管理</a>
+													</div>
+													<div class="xiao-btnlist-item">
+														<a href="${ctx}/betgameplay/name1list?gameclassid=${gameclassid!''}">玩法状态</a>
+													</div>
+												</div>
+											
+											
+												<div class="xiao-btnlist xiap-pull-left">
+												<input type="hidden" name="name="gameclassid"" value="${returnDatas.queryBean.gameclassid}">
+													<!-- <select id="gameclass" style="width: 200px;height: 32px;border: 1px solid #e2e2e2;" >
+													</select> -->
+													<!--    <input type="text" name="gameclassid" value="${(returnDatas.queryBean.gameclassid)!''}" placeholder="彩票名 " class="layui-input"> -->
+												</div>
+												<div class="layui-inline valid-info"></div>
+											</div>
+											<!-- <div class="layui-inline">
+												<button class="layui-btn xiao-mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											</div> -->
+										</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<form action="${ctx}/betgameplay/updateodds" class="pull-left" method="post">
+														<!-- <button id="submitodds" style="cursor: pointer;height: 30px;line-height: 30px;padding: 0 10px;font-size: 12px;width: 100px;border: none;background-color: #009688;color: #fff;">提交赔率</button> -->
+									<div class="xiao-ht-tableWrap">
+										<table class="xiao-ht-table" lay-even style="display:inline">
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+												<th colspan="8">
+												<@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit222">确定</a>
+								                             </@shiro.hasPermission>
+												</th>
+												</tr>
+												<tr>
+														<th  >玩法</th>
+														<th  >赔率</th>
+														<th>最高赔率</th>
+														<th  >限额最小</th>
+														<th >限额最大</th>
+														<!-- <th>操作</th> -->
+												</tr> 
+											</thead>
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+													<tr class="asdfsadfsd">
+													<input  type="hidden" class="id" value=${_data.id!''}>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input class="odds"  style="width:60px"   value=${(_data.odds)!''}>
+														</td>
+														<td>
+															${(_data.maxodds)!''}
+														</td>
+														<td>
+															<input class="minbetting" style="width:60px"   value=${(_data.minbetting)!''}>
+														</td>
+														<td>
+															<input class="maxbetting" style="width:60px"   value=${(_data.maxbetting)!''}>
+														</td>
+														<!-- <td>
+								                            <@shiro.hasPermission name="/betgameplay/updateoddsandbettinglimit" >
+								                            <input value=${(_data.id)!''} style="display:none"> 
+								                             <a style="height: 25px;line-height: 25px; padding: 0 15px;" href="#" class="layui-btn xiao-btn-default layui-btn-mini updateoddsandbettinglimit">确定</a>
+								                             </@shiro.hasPermission>
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											 
+											</tbody>
+										</table>
+										
+										
+											
+										</form>
+										<#if returnDatas.page??> 
+											<div id='laypageDiv' class="xiao-inline-block"></div>
+											<!-- <font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th> -->
+											<@h.layPage page=returnDatas.page /> 
+										</#if>
+									</div>
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	<script>
+		jQuery(document).ready(function(){
+    //加载彩票名称
+   /*  jQuery.ajax({
+        url : ctx+"/betgameclass/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+ 			if(_obj.gameclassid==${returnDatas.queryBean.gameclassid}){
+			 jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"' selected >"+_obj.gcname+"</option>");
+ 		}else{
+ 			/* jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"'>"+_obj.gcname+"</option>"); */
+ 		}
+            });
+            
+            
+        }
+    }); */
+    
+   /*  $(".updateOdds").blur(function(){
+    	var a=$(this).prev().val();
+    	$(this).attr("name",a);
+    });
+	}); */
+	
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betgameplay/list?&springraintoken="+springraintoken});
+	 });
+	</script>
+</body>
+</html>
+

@@ -1,0 +1,213 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betbetting/delete");
+	}
+</script>
+
+</head>
+<style>
+		/*20170425 新增*/
+	
+		.xiao-form {
+			padding-bottom: 10px;
+		}
+		.dataTables_wrapper {
+			border-top: 1px solid #eee;
+		    padding-top: 10px;
+		}
+		.page-title .title_left {
+			margin-bottom: 10px;
+		}
+		
+		.fa{
+			padding-right: 10px;
+		}
+		
+		.xiao-bor {
+			padding-bottom: 10px;
+		}
+		table th:first-child,
+		table td:first-child {
+			display: none;
+		}
+</style>
+<body class="nav-md">
+    <div class="container body">
+      	<div class="main_container">
+		<@h.naviHeader /><@h.leftMenu />
+			<div class="right_col" role="main">	
+				<!-- 主体内容 -->
+          		<div class="">
+          			<!-- 页面引导地址 -->
+					<div class="page-title">
+			            <div class="title_left">
+			                <i class="fa fa-home"></i> 其他 > 投注管理
+			            </div>
+		            </div>	
+		            <!-- 引导end -->
+		            
+		            <div class="clearfix"></div>
+		            
+		            <!--  -->
+		            <div class="row">
+		            	<div class="col-md-12 col-sm-12 col-xs-12">
+			                <div class="x_panel">
+			                  <div class="x_title">
+			                    <h2>投注管理</h2>
+			                    <ul class="nav navbar-right panel_toolbox">
+			                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+			                      </li>
+			                      <li class="dropdown">
+			                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+			                        <ul class="dropdown-menu" role="menu">
+			                          <li><a href="#">Settings 1</a>
+			                          </li>
+			                          <li><a href="#">Settings 2</a>
+			                          </li>
+			                        </ul>
+			                      </li>
+			                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+			                      </li>
+			                    </ul>
+			                    <div class="clearfix"></div>
+			                  </div>
+			                  <div class="x_content">
+			                  	<div class="xiao-bor row">
+			                  		<div class="col-md-12 col-sm-12 col-xs-12">
+			                  			<form class="form-horizontal form-label-left" id="searchForm" action="${ctx}/system/cms/content/list" method="post">
+						                  	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+								          	<input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+								          	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+								         	<input type="hidden" name="siteId" id="siteId" value="${(returnDatas.queryBean.siteId)!''}"/>
+								         	<div class="col-md-4 col-sm-4 col-xs-12">
+									         	<div class="form-group">
+							                        <label class="control-label col-md-2 col-sm-2 col-xs-12">名称 <span class="required">*</span>
+							                        </label>
+							                        <div class="col-md-8 col-sm-8 col-xs-12">
+							                          <input type="text" name="name" value="${(returnDatas.queryBean.name)!''}" placeholder="请输入名称 " class="form-control col-md-7 col-xs-12">
+							                        </div>
+							                    </div>
+							                </div>
+							                	
+							                <div class="col-md-4 col-sm-4 col-xs-12">
+								         		<div class="form-group">
+							                        <label class="control-label col-md-3 col-sm-3 col-xs-12">是否可用 <span class="required">*</span>
+							                        </label>
+							                        <div class="col-md-9 col-sm-9 col-xs-12">
+							                        	<select name="active" id="active" class="form-control">
+							                        		<option value="">==请选择==</option>
+															<option value="1">是</option>
+															<option value="0">否</option>
+							                        	</select>
+							                        </div>
+							                    </div>
+								         	</div>
+								         	
+								         	<div class="col-md-4 col-sm-4 col-xs-12">
+								         		 <button class="btn btn-primary" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="fa fa-search"></i>搜索</button>
+								         	</div>
+								        </form>
+			                  		</div>
+						        </div>
+				                <table id="datatable" class="table table-striped table-bordered bulk_action">
+				                      <thead>
+				                        <tr>
+				                          	<th>
+											 	<th><input type="checkbox" id="checkAll"  class="flat"></th>
+										  	</th>
+				                          	<th id="th_bettingtime" >投注时间</th>
+											<th id="th_gameclass">所在游戏</th>
+											<th id="th_gameplay" >投注内容</th>
+											<th id="th_gameplay" >开奖结果</th>
+											<th id="th_gameplay" >登录地址</th>
+											<th id="th_gameplay" >登录</th>
+											<th id="th_state">结算状态</th>
+											<th>操作</th>
+				                        </tr>
+				                      </thead>
+				
+				
+				                      <tbody>
+				                      	<#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+				                        <tr>
+				                          <td>
+											 <th><input type="checkbox" name="check_li" value="${_data.id}" class="flat"></th>
+										  </td>
+				                          <td>${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}</td>
+				                          <td></td>
+				                          <td></td>
+				                          <td></td>
+				                          <td></td>
+				                          <td></td>
+				                          <td>
+				                          	<#if _data.state==0>
+												<font color="red">未结算</font>
+											<#elseif _data.state==1>
+												<font color="green">已结算</font>
+											</#if>
+				                          </td>
+				                          <td>
+												<@shiro.hasPermission name="/betbetting/update" >
+								                    <a href="#" data-action="${ctx}/betbetting/update/pre?id=${_data.id}" class="btn btn-primary btn-xs">编辑</a>
+								                </@shiro.hasPermission>
+								                <@shiro.hasPermission name="/betbetting/delete" >
+								                    <a href="javascript:del('${(_data.id)!''}')" class="btn btn-danger btn-xs">删除</a>
+								                </@shiro.hasPermission>
+											</td>
+				                        </tr>
+				                        </#list>
+									</#if>
+				                      </tbody>
+				                </table>
+			                  </div>
+			                </div>
+			              </div>  
+		            </div>
+				</div>
+			</div>	
+		<@h.footer />
+	</div>
+	<script type="text/javascript">
+		//分野国际化配置
+		$('#datatable').DataTable({
+			"aLengthMenu" : [10,50,100,200],
+        	"oLanguage": {
+            		"sLengthMenu" : "显示 _MENU_ 条", 
+            		"sZeroRecords": "没有您要搜索的内容",
+            		"sInfo": "从 _START_ 到 _END_ 条记录 总记录数为 _TOTAL_ 条",
+            		"sInfoEmpty" : "记录数为0",
+            		"sInfoFiltered" : "(全部记录数 _MAX_ 条)",
+            		"sInfoPostFix" : "",
+            		"sSearch" : "搜索",
+            		"sUrl" : "",
+            		"oPaginate": {
+            			"sFirst": "第一页",
+            			"sPrevious": "上一页",
+            			"sNext": "下一页",
+            			"sLast" : "最后一页"
+            		}
+		    }
+		});
+	</script>
+</body>
+</html>
+

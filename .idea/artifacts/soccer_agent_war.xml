@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="soccer_agent:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>soccer_agent</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="springrain.war">
+      <element id="artifact" artifact-name="soccer_agent:war exploded" />
+    </root>
+  </artifact>
+</component>

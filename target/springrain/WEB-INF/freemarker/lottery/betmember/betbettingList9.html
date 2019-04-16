@@ -1,0 +1,295 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+		
+		
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betbetting/delete");
+	}
+	//搜索pageindex设为1
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}	
+</script>
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title ">
+			             <li class="layui-this">
+			             		<i class="layui-icon">&#xe630;</i>
+			             		<span class="layui-breadcrumb" style="visibility: visible;">
+								  <a >报表<span class="layui-box">&gt;</span></a>
+								  <a><cite>代理报表</cite><span class="layui-box">&gt;</span></a>
+								  <a><cite>游戏输赢(按结算时间统计)</cite></a>
+								</span>
+			             </li>
+			             
+			          <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+		       		</ul>
+						          <div id="LAY_preview" class="xiao-ht-content">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/agreport?k=11&agentid=${(agentid)!''}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          <input type="hidden" name="directlyunder"  value="${(directlyunder)!''}" />
+							          
+									  <!-- 查询  结束 -->
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							          			
+							                		<div class="layui-inline">
+									                    <label class="layui-form-label">游戏类型</label>
+									                    <div class="layui-input-inline">
+									                        <select name="type" id="type" class="layui-input">
+																	<option value="100" 
+																		 <#if "${type}"="100"> selected
+																		 </#if> 
+																     >所有游戏</option>
+																	<option value="0" 
+																		 <#if "${type}"="0"> selected
+																		 </#if> 
+																     >彩票</option>
+																  	<option value="1" 
+																		 <#if "${type}"="1"> selected
+																		 </#if> 
+																     >足球</option>
+																     <option value="3" 
+																		 <#if "${type}"="3"> selected
+																		 </#if> 
+																     >篮球</option>
+																     <option value="4" 
+																		 <#if "${type}"="4"> selected
+																		 </#if> 
+																     >北单</option>
+															</select>   
+									                    </div>
+									                </div>
+									                <div class="layui-input-inline xiao-input-wrap pull-left">
+																	 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>到
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+										            <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+									                </div>
+							          			</td>
+							          			<td>
+							          			   <#if returnDatas.page??> 
+												
+												
+												<font id='recordsView' class='recorsView xiao-ht-pageM xiao-pull-right'>共<span>${(returnDatas.page.pageCount)!''}</span>页,共 <span>${(returnDatas.page.totalCount)!''}</span>条记录</font>
+											</#if>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									</form>
+									<!--start_export-->
+									<div class="xiao-ht-tableWrap">
+											<table class="xiao-ht-table" lay-even>
+												<thead>
+													 <tr>
+													<th colspan="14"><#if (directlyunder??)>直属&nbsp;&nbsp;&nbsp;</#if>所属代理ID：${agentid!''}</th> 
+												</tr>
+													<tr>
+													  <!--first_start_no_export-->
+													  <!--first_end_no_export-->
+															 
+															  <th id="th_bettingtime" >时间</th>
+														   <th id="th_gameclass">所在游戏</th>
+														   
+														   <th id="th_qibie">期数</th>
+														    <th id="th_id" >单号</th>
+														   <th id="th_gameplay" >投注内容</th>
+														    <th id="th_gameplay" >结果</th>
+														    <th id="th_gameplay" >状态</th>
+														   <th id="th_gameplay" >登录地址</th>
+														   <th id="th_gameplay" >登录</th>
+															   
+															   
+															<!-- <th id="th_memberid" >用户ID</th>
+															<th id="th_gameplayid" >玩法ID</th>
+															<th id="th_qibie" >期数</th>
+															<th id="th_bettingnum" >投注数量</th>
+															<th id="th_bettingmoney" >投注金额</th>
+															<th id="th_bettingscore" >投注输赢</th> -->
+													</tr> 
+												</thead>
+											  <!--first_end_export-->
+											  <!--start_export-->
+											   <tbody>
+											    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+											    	<#list	returnDatas.data as _data>
+											    		<!--start_no_export-->
+														<tr class="">
+															<!--end_no_export-->
+															
+															<td >
+															<!--日期型-->
+														${((_data.bettingtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															${(_data.gcname)!''}
+														</td>
+														<td>${(_data.qibie)!''}</td>
+														<td >
+															${(_data.id)!''}
+														</td>
+														<td >
+														<input class="t1" type="hidden" value="${(_data.bettingmoney)!''}">
+															${(_data.name1)!''}&nbsp;${(_data.name2)!''}&nbsp;${(_data.detail)!''}-<span style="color:red;">${(_data.bettingmoney)!''}</span>
+														</td>
+														
+														<td 
+														<#if ((_data.bettingscore-_data.bettingmoney)>=0)>
+															style="color:blue"
+														<#elseif ((_data.bettingscore-_data.bettingmoney)<0)>
+															style="color:red"
+														</#if>
+														>
+															<#if _data.state!=0>
+															<input class="t2" type="hidden" value="${(_data.bettingscore-_data.bettingmoney)!''}">
+															${((_data.bettingscore-_data.bettingmoney))!''}
+															</#if>
+														</td>
+														<td >
+															<#if _data.state??>
+															 <#if _data.state=1>
+															 	<span style="color:green;">已结算</span>
+															 	<#elseif _data.state=0>
+															 	<span style="color:red;">未结算</span>
+															 	<#elseif _data.state=2>
+															 	撤销
+															 </#if>
+															</#if>
+														</td>
+														<td >
+															${(_data.loginip)!''}
+														</td>
+														<td >
+															${(_data.logintool)!''}
+														</td>
+														
+															
+															<!-- <td >
+																${(_data.memberid)!''}
+															</td>
+															<td >
+																${(_data.gameplayid)!0}
+															</td>
+															<td >
+																${(_data.qibie)!''}
+															</td>
+															<td >
+																${(_data.bettingnum)!0}
+															</td>
+															<td >
+																${(_data.bettingmoney)!0}
+															</td>
+															<td >
+																${(_data.bettingscore)!0}
+															</td> -->
+														</tr>
+													</#list>
+													<tr class="" style="background-color:#eafcff;">
+															<td >
+															小计
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														 <a  id="t1"></a>
+														</td>
+														
+														<td >
+														 <a  id="t2"></a>
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														<td >
+														</td>
+														</tr>
+												 </#if>
+												</tbody>
+											</table>
+											<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+										</div>	
+								</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+</body>
+<script>
+var t1 = 0.;
+	$(".t1").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t1+= a*1;
+	});
+	
+	if(t1>=0){
+		$("#t1").css('color','blue');
+	}else if(t1<0){
+		$("#t1").css('color','red');
+	}
+	$("#t1").text(Math.round(t1*100)/100);
+	
+	var t2 = 0.;
+	$(".t2").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		t2+= a*1;
+	});
+	if(t2>=0){
+		$("#t2").css('color','blue');
+	}else if(t2<0){
+		$("#t2").css('color','red');
+	}
+	$("#t2").text(Math.round(t2*100)/100);
+</script>
+</html>
+

@@ -1,0 +1,129 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+
+<script src="${ctx}/js/validform/validform.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/validform/validform.css" media="all">
+<script>
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betcommodity/list?springraintoken="+springraintoken});
+	 });
+</script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+		<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <li style="float:right;">
+				        <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview" class="layui-my-form">
+						          				<header class="larry-personal-tit">
+													<span>添加商品列表</span>
+												</header>
+												<div class="larry-personal-body clearfix changepwd">
+													<form id="validForm" class="layui-form <!--  -->"  method="post" action="${ctx}/betcommodity/update">
+																<input type="hidden" id="id" name="id" value="${(returnDatas.data.id)!''}"/>	
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">名称*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="name" id="name" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.name)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">兑换分*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="exchangescore" id="exchangescore" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.exchangescore)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">状态*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<select name="state" id="state" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input">
+																				<option value="1"
+																				<#if (_data.state)??>
+																					<#if _data.state=1>
+																						selected
+																					</#if>
+																				</#if>
+																				>发布中</option>
+																				<option value="0"
+																				<#if (_data.state)??>
+																					<#if _data.state=0>
+																						selected
+																					</#if>
+																				</#if>
+																				>下架</option>
+																				
+																			</select>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">兑换/笔*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="exchangenum" id="exchangenum" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.exchangenum)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">进价*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<input type="text" name="purchaseprice" id="purchaseprice" datatype="*" nullmsg="不能为空" errormsg="不能为空！" autocomplete="off" class="layui-input" value="${(returnDatas.data.purchaseprice)!''}">
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																		<#if (commodityclassificationList??)&&(commodityclassificationList?size>0)> 
+																	<div class="layui-form-item col-lg-6">
+																		<label class="layui-form-label">商品分类*</label>
+																		<div class="layui-inline col-lg-5">  
+																			<select name="type" id="type" >
+																			 <option value="" >请选择</option>
+																				<#if (commodityclassificationList??)&&(commodityclassificationList?size>0)> 
+																			    	<#list	commodityclassificationList as _data1>
+																			    		<option value="${_data1.id!''}" 
+																			    				<#if (returnDatas.data??)&&(returnDatas.data.type??)>
+																				    			<#if (returnDatas.data.type=_data1.id)>
+																				    				selected
+																				    			</#if>       
+																				    			</#if>       
+																			    		>${_data1.type!''}</option>
+																			    	</#list>
+																			    </#if>
+																			</select>
+																		</div>
+																		<div class="layui-inline valid-info"></div>
+																	</div>
+																	</#if>
+													<div class="layui-form-item change-submit">
+													<label class="layui-form-label"></label>
+															<div class="layui-inline">
+																<button type="button" class="layui-btn" id="smtbtn">保存</button>
+																<button type="button" class="layui-btn layui-btn-primary" id="rstbtn">重置</button>
+															</div>
+														</div>
+													</form>
+												</div>
+								  </div>
+							</div>
+					</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>

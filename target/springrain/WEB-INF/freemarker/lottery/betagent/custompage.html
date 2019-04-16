@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>客服</title>
+<script language="javascript" type="text/javascript"> 
+	var i = 2; 
+	var intervalid;
+	intervalid = setInterval("fun()", 1000); 
+	function fun() { 
+		if (i == 0) { 
+			location.href='${url}?uid=${userid}&company=${company}';
+			clearInterval(intervalid); 
+		} 
+		document.getElementById("mes").innerHTML = i; 
+		i--; 
+	} 
+</script> 
+  </head>
+ 
+  <body>
+	<h2>系统将在 <span id="mes">2</span> 秒钟后跳转</h2> 
+  </body>
+</html>

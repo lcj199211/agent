@@ -1,0 +1,98 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+
+</head>
+<body>
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="xiao-ht-contentWrap">
+				<div class="xiao-ht-content-bg layui-tab-brief">
+					<ul class="layui-tab-title site-demo-title">
+		       		</ul>
+						        <div id="LAY_preview" class="xiao-ht-content">
+						          	<div class="xiao-form-control  xiao-input-wrap  col-lg-10">
+										<div class="xiao-btnlist">
+											<div class="xiao-btnlist-item">
+												<a style="display: block; background-color: #009688;color: #fff;" href="${ctx}/bettransferaccounts/list">转账</a>
+											</div>
+											<div class="xiao-btnlist-item">
+												<a href="${ctx}/bettransferaccounts/list?k=1">转账记录</a>
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<div class="xiao-form-text col-lg-5">接收ID：</div>
+											<div class="xiao-form-input  col-lg-5">
+												<input class="xiao-input" type="text" id="ff-memberid2"> 
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<div class="xiao-form-text col-lg-5"><button id="ff-jc" class="xiao-btn xiao-btn-success">检测</button></div>
+										    <div class="xiao-form-input  col-lg-5">
+										    	<span class="xiao-input" id="idjc"></span>
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<div class="xiao-form-text col-lg-5">转账分：</div>
+											<div class="xiao-form-input  col-lg-5">
+												<input class="xiao-input" type="text" id="ff-money">
+											</div>
+										</div>
+										<div class="xiao-form-cell col-lg-10">
+											<div class="xiao-form-text col-lg-5">备注：</div>
+											<div class="xiao-form-input  col-lg-5">
+												<input class="xiao-input" type="text" id="ff-remark">
+											</div>
+										</div>	
+										<div class="xiao-form-cell col-lg-10 text-center">
+											<button id="ff-confirm" class="xiao-btn xiao-btn-blue">确认转账 </button>
+										</div>
+								</div>
+							</div>
+			</div>
+		</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	<script>
+	$("#ff-jc").click(function(){
+		var a=$("#ff-memberid2").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/betmember/look/json",
+			
+			data:{id2:a},
+			success:function(result){
+				if("error"==result.status){
+					$("#idjc").html("<font color='red'>无此用户</font>");
+					
+				}else if("success"==result.status){
+					$("#idjc").text("昵称："+result.data.nickname+"，真实姓名："+result.data.realname);
+				}
+			},
+		})
+	})
+	
+	$("#ff-confirm").click(function(){
+		var a=$("#ff-memberid2").val();
+		var b=$("#ff-money").val();
+		var c=$("#ff-remark").val();
+		$.ajax({
+			type:"post",
+			url:"${ctx}/bettransferaccounts/update?u=1",
+			
+			data:{memberid2:a,transferaccountsscore:b,remark:c},
+			success:function(result){
+				if("error"==result.status){
+					alert(result.message);
+					
+				}else if("success"==result.status){
+					alert("转账成功！");
+				}
+			},
+		})
+	})
+	</script>
+</body>
+</html>
+

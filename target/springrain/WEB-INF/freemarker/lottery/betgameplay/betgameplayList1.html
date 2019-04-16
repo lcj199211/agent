@@ -1,0 +1,237 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="代理管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betgameplay/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		            <!--  <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>玩法_原始（新）管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	 <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							        <form  id="searchForm" action="${ctx}/betgameplay/list" class="pull-left" method="post">
+							          	<input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							        	<!--  <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          	<input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}"  /> -->
+									  	<div class="layui-table search-wrap xiao-mb0">
+											<div class="layui-inline">
+												<div class="layui-input-inline xiao-input">
+													<select id="gameclass" style="width: 200px;height: 32px;border: 1px solid #e2e2e2;" name="gameclassid">
+													</select>
+													<!--    <input type="text" name="gameclassid" value="${(returnDatas.queryBean.gameclassid)!''}" placeholder="游戏名 " class="layui-input"> -->
+												</div>
+												<div class="layui-inline valid-info"></div>
+											</div>
+											<div class="layui-inline">
+												<button class="layui-btn xiao-mb0" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											</div>
+										</div>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<form action="${ctx}/betgameplay/updateodds" class="pull-left" method="post">
+									<div class="xiao-btnlist xiap-pull-left">
+										<div class="xiao-btnlist-item">
+											<a href="${ctx}/betgameclass/list?gameclassid=${gameclassid!''}">游戏列表</a>
+										</div>
+										<!-- <div class="xiao-btnlist-item">
+											<a href="${ctx}/betcollectionaddress/list?id=${gameclassid!''}">采集地址</a>
+										</div> -->
+										<div class="xiao-btnlist-item">
+											赔率设置
+										</div>
+										<div class="xiao-btnlist-item">
+											<a href="${ctx}/betperiod/list?gameclassid=${gameclassid!''}">开奖管理</a>
+										</div>
+									</div>	
+									<table class="layui-table" lay-even>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												
+												<tr>
+												  <!--first_start_no_export-->
+												  <th class="center">
+															<input id="checkAll"  type="checkbox">
+												  </th>
+												  <!--first_end_no_export-->
+														<th id="th_gameclassid" >游戏名</th>
+														<th id="th_name1" >玩法一级分类</th>
+														<th id="th_name2" >玩法二级分类</th>
+														<th id="th_name3" >玩法三级分类</th>
+														
+														
+														<th id="th_odds" >赔率</th>
+														<th id="th_odds" >最高赔率</th>
+														<th id="th_odds" >限额最小</th>
+														<th id="th_odds" >限额最大</th>
+														  <th>操作</th>
+														<!-- <th id="th_width" >宽度</th>
+														<th id="th_order1" >排序号</th>
+														<th id="th_fontsize1" >二级分类字体大小</th>
+														<th id="th_fontsize" >三级分类字体大小</th>
+														<th id="th_numofbets">下注个数</th> -->
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<td class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td>
+														<!--end_no_export-->
+														<td >
+															${(returnDatas.queryBean.gameclassname)!0}
+														</td>
+														<td >
+															${(_data.name1)!''}
+														</td>
+														<td >
+															${(_data.name2)!''}
+														</td>
+														<td >
+															${(_data.name3)!''}
+														</td>
+														<td >
+															<input value=${(_data.id)!''} style="display:none"> 
+															<input class="updateOdds"   value=${(_data.odds)!0}>
+														</td>
+														<td>
+														${(_data.maxodds)!''}
+														</td>
+														<td>
+														${(_data.minbetting)!''}
+														</td>
+														<td>
+														${(_data.maxbetting)!''}
+														</td>
+														<td>
+															<@shiro.hasPermission name="/betgameplay/update" >
+								                           		 <a href="#" data-action="${ctx}/betgameplay/update/pre?id=${(_data.id)!''}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgameplay/delete" >
+								                            	<a href="javascript:del('${(_data.id)!''}')" class="layui-btn layui-btn-danger layui-btn-mini ajax-delete">删除</a>
+								                            </@shiro.hasPermission>
+														</td>
+													<!-- 	<td >
+															${(_data.width)!0}
+														</td>
+														<td >
+															${(_data.order1)!0}
+														</td>
+														<td >
+															${(_data.fontsize1)!0}
+														</td>
+														<td >
+															${(_data.fontsize)!0}
+														</td>
+														<td >
+															${(_data.numofbets)!0}
+														</td> -->
+													</tr>
+												</#list>
+											 </#if>
+											 <tr>
+													<td colspan="5">
+														<button id="submitodds" style="cursor: pointer;height: 30px;line-height: 30px;padding: 0 10px;font-size: 12px;width: 100px;border: none;background-color: #009688;color: #fff;">提交赔率</button>
+													</td>
+											</tr>
+											</tbody>
+										</table>
+										</form>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv' class="xiao-inline-block"></div>
+										<font id='recordsView' class='recorsView xiao-pull-right'>共<span></span>页,共 <span></span>条记录</font></th>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+	<script>
+		jQuery(document).ready(function(){
+    //加载游戏名称
+    jQuery.ajax({
+        url : ctx+"/betgameclass/list/json",
+        type : "get",
+        dataType : "json",
+        success : function(_json) {
+            if(_json.status=="error"){
+                return;
+            }
+            jQuery(_json.data).each(function(i,_obj){
+ 			if(_obj.gameclassid==${returnDatas.queryBean.gameclassid}){
+			 jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"' selected >"+_obj.gcname+"</option>");
+ 		}else{
+ 			jQuery("#gameclass").append("<option value='"+_obj.gameclassid+"'>"+_obj.gcname+"</option>");
+ 		}
+            });
+            
+            
+        }
+    });
+    
+    $(".updateOdds").blur(function(){
+    	var a=$(this).prev().val();
+    	$(this).attr("name",a);
+    });
+	});
+	
+	 jQuery(function(){
+		 /*
+		 init_valid(_before,_after)
+		 @_before:提交表单前，调用 的函数   可以为空，一般有validform处理不了，独自进行处理时使用
+		 @_after:保存成功后，调用的函数  可以为空，一般为对应的列表页面
+		 */
+		 springrain.initValid(null,function(){window.location.href="${ctx}/betgameplay/list?springraintoken="+springraintoken});
+	 });
+	</script>
+</body>
+</html>
+

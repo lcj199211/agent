@@ -1,0 +1,171 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betsubordinaterebatedetail/delete");
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betsubordinaterebatedetail/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betsubordinaterebatedetail/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betsubordinaterebatedetail/list?k=1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+							          				<div class="layui-inline">
+									                    <label>用户ID</label>
+									                    <input type="text" name="memberid" value="${(returnDatas.queryBean.memberid)!''}" placeholder="请输入用户ID " style="width=40px;">
+							                		</div>
+													<div class="layui-inline">
+							          					时间：
+														<div class="layui-input-inline">
+															<input style="height: 22px;width: 140px;margin: 0 10px;"  name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+							                			</div>至
+														<div class="layui-input-inline">
+															<input style="height: 22px;width: 140px;margin: 0 10px;"  name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon">
+							                			</div>
+										            </div>
+												</td>
+												<td>
+							          			   <div class="layui-inline">
+									                    <button class="layui-btn" type="button" onclick="springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>查询</button>
+									                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="9">推广返利&nbsp;&nbsp; &nbsp;
+													<a href="${ctx}/betsubordinaterebate/update/pre?mark=t">推广设置</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betsubordinaterebatedetail/list?date=today">今日</a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betsubordinaterebatedetail/list?date=yesterday" >昨日 </a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betsubordinaterebatedetail/list?date=week" >本周 </a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betsubordinaterebatedetail/list?date=month" >本月 </a>&nbsp;&nbsp;&nbsp;
+													<a href="${ctx}/betsubordinaterebatedetail/list?date=lmonth" >上月 </a>&nbsp;&nbsp;&nbsp;
+													<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font>
+													</th>
+												</tr>
+												<tr>
+														<th id="memberid" >用户ID</th>
+														<th id="th_nickname" >昵称</th>
+														<th id="subordinatebet" ><font color="red">下线投注</font></th>
+														<th id="recommendnum" >推广人数</th>
+														<th id="subordinaterecharge" >充值佣金</th>
+														<th id="subordinatelose" >流水佣金</th>
+														<th id="income" >结算</th>
+														<th id="th_subtime" >日期</th>
+														<th id="state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+													<tr class="">
+														<td >
+															${(_data.memberid)!''}
+														</td>
+														<td >
+															${(_data.nickname)!''}
+														</td>
+														<td >
+															<font color="red">${(_data.subordinatebet)!0}</font>
+														</td>
+														<td >
+															${(_data.recommendnum)!0}
+														</td>
+														<td >
+															${(_data.subordinaterecharge)!0}
+														</td>
+														<td >
+															${(_data.subordinatelose)!0}
+														</td>
+														<td >
+															${(_data.income)!0}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.subtime)?string('yyyy-MM-dd'))!''}
+														</td>
+														<td >
+															<#if _data.state??>
+																<#if _data.state==1>
+																<font color="#555555">未领</font>
+																<#elseif _data.state==0>
+																<font color="red">已领</font>
+																</#if>
+															</#if>
+														</td>
+													</tr>
+												</#list>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+</html>
+

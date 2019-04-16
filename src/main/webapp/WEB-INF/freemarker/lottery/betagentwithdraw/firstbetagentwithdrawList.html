@@ -1,0 +1,372 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+		/*
+		全选、反选
+		*/
+		jQuery("#checkAll").bind('click',function(){
+			var _is_check=jQuery(this).get(0).checked;
+			jQuery("input[name='check_li']").each(function(_i,_o){
+				jQuery(_o).get(0).checked=_is_check;
+			});
+		});
+	});
+	function del(_id){
+		springrain.mydelete(_id,"${ctx}/betagentwithdraw/delete");
+	}
+	function clearpageindex(){
+		$('#pageIndex').val(1);
+	}
+	
+	
+	
+	$(document).ready(function(){
+	 $('.confirm').click(function(){
+	 var a=$(this).prev().val();
+		//询问框
+		layer.confirm('确定提现成功？', {
+		offset:['',''],
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+		  
+			$.ajax({
+				type:"get",
+				url:"${ctx}/betagentwithdraw/update1?id="+a+"&state=2",
+				data:{},
+				success:function(result){
+					if("success"==result.status){
+						layer.msg('已确认提现成功！',{offset:['','']});
+						setTimeout("kkk()",2000);
+						
+					}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+					}
+				},
+			})
+		}, function(){
+		  
+		});
+	
+	
+	})
+	$('.cancel').click(function(){
+		var a=$(this).prev().prev().val();
+			//询问框
+			layer.confirm('确定提现失败？', {
+			offset:['',''],
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				  $.ajax({
+					type:"get",
+					url:"${ctx}/betagentwithdraw/update1?id="+a+"&state=1",
+					data:{},
+					success:function(result){
+						if("success"==result.status){
+							layer.msg('已确认提现失败！',{offset:['','']});
+							setTimeout("kkk()",2000);
+						}else if("error"==result.status){
+							layer.msg(result.message,{offset:['','']});
+						}
+					},
+					})
+			}, function(){
+			  
+			});
+	
+	
+	
+	})
+	})
+	function kkk(){
+	window.location.href="${ctx}/betagentwithdraw/list1?startTime=${startTime!''}&endTime=${endTime!''}&startTime1=${startTime1!''}&endTime1=${endTime1!''}&springraintoken="+springraintoken;
+	}
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title site-demo-title">
+		             <!-- <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							网站地图导航
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a href="${ctx}">首页<span class="layui-box">&gt;</span></a>
+							  <a><cite>BetAgentwithdraw管理</cite></a>
+							</span>
+		             </li> -->
+					 <li style="float:right;">
+		             	<@shiro.hasPermission name="/betagentwithdraw/update" >
+		             		<button type="button"   class="layui-btn layui-btn-small" data-action="${ctx}/betagentwithdraw/update/pre"><i class="layui-icon layui-icon-specil">&#xe61f;</i>新增</button>
+		             	</@shiro.hasPermission>
+		             </li>
+	       		</ul>
+				
+				<div class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						          <!-- 查询  开始 -->
+							          <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betagentwithdraw/list1" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+
+									  <div class=" search-wrap">
+										  <div class="xiao-cell xiao-pull-left xiao-record">
+											  <#if yesterdayWithdrawcash??>
+											  昨日提现：${(yesterdayWithdrawcash)!0}&nbsp;&nbsp;&nbsp;今日提现：<span class="font-weight xiao-color-e00">${(todayWithdrawcash)!0}</span>
+											  <#else>
+											  提现：${(totolWithdrawcash)!0}
+										  </#if>
+										  &nbsp;&nbsp;&nbsp;总提现：${(allWithdrawcash)!0}&nbsp;&nbsp;&nbsp;
+										  <font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+											  </div>
+									  </div>
+
+									  <table class="layui-table search-wrap">
+									  	<colgroup>
+										    <col width="">
+										    <col width="150">
+										</colgroup>
+							          	<tbody>
+							          		<tr>
+							          			<td>
+									                <div class="layui-inline xiao-pull-left ">
+										            <div class="layui-input-inline xiao-input-wrap pull-left">
+																	提交时间： 从
+														<div class="layui-input-inline">
+												            <input name="startTime" onclick="laydate()" value="${(startTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>到	
+												        <div class="layui-input-inline">
+												            <input name="endTime" onclick="laydate()" value="${(endTime)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>
+												    	    审核时间： 从
+														<div class="layui-input-inline">
+												            <input name="startTime1" onclick="laydate()" value="${(startTime1)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>到	
+												        <div class="layui-input-inline">
+												            <input name="endTime1" onclick="laydate()" value="${(endTime1)!''}" placeholder="请输入日期 " class="laydate-icon xiao-input">
+												        </div>
+	
+										            </div>
+									          		<div class="layui-inline">
+											            <button class="layui-btn xiao-mb0" type="button" onclick="clearpageindex();springrain.commonSubmit('searchForm');"><i class="layui-icon" style="top:4px;right:5px;">&#xe615;</i>搜索</button>
+											        </div>
+											        
+								                </div>
+							          			</td>
+							          		</tr>
+							          	</tbody>
+							          </table>
+									  <!-- 查询  结束 -->
+									</form>
+									<!--start_export-->
+									<table class="layui-table" lay-even>
+										  <colgroup>
+										    <col width="">
+										    <col width="">
+										    <col>
+										  </colgroup>
+										  <!--end_no_export-->
+										  <!--first_start_export-->
+											<thead>
+												<tr>
+													<th colspan="16"><font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!--first_end_no_export-->
+												  		<th id="th_id">订单编号</th>
+												  		<th id="th_agentid">代理ID</th>
+												  		<th id="th_agentaccount">代理账号</th>
+												  		<th id="th_agentnickname">代理昵称</th>
+														<th id="th_applicationtime" >提交时间</th>
+														<th id="th_audittime" >审核时间</th>
+														<th id="th_bwcs" >提现前分</th>
+														
+														<th id="th_money" >提现金额</th>
+														<th id="th_awcs" >提现后分</th>
+														<th id="th_realname" >真实姓名</th>
+														
+														<th id="th_paytype" >提现方式</th>
+														<th id="th_remark" >账号</th>
+														<th id="th_bank" >银行名称/开户行</th>
+														
+														<th>操作人</th><th id="th_state" >状态</th>
+														<th>操作</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="center">
+														<!--end_no_export-->
+														<td >
+														${((_data.id))!''}
+														</td>
+														<td>
+														${((_data.agentid))!''}
+														</td>
+														<td>
+
+														<input type="hidden" class="subordinate" value="${(_data.agentaccount)!''}">
+														<a class="xiao-color-00e" style="text-decoration:underline;" href="${ctx}/betagent/update/pre?a=2&id=''&agentid=${(_data.agentid!'')}">${(_data.agentaccount)!''}</a>
+
+														</td>
+														<td>
+														${((_data.agentnickname))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.applicationtime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td >
+															<!--日期型-->
+														${((_data.audittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td style="white-space:nowrap">
+														<#if _data.state==2>
+															<input type="hidden" class="txqf" value="${(_data.bwcs)!0}">
+														</#if>
+															${(_data.bwcs)!0}
+														</td>
+														<td class="xiao-color-e00 font-weight" style="white-space:nowrap">
+														<#if _data.state==2>
+															<input type="hidden" class="txje" value="${(_data.money)!0}">
+														</#if>
+														<span style="color:blue;">
+															${(_data.money)!0}
+														</td>
+														<td style="white-space:nowrap">
+														<#if _data.state==2>
+															<input type="hidden" class="txhf" value="${(_data.awcs)!0}">
+														</#if>
+															${(_data.awcs)!0}
+														</td>
+														<td >
+															${(_data.realname)!''}
+														</td>
+														
+														
+														<td >
+															<#if _data.paytype==0>
+																支付宝
+																<#elseif _data.paytype==1>
+																银行卡
+																
+																<#else> 
+															</#if>
+														</td>
+														
+														<td >
+															${(_data.remark)!''}
+														</td>
+														
+														<td >
+															${(_data.bank)!''}
+														</td>
+														
+														<td >
+															${(_data.operator)!''}
+														</td>
+														<td >
+															<#if _data.state==0>
+																<font style="color:red;">未处理</font>
+																<#elseif _data.state==1>
+																未付款
+																<#elseif _data.state==2>
+																<p style="color:green">成功</p>
+																<#else> 
+															</#if>
+														</td>
+														<td>
+															<input type="hidden" value="${(_data.id)!''}">
+																<#if _data.state=0>
+																<@shiro.hasPermission name="/betagentwithdraw/update1" >
+									                           		 <a style="padding: 0 30px;line-height: 25px;height: 25px; " href="#" class="layui-btn xiao-btn-default layui-btn-mini confirm">确定</a>
+									                            </@shiro.hasPermission>
+									                            <@shiro.hasPermission name="/betagentwithdraw/update1" >
+									                            	<a style="padding:0  15px;line-height: 25px;height: 25px;" href="#" class="layui-btn xiao-btn-danger layui-btn-mini cancel">取消</a>
+									                            </@shiro.hasPermission>
+									                            </#if>
+														</td>
+													</tr>
+												</#list>
+												<tr style="background-color:#eafcff;">
+													<td style="text-align: center;">小计</td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"><a id="txqf"></a></td>
+													<td style="text-align: center;"><b><a id="txje"></a></b></td>
+													<td style="text-align: center;"><a id="txhf"></a></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+													<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<@h.footer />
+	</div>
+</body>
+<script>
+var txqf = 0.;
+	$(".txqf").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		txqf+= a*1;
+	});
+	$("#txqf").text(Math.round(txqf*100)/100);
+	
+var txhf = 0.;
+	$(".txhf").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		txhf+= a*1;
+	});
+	
+var txje = 0.;
+	$(".txje").each(function(){
+		var a=0.;
+		($(this).val()== null || $(this).val()== undefined || $(this).val() == '') ? a=0. : a=$(this).val();
+		txje+= a*1;
+	});
+	if(txje>=0){
+		$("#txje").css('color','blue');
+	}else if(txje<0){
+		$("#txje").css('color','red');
+	}
+	
+	$("#txje").text(Math.round(txje* 100) / 100);
+</script>
+</html>
+

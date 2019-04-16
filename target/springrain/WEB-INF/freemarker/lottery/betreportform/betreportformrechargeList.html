@@ -1,0 +1,229 @@
+<#ftl output_format="HTML" auto_esc=true>
+<@h.commonHead title="后台管理系统" keywords="开源,永久免费" description="springrain开源系统管理后台"/>
+<script src="${ctx}/js/custom/common/form.js"></script>
+<script src="${ctx}/js/laydate/laydate.js"></script>
+<script src="${ctx}/js/custom/common/formatmoney.js"></script>
+<script>
+	var _state;
+	jQuery(function(){ 
+		_state="${(returnDatas.queryBean.active)!''}";
+		jQuery("#active").val(_state);
+	});
+</script>
+
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<@h.naviHeader /><@h.leftMenu />
+			<!-- 主体内容开始 -->
+			<div class="layui-tab layui-tab-brief">
+				<ul class="layui-tab-title">
+		             <li class="layui-this">
+		             		<i class="layui-icon">&#xe630;</i>
+							<!--网站地图导航-->
+		             		<span class="layui-breadcrumb" style="visibility: visible;">
+							  <a><cite>首页</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>报表</cite><span class="layui-box">&gt;</span></a>
+							  <a><cite>充值</cite></a>
+							</span>
+		             </li>
+					 <li style="float:right;">
+					  <button type="button" onclick="history.go(-1)" class="layui-btn layui-btn-small" style="margin-top:8px;"><i class="layui-icon layui-icon-specil">&#xe603;</i>返回</button>
+		             </li>
+	       		</ul>
+				
+				<div style="overflow-x:scroll" class="layui-body layui-tab-content site-demo-body">
+					<div class="layui-tab-item layui-show">
+							<div class="layui-main">
+						          <div id="LAY_preview">
+						           <form class="layui-form layui-form-pane" id="searchForm" action="${ctx}/betreportform/list?k=4&date=${rechargetime}" method="post">
+							          <input type="hidden" name="pageIndex" id="pageIndex" value="${(returnDatas.page.pageIndex)!'1'}" /> 
+							          <input type="hidden" name="sort" id="page_sort" value="${(returnDatas.page.sort)!'desc'}" />
+							          <input type="hidden" name="order" id="page_order" value="${(returnDatas.page.order)!'id'}" />
+							          <input type="hidden" name="virtualmember"  value="${(virtualmember)!0}" />
+							          </form>
+									<table class="layui-table" lay-even>
+											<thead>
+											<tr>
+													<th colspan="12">充值列表<font id='recordsView' class='recorsView'>共<span></span>页,共 <span></span>条记录</font></th>
+												</tr>
+												<tr>
+												  <!--first_start_no_export-->
+												  <!-- <th type="hidden" class="center">
+															<input type="hidden" id="checkAll"  type="checkbox">
+												  </th> -->
+												  <!--first_end_no_export-->
+												  		<th>订单编号</th>
+														<th>用户ID</th>
+														<th id="th_brs">充值前分</th>
+														<th id="th_ars">充值后分</th>
+														<th id="th_submittime" >提交时间</th>
+														<th id="th_rechargetime" >充值时间</th>
+														<th id="th_type">支付类型</th>
+														<th>来源</th>
+														<th>充值账户</th>
+														<th id="th_money" >金额</th>
+														<th id="th_state" >状态</th>
+												</tr> 
+											</thead>
+										  <!--first_end_export-->
+										  <!--start_export-->
+										   <tbody>
+										    <#if (returnDatas.data??)&&(returnDatas.data?size>0)> 
+										    	<#list	returnDatas.data as _data>
+										    		<!--start_no_export-->
+													<tr class="">
+														<!-- <td type="hidden" class="center">
+																<input name="check_li" value="${_data.id}"  type="checkbox">
+														</td> -->
+														<!--end_no_export-->
+														<td style="text-align: center;">
+															${(_data.id)!''}
+														</td>
+														<td style="text-align: center;">
+															<a     href="${ctx}/betmember/look?id2=${(_data.memberid2)!''}" style="color: blue"><u>${(_data.memberid2)!''}</u></a>
+														</td>
+														<td 
+														<#if (_data.brs??)&&(_data.brs<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" value="${(_data.brs)!0}" class="czqf">
+															${((_data.brs))!''}
+														</td>
+														<td 
+														<#if (_data.ars??)&&(_data.ars<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" value="${(_data.ars)!0}" class="czhf">
+															${((_data.ars))!''}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.submittime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td style="text-align: center;">
+															<!--日期型-->
+														${((_data.rechargetime)?string('yyyy-MM-dd HH:mm:ss'))!''}
+														</td>
+														<td style="text-align: center;">
+															<#if (_data.type??)>
+																<#if (_data.type=1)>
+																银行卡
+																<#elseif (_data.type=2)>
+																支付宝
+																<#elseif (_data.type=3)>
+																微信
+																<#elseif (_data.type=4)>
+																信用卡
+																<#elseif (_data.type=5)>
+																快捷支付
+																<#elseif (_data.type=6)>
+																扫码支付
+																<#elseif (_data.type=8)>
+																支付宝移动支付
+																<#elseif (_data.type=9)>
+																线下充值
+																<#elseif (_data.type=10)>
+																人工审核
+																</#if>
+															</#if>
+														</td>
+														<td style="text-align: center;">
+															${(_data.source)!''}
+															<#if _data.accountname??>
+															<#else>
+															
+															</#if>
+														</td>
+														<td style="text-align: center;">
+															${(_data.account)!''}
+														</td>
+														<td 
+														<#if (_data.money??)&&(_data.money<0)>
+															style="text-align: center;color:red;"
+														<#else>
+															style="text-align: center;color:blue;"
+														</#if>
+														>
+														<input type="hidden" value="${(_data.money)!0}" class="je">
+															${((_data.money))!0}
+														</td>
+														<td style="text-align: center;">
+															<#if _data.state==0>
+																<font style="color:red;">未处理</font>
+																<#elseif _data.state==1>
+																取消
+																<#elseif _data.state==2>
+																<p style="color:green">成功</p>
+																<#else> 
+															</#if>
+														</td>
+														<!-- <td style="text-align:center">
+															<@shiro.hasPermission name="/betgold/update" >
+								                           		 <a style="margin:2px" href="#" class="layui-btn layui-btn-normal layui-btn-mini confirm">确定</a>
+								                            </@shiro.hasPermission>
+								                            <@shiro.hasPermission name="/betgold/update" >
+								                            	<a style="margin:2px" href="#" class="layui-btn layui-btn-danger layui-btn-mini cancel">取消</a>
+								                            </@shiro.hasPermission>
+														</td> -->
+													</tr>
+												</#list>
+												<tr style="background-color: #eafcff">
+												<td style="text-align: center;">小计</td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"><a id="czqf"></a></td>
+												<td style="text-align: center;"><a id="czhf"></a></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"></td>
+												<td style="text-align: center;"><a id="je"></a></td>
+												<td style="text-align: center;"></td>
+												</tr>
+											 </#if>
+											</tbody>
+										</table>
+									<#if returnDatas.page??> 
+										<div id='laypageDiv'></div>
+										<@h.layPage page=returnDatas.page /> 
+									</#if>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		<!-- 主体内容结束 -->
+		<div class="footer"></div>
+	</div>
+</body>
+<script type="text/javascript">
+var czqf =0;
+$(".czqf").each(function(){
+	czqf+=parseFloat($(this).val());
+});
+$("#czqf").text(outputmoney(czqf));
+$("#czqf").css("color","blue");
+
+var czhf =0;
+$(".czhf").each(function(){
+	czhf+=parseFloat($(this).val());
+});
+$("#czhf").text(outputmoney(czhf));
+$("#czhf").css("color","blue");
+
+var je =0;
+$(".je").each(function(){
+	je+=parseFloat($(this).val());
+});
+$("#je").text(outputmoney(je));
+$("#je").css("color","blue");
+</script>
+</html>
+
